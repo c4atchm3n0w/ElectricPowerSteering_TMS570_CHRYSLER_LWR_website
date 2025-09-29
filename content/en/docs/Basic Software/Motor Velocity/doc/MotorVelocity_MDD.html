@@ -1,0 +1,1163 @@
+---
+title: MotorVelocity_MDD
+linkTitle: MotorVelocity_MDD
+weight: 5
+---
+
+<h1 class="unnumbered" id="module----motor-velocity">Module -- Motor Velocity</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This function is responsible for calculating motor velocity from the sine and cosine motor position sensor signals.</p>
+<p>Based on HighLevelDesignDocument (<strong>State Dependant Runnables_BMW_Future.xlsx)</strong>, Runnables shown in different application segments are placed in different source files. For MtrVel, FDD Ver 007, HLDD has 4 runnables, two of which are in ASILD listed as MtrVel_Per1() and MtrVel_Per2(). And two of them are in ASILB’(D) listed as MtrVel2_Per1() and MtrVel2_Per2(). This document is responsible for ASILD runnables.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="diagram-function-data-sharing">Diagram – Function Data Sharing</h2>
+<p>This diagram shows all data that is shared between functions within the module.</p>
+<p>No Shared Data</p>
+<h3 id="diagram-mtrvel_per1">Diagram – MtrVel_Per1</h3>
+<p>This diagram describes the functional characteristics and data flow of a given function.</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:3.03125in;height:2.66667in" /></p>
+<h1 id="variable-data-dictionary">Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<p>(Note: Full variable names required in table.)</p>
+<p>(Note: All global variables including End Of Line data used should be shown here)</p>
+<table>
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 48%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Module Inputs (Global Variable Name)</td>
+<td>Module Outputs (Global Variable Name)</td>
+</tr>
+<tr class="even">
+<td>VehicleSpeed_Kph_f32</td>
+<td>CRFMotorVel_MtrRadpS_f32</td>
+</tr>
+<tr class="odd">
+<td>AsstAssemPol_Cnt_s08</td>
+<td>MRFMotorVel_MtrRadpS_f32</td>
+</tr>
+<tr class="even">
+<td>MtrVel3_SinBuffer_Uls_M_s2p13[4][8]</td>
+<td>HandwheelVel_HwRadpS_f32</td>
+</tr>
+<tr class="odd">
+<td>MtrVel3_CosBuffer_Uls_M_s2p13[4][8]</td>
+<td>HwVelValid_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>MtrVel3_PosBuffer_Rev_M_u0p16 [4][8]</td>
+<td>MRFMotorVelUnfiltered_MtrRadpS_f32</td>
+</tr>
+<tr class="odd">
+<td>MtrVel3_TimeBuffer_uS_M_u16p0[4][8]</td>
+<td>SysCHandwheelVel_HwRadpS_f32</td>
+</tr>
+<tr class="even">
+<td>MtrVel3_OsBufPos_Cnt_M_u08[4]</td>
+<td>SysCMotorVelMRF_MtrRadpS_f32</td>
+</tr>
+<tr class="odd">
+<td>SysCDiagHandWheelVel_HwRadpS_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SysCDiagMtrVelMRF_MtrRadpS_f32</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 12%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Variable Name</td>
+<td>Resolution</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>CrsMtrVel_MtrRadpS_D_f32[2]</td>
+<td>Single Precision Floating Point</td>
+<td>-1350</td>
+<td>1350</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>DeltaTheta_Uls_D_s18p13[2][8]</td>
+<td>2^-13</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>HwVel_HwRadpS_M_f32</td>
+<td>Single Precision Floating Point</td>
+<td>-42</td>
+<td>42</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>HwVelCorrLimDiff_HwRadpS_D_f32</td>
+<td>Single Precision Floating Point</td>
+<td>0</td>
+<td>84</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>HwVelDiffAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>255</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>MtrVel_ActiveBufSet_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>MtrVel_AvgDeltaT_uS_D_u16p0[2]</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>MtrVel_DeltaThetaIntercept_Uls_D_s7p24[2]</td>
+<td>2^-24</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>MtrVel_MtrRadpS_M_f32</td>
+<td>Single Precision Floating Point</td>
+<td>-1350</td>
+<td>1350</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>MtrVel_OldPosBuf_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>MtrVel_OsBufSelect_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>4</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="odd">
+<td>MtrVel_Slope_puS_D_sm11p42[2]</td>
+<td>2^-42</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>MtrVel_SnapShotSet_Cnt_G_u08</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_8_GLOBALSHARED</td>
+</tr>
+<tr class="odd">
+<td>MtrVelCorrLimDiff_MtrRadpS_D_f32</td>
+<td>Single Precision Floating Point</td>
+<td>0</td>
+<td>2700</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>MtrVelDelta_MtrRadpS_M_u12p4</td>
+<td>2<sup>-4</sup></td>
+<td>0</td>
+<td>1350</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>MtrVelDiffAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>255</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>MtrVelFiltSV_MtrRadpS_M_s11p20</td>
+<td>2^-20</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>OldMtrVel_MtrRadpS_M_s11p4</td>
+<td>2<sup>-4</sup></td>
+<td>-1350</td>
+<td>1350</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>PosAvg_Rev_M_u0p16</td>
+<td>2<sup>-16</sup></td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>PredDeltaTheta_Uls_D_f32[2]</td>
+<td>Single Precision Floating Point</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>PredDeltaThetaCor_Uls_D_f32[2]</td>
+<td>Single Precision Floating Point</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>WestBlendedMtrVel_MtrRadpS_D_f32[2]</td>
+<td>Single Precision Floating Point</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>WestVelocity_MtrRadpS_D_f32[2]</td>
+<td>Single Precision Floating Point</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>MTRVEL_START_SEC_VAR_CLEARED_32</td>
+</tr>
+</tbody>
+</table>
+<p>* Note: These ranges are based on the range of the normalized sine and cosine global inputs, which in turn are based on the maximum amount of signal variation that can be caused by temperature changes on the MSB signals.</p>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 31%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Typedef Name</td>
+<td>Element Name</td>
+<td>User Defined Type</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+</tr>
+<tr class="even">
+<td><p>(Name given for the user defined typdef of type struct/union)</p>
+<p>(Variable name qualified similar to all other variables)</p></td>
+<td>(Variable name qualified similar to all other variables)</td>
+<td>as other variables</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>t_MtrVelDeltaKpTblX_MtrRadpS_u12p4</td>
+</tr>
+<tr class="odd">
+<td>t_MtrVelDeltaKpTblY_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>t_MtrVelFiltKpTblX_Kph_u9p7</td>
+</tr>
+<tr class="odd">
+<td>t_MtrVelFiltKpYTbl_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>t_MtrVelBlendTblX_MtrRadpS_u12p4</td>
+</tr>
+<tr class="odd">
+<td>k_MtrVelFiltEn_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>k_GearRatio_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MtrVelCorrLim_Cnt_Str</td>
+</tr>
+<tr class="even">
+<td>k_HwVelCorrLim_Cnt_Str</td>
+</tr>
+<tr class="odd">
+<td>k_MtrVelCorrLim_MtrRadpS_f32</td>
+</tr>
+<tr class="even">
+<td>k_HwVelCorrLim_HwRadpS_f32</td>
+</tr>
+<tr class="odd">
+<td>t_MtrVelTimeOffsetTblX_Kph_u9p7</td>
+</tr>
+<tr class="even">
+<td>t_MtrVelTimeOffsetYTbl_uS_u16</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 19%" />
+<col style="width: 35%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+</tr>
+<tr class="even">
+<td>D_CORRTERMA0_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>0.5240920730306</td>
+</tr>
+<tr class="odd">
+<td>D_CORRTERMN1P_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>0.09361941664774</td>
+</tr>
+<tr class="even">
+<td>D_CORRTERMN2P_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>1.488737214789</td>
+</tr>
+<tr class="odd">
+<td>D_CORRTERME1P_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>1.27106431778</td>
+</tr>
+<tr class="even">
+<td>D_CORRTERME2P_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>3.700991517299</td>
+</tr>
+<tr class="odd">
+<td>D_USECPERSEC_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>1000000.0</td>
+</tr>
+<tr class="even">
+<td>D_MTRVELOSBUFNUM_CNT_U08</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>D_MTRVELOSBUFSZ_CNT_U08</td>
+<td>1</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>D_SNAPSHOTBUF_CNT_U08</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>D_MTRVELLOLMT_MTRRADPS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>-1350</td>
+</tr>
+<tr class="even">
+<td>D_MTRVELLOLMT_MTRRADPS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>1350</td>
+</tr>
+<tr class="odd">
+<td>D_B1NUMLIMIT_US_S7P24</td>
+<td>2<sup>-24</sup></td>
+<td>0.0625 – 1count</td>
+</tr>
+<tr class="even">
+<td>D_HWVELLOLMT_HWRADPS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>-42</td>
+</tr>
+<tr class="odd">
+<td>D_HWVELHILMT_HWRADPS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>42</td>
+</tr>
+<tr class="even">
+<td>D_FIXPTMTRVELHILMT_MTRRADPS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>2047.9375</td>
+</tr>
+<tr class="odd">
+<td>D_FIXPTMTRVELLOLMT_MTRRADPS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>-2048.0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>D_RADPERREV_ULS_F32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>T_MtrVelBlendTblY_Uls_u2p14</td>
+<td>2^-14</td>
+<td>{0, 1}</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules">Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>FPM_FixedToFloat_m()</p></li>
+<li><p>FPM_FloatToFixed_m()</p></li>
+<li><p>FMP_Fix_m()</p></li>
+<li><p>Max_m()</p></li>
+<li><p>Abs_s16_m()</p></li>
+<li><p>Abs_f32_m()</p></li>
+<li><p>IntplVarXY_u16_u16Xu16Y_Cnt()</p></li>
+<li><p>LPF_SvUpdate_s16InFixKTrunc_m()</p></li>
+<li><p>LPF_OpUpdate_s16InFixKTrunc_m()</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_GetNTCFailed</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_SetNTCStatus</p></li>
+<li><p>TableSize_m()</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<p>The data hiding functions / macros used in this module are identified below,</p>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<p>(Note if they are defined in another source file, then reference the appropriate header file)</p>
+<p>The local functions/macros in this module are identified below,</p>
+<ol type="1">
+<li><p>Square_m(x) ((x)*(x))</p></li>
+<li><p>CalcCoarseVel()</p></li>
+<li><p>CorrectVel()</p></li>
+<li><p>MtrVelBlend()</p></li>
+<li><p>RegressionFit()</p></li>
+</ol>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-mtrvel_init1">Init: MtrVel_Init1</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>None</p>
+<h4 id="module-outputs">Module Outputs</h4>
+<p>None</p>
+<h4 id="module-internal">Module Internal </h4>
+<p>None</p>
+<h4 id="description">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.wmf" /></p>
+<h2 id="periodic-functions">Periodic Functions</h2>
+<h3 id="per-mtrvel_per1">Per: MtrVel_Per1</h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<h5 id="coarse-and-fine-velocity-calculations">Coarse and Fine Velocity Calculations</h5>
+<p>A “coarse” motor velocity signal is calculated which is simply calculated from (change in averaged motor position) / (change in averaged time).</p>
+<p>The “fine” motor velocity signal has inherent error at high speeds due to the nature of the algorithm. Because of the way the calculation is done and the fact that the samples are done every 1mS, the maximum velocity that this algorithm can calculate is +/-pi rad/ms ~ +/- 3142 rad/sec. Additionally, there is significant error in the calculation as velocity increases to this limit. For this reason, a correction is calculated and applied to the fine velocity to increase the accuracy up to a certain speed, and a blending is done so that “fine” velocity is used at lower speeds when it is accurate, and “coarse” velocity is used at high speeds.</p>
+<h5 id="unit-testing-considerations">Unit Testing Considerations</h5>
+<p>The design of this module was done with physical motor velocity considerations taken into account. For example, the limits on the inputs to some of the local functions are based on the physical system. Assuming the motor can rotate at a maximum of +/- 1350 Rads/Sec, the design only needs to accommodate a certain “change in position” from the last loop. Similarly, a “change in time” from the last loop will always correspond to the calculation loop rate within a tolerance. This was where the limits for the Coarse and Fine velocity functions were derived. All unit-testing test vectors should be designed in such a way as to conform to these physical limitations. Additionally, for any use of combinations of the sin and cos signals, the standard sin vs cos relationship may need to be followed (e.g. sin and cos are never both “0” at the same point in time).</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<h4 id="rte_call_mtrvel_per1_cp0_checkpointreachedstore-module-inputs-to-local-copies"> Rte_Call_MtrVel_Per1_CP0_CheckpointReached()Store Module Inputs to Local copies</h4>
+<p>SinAvg_Uls_T_s2p13 as sint16</p>
+<p>CosAvg_Uls_T_s2p13 as sint16</p>
+<p>PosAvg_Rev_T_u0p16 as uint16</p>
+<p>TimeAvg_uS_T_u16p0 as uint16</p>
+<p>MtrVel_ActiveBufSet_Cnt_M_u08 = (MtrVel_SnapShotSet_Cnt_G_u08 ^ 1u) &amp; 1u</p>
+<p>AsstAssemPol_Cnt_T_s08 = Rte_IRead_MtrVel_Per1_AsstAssemPol_Cnt_s08()</p>
+<p>VehSpd_Kph_T_f32 = Rte_IRead_MtrVel_Per1_VehSpd_Kph_f32()</p>
+<p>VehSpd_Kph_T_u9p7 = FPM_FloatToFixed_m(VehSpd_Kph_T_f32, u9p7_T);</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_PriMSB_SinCosCorr,&amp;MtrPosFault1_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_PriVsSec_SinCosCorr, &amp;MtrPosFault2_Cnt_T_lgc)</p>
+<h4 id="calculate-raw-motor-velocity">Calculate Raw Motor Velocity</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_MtrVel_Per1_MRFMtrVel_MtrRadpS_f32(MtrVel_MtrRadpS_T_f32)</p>
+<p>MtrVel_MtrRadpS_T_f32 = AsstAssemPol_Cnt_T_s08 * MtrVel_MtrRadpS_T_f32</p>
+<p>Rte_IWrite_MtrVel_Per1_CRFMtrVel_MtrRadpS_f32(MtrVel_MtrRadpS_T_f32)</p>
+<p>HwVel_HwRadpS_T_f32 = MtrVel_MtrRadpS_T_f32 * k_GearRatio_Uls_f32</p>
+<p>HwVel_HwRadpS_M_f32 = Limit_m(HwVel_HwRadpS_T_f32, D_HWVELLOLMT_HWRADPS_F32, D_HWVELHILMT_HWRADPS_F32)</p>
+<p>Rte_IWrite_MtrVel_Per1_HandwheelVel_HwRadpS_f32 (MtrVel_MtrRadpS_T_f32)</p>
+<p>Rte_IWrite_MtrVel_Per1_HwVelValid_Cnt_lgc(HwVelValid_Cnt_T_lgc)</p>
+<p>Rte_IWrite_MtrVel_Per1_MRFMotorVelUnfiltered_MtrRadpS_f32(WestBlendedMtrVel_MtrRadpS_D_f32)</p>
+<p>Rte_IWrite_MtrVel_Per1_SysCMotorVelMRF_MtrRadpS_f32(MtrVel_MtrRadpS_M_f32)</p>
+<p>Rte_IWrite_MtrVel_Per1_SysCHandwheelVel_HwRadpS_f32(HwVel_HwRadpS_M_f32)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_MtrVel_Per1_CP1_CheckpointReached()</p>
+<h2 id="periodic-functions-1">Periodic Functions</h2>
+<h3 id="per-mtrvel_per2">Per: MtrVel_Per2</h3>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<h4 id="program-flow-start-1">Program Flow Start</h4>
+<h4 id="rte_call_mtrvel_per2_cp0_checkpointreachedstore-module-inputs-to-local-copies"> Rte_Call_MtrVel_Per2_CP0_CheckpointReached()Store Module Inputs to Local copies</h4>
+<p>SysC_DiagMtrVelMRF_MtrRadpS_T_f32 = Rte_IRead_MtrVel_Per2_SysCDiagMtrVelMRF_MtrRadpS_f32()</p>
+<p>SysC_DiagHandWheelVel_HwRadpS_T_f32 = Rte_IRead_MtrVel_Per2_SysCDiagHandWheelVel_HwRadpS_f32()</p>
+<h4 id="calculate-raw-motor-velocity-1">Calculate Raw Motor Velocity</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.wmf" /></p>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>Rte_Call_MtrVel_Per2_CP1_CheckpointReached()</p>
+<h2 id="fault-recovery-functions">Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions">Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions">Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions">Serial Communication Functions</h2>
+<p>None</p>
+<h2 id="local-functionmacro-definitions">Local Function/Macro Definitions</h2>
+<p>If these are numerous and defined in a separate source file then reference the source file only.</p>
+<h3 id="calculation-coarse-velocity">Calculation Coarse Velocity</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 4%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>CalcCoarseVel</td>
+<td>Type</td>
+<td>Dir.</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DeltaPos_Rev_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>I</td>
+<td>-0.2</td>
+<td>0.2</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DeltaTime_uS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>I</td>
+<td>900</td>
+<td>1100</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>MtrVel_MtrRadpS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>O</td>
+<td>-1350</td>
+<td>1350</td>
+<td>6.25E-2</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-1">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.wmf" /></p>
+<h3 id="correct-velocity">Correct Velocity</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 4%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>CorrectVel</td>
+<td>Type</td>
+<td>Dir.</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MtrVel_MtrRadpS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>I</td>
+<td>-1350</td>
+<td>1350</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>MtrVel_MtrRadpS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>O</td>
+<td>-1350</td>
+<td>1350</td>
+<td>6.25E-2</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-3">Design Rationale</h4>
+<p>This function will calculate and apply a correction factor to the fine motor velocity. This will increase the range of speeds over which the fine motor velocity is accurate. The calculation of the correction term is shown below:</p>
+<p><strong>Correction Term = A0 + N_1P/(E_1P - w^2) + N_2P/(E_2P - w^2)</strong></p>
+<p>A0 = 0.5249978317</p>
+<p>N_1P = 0.09425018578 / SampleTime^2 = 94250.18578</p>
+<p>E_1P = 3 1.270451499 / SampleTime^2 = 1270451.499</p>
+<p>N_2P = 1.484093006 / SampleTime^2 = 1484093.006</p>
+<p>E_2P = 3.702672882 / SampleTime^2 = 3702672.882</p>
+<p>w = Calculated Fine Motor Velocity</p>
+<h4 id="description-2">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.wmf" /></p>
+<h3 id="motor-velocity-blend">Motor Velocity Blend</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 4%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>MtrVelBlend</td>
+<td>Type</td>
+<td>Dir.</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>FinMtrVel_MtrRadpS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>I</td>
+<td>-1350</td>
+<td>1350</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>CrsMtrVel_MtrRadpS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>I</td>
+<td>-1350</td>
+<td>1350</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>MtrVel_MtrRadpS_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>O</td>
+<td>-1350</td>
+<td>1350</td>
+<td>6.25E-2</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-3">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.wmf" /></p>
+<h3 id="regression-fit">Regression Fit</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 4%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>Regression Fit</td>
+<td>Type</td>
+<td>Dir.</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>VehSpd_Kph_T_u9p7</td>
+<td>uint16</td>
+<td>I</td>
+<td>0</td>
+<td>512</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PredDeltaThetaPtr_Uls_T_s1p14</td>
+<td>P2VAR, sint16</td>
+<td>O</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>6.11E-05</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PosAvgPtr_Rev_T_u0p16</td>
+<td>P2VAR, uint16</td>
+<td>O</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>1.53E-05</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>AvgDeltaTPtr_uS_T_u16p0</td>
+<td>P2VAR, uint16</td>
+<td>O</td>
+<td>250</td>
+<td>2000</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><strong>Return</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>* 200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.wmf" /></p>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>(Describe in words relevant details about the execution sequence of the different sub modules.)</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 21%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Calling Frequency</td>
+<td>System State(s) in which the function is called</td>
+</tr>
+<tr class="even">
+<td>MtrVel_Init1</td>
+<td>Once</td>
+<td>ALL STATES</td>
+</tr>
+<tr class="odd">
+<td>MtrVel_Per1</td>
+<td>1ms</td>
+<td>ALL STATES</td>
+</tr>
+<tr class="even">
+<td>MtrVel_Per2</td>
+<td>4ms</td>
+<td>ALL STATES</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Sub-Module called by (Serial Comm Function Name)</td>
+</tr>
+<tr class="even">
+<td>N/A</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section"><br />
+</h1>
+<h1 id="memory-map-definition-requirements">Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>MtrVel_Per1</td>
+<td>RTE_SA_MTRVEL_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>MtrVel_Per2</td>
+<td>RTE_SA_MTRVEL_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>CalcCoarseVel</td>
+<td>AP_MTRVEL_CODE</td>
+</tr>
+<tr class="odd">
+<td>CalcVel</td>
+<td>AP_MTRVEL_CODE</td>
+</tr>
+<tr class="even">
+<td>CorrectVel</td>
+<td>AP_MTRVEL_CODE</td>
+</tr>
+<tr class="odd">
+<td>MtrVelBlend</td>
+<td>AP_MTRVEL_CODE</td>
+</tr>
+<tr class="even">
+<td>CalcAvgMtrVelSignals</td>
+<td>AP_MTRVEL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-1"><br />
+</h1>
+<h1 id="known-issues-limitations-with-design">Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>In this design, MtrVel3_TimeBuffer_uS_M_u16p0[][] represents a set of independent circular buffers. Each buffer contains a set of continuous timestamps with the most recent timestamp index of each sample set stored in the associated index of MtrVel3_OsBufPos_Cnt_M_u08[] . The design requires monotonically increasing timestamps relative to the starting index value in MtrVel3_OsBufPos_Cnt_M_u08[]. Due to the modulo 65536 behavior of the timestamp, a single timestamp rollover within the active sample set pair is correctly handled by the design. Simultaneous sample points (e.g. ∆t = 0 for consecutive timestamps) are invalid and will result in a divide by zero in the current design. Unit Test vectors for functions which have MtrVel3_TimeBuffer_uS_M_u16p0[4][8] as an input (MtrVel_Per1 and RegressionFit) must provide an input vector value set which conforms to the set of rules in the following table:</p></li>
+</ol>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 44%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Parameter</td>
+<td>Min</td>
+<td>Max</td>
+<td>Notes</td>
+</tr>
+<tr class="even">
+<td><p>Buffer consecutive timestamp value ∆</p>
+<p>i.e. MtrVel3_TimeBuffer_uS_M_u16p0 [i][k] - MtrVel3_TimeBuffer_uS_M_u16p0 [i][k+1]</p></td>
+<td>10 uS</td>
+<td>125 uS</td>
+<td><p>Monotonically increasing in a modulo 65536 fashion (e.g. testing of the 16 bit rollover point allows for a single rollover point within the data buffer that is not monotonically increasing).</p>
+<p>The UTP MUST provide at least 1 test vector that provides a data set with a time stamp rollover (See Table 2).</p>
+<p>10 uS is the worst case minimum sampling period based on the MtrCtrl ISR runtime.</p>
+<p>125uS is twice the nominal execution rate for MtrCtrl ISR. This is to account for a worst case delay scenario.</p></td>
+</tr>
+<tr class="odd">
+<td><p>Cross buffer set timestamp pair ∆</p>
+<p>(e.g the ∆ between the oldest samples in each buffer, the ∆ between the second oldest oldest samples in each buffer, etc)</p>
+<p>i.e. MtrVel3_TimeBuffer_uS_M_u16p0 [MtrVel_OsBufSelect_M_u08][i] - MtrVel3_TimeBuffer_uS_M_u16p0 [MtrVel_OldPosBuf_M_u08][k]</p>
+<p>where k = i + (MtrVel3_OsBufPos_Cnt_M_u08[MtrVel_OldPosBuf_M_u08] - MtrVel3_OsBufPos_Cnt_M_u08[MtrVel_OsBufSelect_M_u08]) modulo 8</p></td>
+<td>250 uS</td>
+<td>2000 uS</td>
+<td><p>250 uS is the minimum required time to guarantee 8 samples at a nominal 62.5 uS sample rate have been completed.</p>
+<p>2000 uS is twice the execution rate for MtrVel_Per1. This is to account for a worst case delay scenario.</p>
+<p>When computing the delta it is necessary to perform modulo 65536 math compensation to account for rollover situations (e.g. Table 2 [z-7] samples depict a rollover case where the natural delta is 1764 – 65300 = -63536, however this is not the correct delta result for the strictly increasing modulo 65536 accumulator. Since the natural result is negative, 65536 must be added to obtain the actual delta, -63536 + 65536 = 2000.</p>
+<p>See Table 2 for a complete example conforming to this rule.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Table 1: Time Buffer UTP Constraints</p>
+<p>The following *.bas is a VBA function to validate the timestamp data sets.</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.wmf" /></p>
+<p><strong><u>EXAMPLE TimeStamp Buffer Data Set:</u></strong></p>
+<p>The following buffer timestamp data set provides an example when buffers 0 and 1 are active. Values for buffers 2 and 3 are don’t care values for this example and shown as “X” or “Don’t Care”. The samples within the buffers have subscripts which describe the samples order relative to the newest sample in the buffer (e.g. z-1 indicates that the sample is 1 sample period old, z-2 indicates the sample is 2 sample periods old, etc). Samples of the same relative order within each buffer have the same cell shading applied to aid the reader in locating cross buffer sample pairs.</p>
+<p>MtrVel_OldPosBuf_M_u08 = 0</p>
+<p>MtrVel_OsBufSelect_M_u08 = 1</p>
+<p>MtrVel3_OsBufPos_Cnt_M_u08[0] = 0</p>
+<p>MtrVel3_OsBufPos_Cnt_M_u08[1] = 2</p>
+<p>MtrVel3_OsBufPos_Cnt_M_u08[2] = Don’t Care</p>
+<p>MtrVel3_OsBufPos_Cnt_M_u08[3] = Don’t Care</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>198</td>
+<td>65300<sub>z-7</sub></td>
+<td>65362<sub>z-6</sub></td>
+<td>65424<sub>z-5</sub></td>
+<td>65486<sub>z-4</sub></td>
+<td>12<sub>z-3</sub></td>
+<td>74<sub>z-2</sub></td>
+<td>136<sub>z-1</sub></td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td>2074<sub>z-2</sub></td>
+<td>2136<sub>z-1</sub></td>
+<td>2198</td>
+<td>1764<sub>z-7</sub></td>
+<td>1826<sub>z-6</sub></td>
+<td>1888<sub>z-5</sub></td>
+<td>1950<sub>z-4</sub></td>
+<td>2012<sub>z-3</sub></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<p>Table 2: Example UTP TimeBuffer Roll-Over Sample Set</p>
+<ol start="2" type="1">
+<li><p>The state variables MtrVel_OldPosBuf_M_u08 and MtrVel_OsBufSelect_Cnt_M_u08 have a relationship that is maintained by logic that is executed after their use in RegressionFit(). The RegressionFit() function design requires a valid set of state variables to function properly. Therefore, it is possible to provide an illegal value set for the related state variables in a unit testing environment that will cause an illegal execution of RegressionFit(). All unit test vectors must ensure that MtrVel_OldPosBuf_M_u08 ≠ MtrVel_OsBufSelect_Cnt_M_u08. Failure to do so will result in a divide by 0 exception.</p></li>
+<li><ol type="a">
+<li></li>
+<li></li>
+<li></li>
+</ol></li>
+</ol>
+<h1 id="revision-control-log">Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Item #</strong></td>
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.0</td>
+<td>Initial AutoSAR release.</td>
+<td>31JAN11</td>
+<td>L.N.</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2</td>
+<td>Created new handwheel velocity output.</td>
+<td>01-Jun-11</td>
+<td>YY</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3</td>
+<td>Fixed filter time constant anomaly. Update rationale and ranges for current implementation.</td>
+<td>16-Jun-11</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4</td>
+<td>Component created</td>
+<td>11-July-12</td>
+<td>NRAR</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5</td>
+<td>Updated to ver 007 – Safety stuff added</td>
+<td>5-OCT-12</td>
+<td>NRAR</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6</td>
+<td>Updated to v010</td>
+<td>6-FEB-13</td>
+<td>JWJ</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7</td>
+<td>Corrected RegressionFit truncation and calculation errors</td>
+<td>8-FEB-13</td>
+<td>JJW</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8</td>
+<td>Corrected FPM resolution of Slope in RegressionFit function</td>
+<td>14-FEB-13</td>
+<td>JJW</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9</td>
+<td>Added missing module level variables per UTP feedback</td>
+<td>04-APR-13</td>
+<td>JJW</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>10</td>
+<td><p>Corrected MtrVel_Init1 variable name typo</p>
+<p>Added “UTP Tol.” Field to all local functions</p>
+<p>Updated range of MtrVel Rad/S signals to FDD specified +/-1350</p>
+<p>Added “Dir.” Field to all local functions to specify the direction of the data in the case of values passed by reference.</p>
+<p>Added missing limit on HwVel output</p></td>
+<td>08-APR-13</td>
+<td>JJW</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>11</td>
+<td>Corrected range of MtrVel_OldPosBuf_Cnt_M_u08 and MtrVel_OsBufSelect_Cnt_M_u08</td>
+<td>10-APR-13</td>
+<td>JJW</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>12</td>
+<td>Corrected range of MtrVel_OsBufSelect_Cnt_M_u08</td>
+<td>17-APR-13</td>
+<td>JJW</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>13</td>
+<td><p>Updated “Known Issues/Limitations with Design” section to provide direction for UTP development with regard to selecting vectors for the TimeStamp buffer and buffer selection variables.</p>
+<p>Added explicit 0xFFFF masking to result of PosBuffer_Rev_M_u0p16 delta and PosAvg_Rev_T_u0p16 delta.</p>
+<p>Added description of design limitations due to anomaly 5048</p></td>
+<td>07-MAY-13</td>
+<td>JJW</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>14</td>
+<td>Added limit macro support for Per1 if the filter is enabled to correct anomaly 5048, removed comment in design limitations pertaining to this anomaly.</td>
+<td>13-Jun-13</td>
+<td>KJS</td>
+</tr>
+</tbody>
+</table>

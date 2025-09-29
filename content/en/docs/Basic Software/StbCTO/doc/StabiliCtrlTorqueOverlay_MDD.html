@@ -1,0 +1,1137 @@
+---
+title: StabiliCtrlTorqueOverlay_MDD
+linkTitle: StabiliCtrlTorqueOverlay_MDD
+weight: 4
+---
+
+<h1 class="unnumbered" id="module----stability-control-torque-overlay66">Module -- Stability Control Torque Overlay66</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This function describes the algorithms used to implement the activation logic for torque overlay functionality related to dynamic stability.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="diagram-function-data-sharing">Diagram – Function Data Sharing</h2>
+<p>This diagram shows all data that is shared between functions within the module.</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:4.30139in;height:5.20764in" /></p>
+<h1 id="variable-data-dictionary">Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<p>(Note: Full variable names required in table.)</p>
+<p>(Note: All global variables including End Of Line data used should be shown here)</p>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Module Inputs (Global Variable Name)</td>
+<td>Module Outputs (Global Variable Name)</td>
+</tr>
+<tr class="even">
+<td>DSTTOCState_Cnt_u08</td>
+<td>DSTActive_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td>DSTEnableRqst_Cnt_lgc</td>
+<td>DSTState_Cnt_u08</td>
+</tr>
+<tr class="even">
+<td>DSTExtSystemFltActive_Cnt_lgc</td>
+<td>DSTSlewStart_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td>DSTErrCntrRecvLevel_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DSTTrqOvCmdRqst_HwNm_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>DSTTrqOvRqstValid_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>NTCDSTMaxValue_Cnt_T_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>NTCDSTMaxRate_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>NTCDSTMaxTime_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>NTCDSTXOR_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>NTCDSTStuckValue_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TOEOLDisable_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DSTSlewComplete_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TrqOvReverseGearEngage_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>VehicleSpeed_Kph_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>VehicleSpeedValid_ Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>LimitPercentFiltered_Uls_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>NTCLowBattVtg_Cnt_T_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DiagStsNonRecRmpToZeroFltPres_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>DiagStsRecRmpToZeroFltPres_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DSTFuncPresent_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>SystemState_Mode</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DSTRevGearValid_Cnt_lgc</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 12%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>User Defined Type</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DSTRDTimer_M_mS_u32</td>
+<td>UINT32</td>
+<td>N/A</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>DSTTNATimer_M_mS_u32</td>
+<td>UINT32</td>
+<td>N/A</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>RDStateCounter_Cnt_M_u08</td>
+<td>UINT8</td>
+<td>N/A</td>
+<td>0</td>
+<td>255</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>DSTVspdActive_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>DSTBkwdMotionAbsent_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>VehExtCondDSTActive_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>IntCondDSTEnable_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>LoSpdInactive_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>HiSpdInactive_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>DiagStsNonRecRmpToZeroFltPres_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>DiagStsRecRmpToZeroFltPres_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>DSTInternalCondTimer_mS_M_u32</td>
+<td>UINT32</td>
+<td>N/A</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>STBCTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>DSTBkwdMotionTime_mS_M_u32</td>
+<td>UINT32</td>
+<td>N/A</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>STBCTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>activeTimer_mS_M_u32</td>
+<td>UINT32</td>
+<td>N/A</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>InactiveTimer_mS_M_u32</td>
+<td>UINT32</td>
+<td>N/A</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>DSTState_Cnt_M_enum</td>
+<td>TOC_STATE</td>
+<td>N/A</td>
+<td>0</td>
+<td>8</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>StartTNATimer_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>StartRDTimer_Cnt_M_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>STBCTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 31%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Typedef Name</td>
+<td>Element Name</td>
+<td>User Defined Type</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+</tr>
+<tr class="even">
+<td colspan="5">typedef void(*DSTHandler_T)(boolean*DSTActive_T_lgc,boolean*DSTSlewStart_T_lgc)</td>
+</tr>
+<tr class="odd">
+<td>TOC_STATE</td>
+<td>TOCSTATE_OFF</td>
+<td rowspan="9">Uint8</td>
+<td colspan="2">0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>TOCSTATE_TNA</td>
+<td colspan="2">1</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TOCSTATE_PNA</td>
+<td colspan="2">2</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>TOCSTATE_READY</td>
+<td colspan="2">3</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TOCSTATE_REQUESTDENIED</td>
+<td colspan="2">4</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>TOCSTATE_ACTIVEMODE05</td>
+<td colspan="2">5</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TOCSTATE_ACTIVEMODE06</td>
+<td colspan="2">6</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>TOCSTATE_ACTIVEMODE07</td>
+<td colspan="2">7</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TOCSTATE_NOTAVAILABLE</td>
+<td colspan="2">8</td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>k_DSTVSpdVLH_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_DSTVSpdVHH_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_DSTVSpdVLL_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_DSTVSpdVHL_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_DSTVehSpdActvTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_DSTVehSpdInActvTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_DSTBkwdMotionTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_TrqOverlayLimitPerc_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_TrqOverlaySuspendTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTrqOvActiveMaxLimit_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_DSTTNAMaxTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_DSTRDMaxTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_DSTRDStateMaxCount_Cnt_u08</td>
+</tr>
+</tbody>
+</table>
+<h2 id="program-fixed-constants">Program (fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 22%" />
+<col style="width: 26%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>D_ONE_CNT_U8</td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 18%" />
+<col style="width: 26%" />
+<col style="width: 18%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>t_DSTStates_Cnt_Fn</td>
+<td>n/a</td>
+<td><p>&amp;StbCTO_DSTSt_Off</p>
+<p>&amp;StbCTO_DSTSt_TNA</p>
+<p>&amp;StbCTO_DSTSt_PNA</p>
+<p>&amp;StbCTO_DSTSt_Ready</p>
+<p>&amp;StbCTO_DSTSt_RequestDenied</p>
+<p>&amp;StbCTO_DSTSt_Active</p>
+<p>&amp;StbCTO_DSTSt_Active</p>
+<p>&amp;StbCTO_DSTSt_Active</p>
+<p>&amp;StbCTO_DSTSt_NotApplicable</p></td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules">Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library functions / Macros that are called by the various sub modules are identified below,</p>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<p>The data hiding functions / macros used in this module are identified below,</p>
+<ol type="1">
+<li><p>Rte_Call_NxtrDiagMgr_SetNTCStatus()</p></li>
+</ol>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<p>(Note if they are defined in another source file, then reference the appropriate header file)</p>
+<p>The local functions/macros in this module are identified below,</p>
+<ol type="1">
+<li><p>StbCTO_DSTSt_Notvailable ()</p></li>
+<li><p>StbCTO_DSTSt_Off()</p></li>
+<li><p>StbCTO_DSTSt_TNA()</p></li>
+<li><p>StbCTO_DSTSt_PNA()</p></li>
+<li><p>StbCTO_DSTSt_Ready()</p></li>
+<li><p>StbCTO_DSTSt_Active()</p></li>
+<li><p>StbCTO_DSTSt_RequestDenied()</p></li>
+</ol>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<p>Module state variables are initialized to 0 at start-up by RAM init.</p>
+<p>LoSpdInactive_Cnt_M_lgc = TRUE</p>
+<h3 class="unnumbered" id="section"><br />
+</h3>
+<h2 class="unnumbered" id="periodic-functions">Periodic Functions</h2>
+<h3 id="per-stbcto_per1">Per: StbCTO_Per1</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<ol type="1">
+<li><p>StartTNATimer_Cnt_M_lgc, This var is set to TRUE whenever transitioning to TNA state to initialize TNA Timer and set to FALSE when TNA timer is expired. Timer expired is checked in StartandStopTimer()</p></li>
+<li><p>StartRDTimer_Cnt_M_lgc, This var is set to TRUE whenever transitioning to RD state to initialize RD Timer and set to FALSE when RD timer is expired. Timer expired is checked in StartandStopTimer()</p></li>
+</ol>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>Rte_Call_StbCTO_Per1_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies </h4>
+<p>SysState_Cnt_T_Enum = Rte_Mode_SystemState_Mode()</p>
+<p>DSTFuncPresent_Cnt_T_lgc = Rte_IRead_StbCTO_Per1_DSTFuncPresent_Cnt_lgc()</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_ExVoltageLow, &amp;NTCLowBattVtg_Cnt_T_lgc)</p>
+<p>HalfActive_Cnt_T_lgc = Rte_IRead_StbCTO_Per1_HalfActive_Cnt_lgc()</p>
+<p>LimitPercentFiltered_Uls_T_f32 = Rte_IRead_StbCTO_Per1_LimitPercentFiltered_Uls_f32()</p>
+<p>PrkAssistActive_Cnt_T_lgc = Rte_IRead_StbCTO_Per1_PrkAssistActive_Cnt_lgc()</p>
+<p>TrqOvReverseGearEngage_Cnt_lgc = Rte_IRead_StbCTO_Per1_TrqOvReverseGearEngage_Cnt_lgc()</p>
+<p>VehicleSpeed_Kph_T_f32 = Rte_IRead_StbCTO_Per1_VehicleSpeed_Kph_f32()</p>
+<p>DiagStsNonRecRmpToZeroFltPres_Cnt_M_lgc = Rte_IRead_StbCTO_Per1_DiagStsNonRecRmpToZeroFltPres_Cnt_lgc()</p>
+<p>DiagStsRecRmpToZeroFltPres_Cnt_M_lgc = Rte_IRead_StbCTO_Per1_DiagStsRecRmpToZeroFltPres_Cnt_lgc()</p>
+<p>VehicleSpeedValid_Cnt_T_lgc = Rte_IRead_StbCTO_Per1_VehicleSpeedValid_Cnt_lgc()</p>
+<p>DSTRevGearValid_Cnt_T_lgc = Rte_IRead_StbCTO_Per1_DSTRevGearValid_Cnt_lgc()</p>
+<p>PrevDSTState_Cnt_T_enum = DSTState_Cnt_M_enum;</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_VLF_10, &amp;NTCDSTNotPresentCmdNotZero_Cnt_T_lgc);</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_VLF_11, &amp;NTCDSTEnableTrqRqstNotZero_Cnt_T_lgc);</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_VLF_12, &amp;NTCDSTStateRqstDenied_Cnt_T_lgc);</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCFailed(NTC_Num_VLF_13, &amp;NTCDSTPresentTNARDTimerExpired_Cnt_T_lgc)</p>
+<h4 id="perform-over-and-low-voltage-diagnostics">Perform Over and Low Voltage Diagnostics</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_StbCTO_Per1_DSTSlewStart_Cnt_lgc(DSTSlewStart_Cnt_T_lgc)</p>
+<p>Rte_IWrite_StbCTO_Per1_DSTActive_Cnt_lgc(DSTActive_Cnt_M_lgc)</p>
+<p>Rte_IWrite_StbCTO_Per1_DSTState_Cnt_u08 (DSTState_Cnt_M_enum)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_StbCTO_Per1_CP1_CheckpointReached()</p>
+<h2 id="fault-recovery-functions">Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions">Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions">Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions">Serial Communication Functions</h2>
+<p>None</p>
+<h2 id="local-functionmacro-definitions">Local Function/Macro Definitions</h2>
+<h3 id="notavailable">NotAVailable</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_NotAvailable</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description">Description</h4>
+<p>/* This function does nothing. */</p>
+<p>DSTActive_T_lgc = DSTActive_T_lgc</p>
+<p>DSTSlewStart_T_lgc = DSTSlewStart_T_lgc</p>
+<h3 id="off-state">OFF state</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_Off</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-1">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.wmf" /></p>
+<h3 id="tna">TNA</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_TNA</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-2">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.wmf" /></p>
+<h3 id="pna">PNA</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_PNA</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-3">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.wmf" /></p>
+<h3 id="ready">READY</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_Ready</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-4">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.wmf" /><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.wmf" /></p>
+<h3 class="unnumbered" id="section-1"><br />
+</h3>
+<h3 id="active">ACTIVE</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_Active</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-5">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.wmf" /></p>
+<h3 id="request-denied">REQUEST DENIED</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StbCTO_DSTSt_RequestDenied</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewStart_T_lgc</td>
+<td>boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>DSTActive_T_lgc</td>
+<td>boolean pointer</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-6">Description</h4>
+<h1 class="unnumbered" id="section-2"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image15.wmf" /></h1>
+<h3 id="startandstoptimer">StartAndStopTimer</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>StartAndStopTimer</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>StartTime_mS_T_u32</td>
+<td>Uint32</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TimeOut_mS_T_u16</td>
+<td>Uint16</td>
+<td>0</td>
+<td>5000</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>StartTimer_Cnt_T_lgc</td>
+<td>Boolean pointer</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-3"></h1>
+<h1 class="unnumbered" id="section-4"></h1>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image16.wmf" /></p>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>(Describe in words relevant details about the execution sequence of the different sub modules.)</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Task List</td>
+<td>Calling Frequency</td>
+<td>System State(s) in which the function is called</td>
+</tr>
+<tr class="even">
+<td>StbCTO_Init1</td>
+<td></td>
+<td>Executed once after the RTE is started</td>
+<td>ALL</td>
+</tr>
+<tr class="odd">
+<td>StbCTO_per1</td>
+<td></td>
+<td>2ms</td>
+<td>WARMINIT, OPERATE,DISABLE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Sub-Module called by (Serial Comm Function Name)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-5"><br />
+</h1>
+<h1 id="memory-map-definition-requirements">Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>StbCTO _Per1()</td>
+<td>RTE_AP_STBCTO_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>StbCTO_DSTSt_NotApplicable</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="odd">
+<td>StbCTO_DSTSt_Off</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="even">
+<td>StbCTO_DSTSt_TNA</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="odd">
+<td>StbCTO_DSTSt_PNA</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="even">
+<td>StbCTO_DSTSt_Ready</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="odd">
+<td>StbCTO_DSTSt_Active</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="even">
+<td>StbCTO_DSTSt_RequestDenied</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+<tr class="odd">
+<td>StartAndStopTimer</td>
+<td>AP_STBCTO_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-6"><br />
+</h1>
+<h1 id="known-issues-limitations-with-design">Known Issues / Limitations With Design</h1>
+<p>This module is not meeting FDD for below points:</p>
+<p>1) System_State is not shown as input in FDD sec 3 and sec 3.1</p>
+<p>2) HalF_Active and PrkAssist_Active is not used in this module, But these are shown in FDD Sec 3, 3.1, 3.3</p>
+<p>This is informed to FDD owner and FDD will be updated for next release.</p>
+<h1 id="revision-control-log">Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Item #</strong></td>
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.0</td>
+<td>Initial AutoSAR release.</td>
+<td>19-Oct-12</td>
+<td>NRAR</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2.0</td>
+<td>Updated design rationale in Per1 and Sec 9</td>
+<td>27-Nov-12</td>
+<td>NRAR</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3.0</td>
+<td>Updated some of the port names</td>
+<td>27-Nov-12</td>
+<td>NRAR</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4.0</td>
+<td>Corrected anomaly 4476 and 4477 SCR 7438</td>
+<td>21-Fev-13</td>
+<td>DD</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5.0</td>
+<td>Set DSTActive as a global variable</td>
+<td>23-Fev-13</td>
+<td>DD</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6.0</td>
+<td>Correct transition from ACTIVE to Request Denied</td>
+<td>23-Fev-13</td>
+<td>DD</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7.0</td>
+<td>Update to FDD 40C v004, v005</td>
+<td>09-May-13</td>
+<td>BDO</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8.0</td>
+<td>Updated StbCTO_DSTSt_Active() to support for Tessy coverage limitations, update StartAndStopTimer()</td>
+<td>28-May-13</td>
+<td>BDO</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9.0</td>
+<td>Updated to CF08B Ver 001</td>
+<td>15-Jul-13</td>
+<td>SP</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>10.0</td>
+<td>Added logic to pass the NTCs if the enable criteria is FALSE, And added AbsDSTTrqOvCmdRqst_HwNm_T_f32 in StbCTO_DSTSt_Ready to fix the QAC Warning</td>
+<td>08-Oct-13</td>
+<td>MR</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>11.0</td>
+<td>Added logic to pass the NTC as per FDD version CF08B Ver4.</td>
+<td>22-Oct-13</td>
+<td>MR</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>12.0</td>
+<td>Updated to CF-08B v005</td>
+<td>23-Jan-14</td>
+<td>VT</td>
+</tr>
+</tbody>
+</table>

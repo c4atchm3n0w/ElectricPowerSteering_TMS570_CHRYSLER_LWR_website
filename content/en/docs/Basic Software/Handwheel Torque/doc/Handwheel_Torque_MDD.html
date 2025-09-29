@@ -1,0 +1,1161 @@
+---
+title: Handwheel_Torque_MDD
+linkTitle: Handwheel_Torque_MDD
+weight: 4
+---
+
+<h1 class="unnumbered" id="module----hand-wheel-torque2626">Module -- Hand Wheel Torque2626</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This function calculates the Hand Wheel Torque and performs the diagnostics on the Torque input signals T1 and T2.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="component-diagram">Component Diagram </h2>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:2.5in;height:2.01042in" /></p>
+<h1 id="variable-data-dictionary">Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<table>
+<colgroup>
+<col style="width: 46%" />
+<col style="width: 53%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Module Inputs (Global Variable Name)</td>
+<td>Module Outputs (Global Variable Name)</td>
+</tr>
+<tr class="even">
+<td>T1ADC_Volt_f32</td>
+<td>AnaHwTorque_HwNm_f32</td>
+</tr>
+<tr class="odd">
+<td>T2ADC_Volt_f32</td>
+<td>SysCAnaHwTorque_HwNm_f32</td>
+</tr>
+<tr class="even">
+<td>SysCHwTorqueSqd_HwNmSq_f32</td>
+<td>AnaDiffHwTrq_HwNm_f32</td>
+</tr>
+<tr class="odd">
+<td>AbsPosStepSignal_Cnt_u08</td>
+<td>SrlComHwTrqValid_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>CntrlDisRampComplete_Cnt_lgc</td>
+<td>ErrorActiveAnalog_Cnt_enum</td>
+</tr>
+<tr class="odd">
+<td>MECCounter_Cnt_enum</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 12%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 27%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Variable Name</td>
+<td>Resolution</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>CorrDiagFiltOut_Volt_M_s4p11</td>
+<td>2<sup>-11</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>CorrDiagFiltSV_Volt_M_s4p27</td>
+<td>2<sup>-11</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_ VAR_SAVED_ZONEH_32</td>
+</tr>
+<tr class="even">
+<td>SSDiagFiltOut_Volt_M_s4p11</td>
+<td>2<sup>-11</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>SSDiagFiltSV_Volt_M_s4p27</td>
+<td>2<sup>-27</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>TDiagFiltOut_Volt_M_s4p11</td>
+<td>2<sup>-11</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>TDiagFiltSV_Volt_M_s4p27</td>
+<td>2<sup>-27</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>SumFltOut_Volt_M_u5p11</td>
+<td>2<sup>-11</sup></td>
+<td>0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>T1RngErrAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>T2RngErrAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>AnaDiffHwTrq_Volt_M_f32</td>
+<td>Single Precision Floating Point</td>
+<td>-5</td>
+<td>5</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>AnaHwTorque_HwNm_M_f32</td>
+<td>Single Precision Float</td>
+<td>-10</td>
+<td>10</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>TrqSum_Volts_M_s4p11</td>
+<td>2<sup>-11</sup></td>
+<td>-5.0</td>
+<td>5.0</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>TrqSensorRecDiagAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>NvMBlkStatus_Cnt_M_u8</td>
+<td>NvM_RequestResultType</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>AnaHwTorqueSqd_HwNmSq_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>100</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>HWTorqCorrLimDiff_HwNmSq_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>100</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>HwTorqCh1vsCh2CorrLim_HwNmSq_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>100</td>
+<td>HWTRQ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 31%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Typedef Name</td>
+<td>Element Name</td>
+<td>User Defined Type</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+</tr>
+<tr class="even">
+<td>HwTrqStatusType</td>
+<td><p>HWTRQSTATUS_NONE = 0</p>
+<p>HWTRQSTATUS_ACTIVE = 1</p>
+<p>HWTRQSTATUS_FAULT = 2</p></td>
+<td>uint8</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>ManufModeType</td>
+<td><p>ProductionMode = 0</p>
+<p>ManufacturingMode = 1</p>
+<p>EngineeringMode = 2</p></td>
+<td>Uint8</td>
+<td>0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>k_TbarStiff_NmpDeg_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HwTrqSclNom_VoltspDeg_f32</td>
+</tr>
+<tr class="even">
+<td>k_AnaRngDiag_Cnt_str</td>
+</tr>
+<tr class="odd">
+<td>k_T1LowRange_Volts_f32</td>
+</tr>
+<tr class="even">
+<td>k_T1HghRange_Volts_f32</td>
+</tr>
+<tr class="odd">
+<td>k_T2LowRange_Volts_f32</td>
+</tr>
+<tr class="even">
+<td>k_T2HghRange_Volts_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MaxTrqSumLmt_Volts_f32</td>
+</tr>
+<tr class="even">
+<td>t_TdiagFiltKnTbl_Cnt_u16[17]</td>
+</tr>
+<tr class="odd">
+<td>t_TdiagIndptTbl_Volts_u5p11[17]</td>
+</tr>
+<tr class="even">
+<td>k_TdiagLim_Volts_u5p11</td>
+</tr>
+<tr class="odd">
+<td>k_SSDiagKn_Cnts_u16</td>
+</tr>
+<tr class="even">
+<td>k_CorrDiagKn_Cnts_u16</td>
+</tr>
+<tr class="odd">
+<td>k_TdiagCorrLim_Volts_u5p11</td>
+</tr>
+<tr class="even">
+<td>k_SSDiagLim_Volts_u5p11</td>
+</tr>
+<tr class="odd">
+<td>k_CorrDiagFiltActiv_Volts_u5p11</td>
+</tr>
+<tr class="even">
+<td>k_MaxHwTrqTrim_Volts_f32</td>
+</tr>
+<tr class="odd">
+<td>k_SumFiltRecLim_Volt_u5p11</td>
+</tr>
+<tr class="even">
+<td>k_SSFiltRecLim_Volt_u5p11</td>
+</tr>
+<tr class="odd">
+<td>k_TrqFltRecLim_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_T1AccRecLim_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_T2AccRecLim_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_AnaT1T2ErrThreshold_Volts_u5p11</td>
+</tr>
+<tr class="odd">
+<td>t_HwTorqCorrLimXAxis_HwNm_u4p12[]</td>
+</tr>
+<tr class="even">
+<td>t_HwTorqCorrLimYAxis_HwNmSq_u7p9[]</td>
+</tr>
+<tr class="odd">
+<td>k_HwTorqCorrLimDiag_Cnt_str</td>
+</tr>
+</tbody>
+</table>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.wmf" /></p>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 22%" />
+<col style="width: 26%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+</tr>
+<tr class="even">
+<td>D_HWTRQLOLMT_HWNM_F32</td>
+<td>Single Precision Floating Point</td>
+<td>-10.0</td>
+</tr>
+<tr class="odd">
+<td>D_HWTRQHILMT_HWNM_F32</td>
+<td>Single Precision Floating Point</td>
+<td>10.0</td>
+</tr>
+<tr class="even">
+<td>D_DFLTRTRQTRIM_VOLT_F32</td>
+<td>Single Precision Floating Point</td>
+<td>2.5</td>
+</tr>
+<tr class="odd">
+<td>D_TRQSCALEWNDW_ULS_F32</td>
+<td>Single Precision Floating Point</td>
+<td>0.20</td>
+</tr>
+<tr class="even">
+<td>D_NTCFAILED_CNT_U08</td>
+<td>1</td>
+<td>0x01U</td>
+</tr>
+<tr class="odd">
+<td>D_SSDIAGNFILTSVLMT_VOLT_S4P27</td>
+<td>2<sup>-27</sup></td>
+<td>FPM_Fix_m((k_SSDiagLim_Volts_u5p11 + 1), u5p11_T, s4p27_T)</td>
+</tr>
+<tr class="even">
+<td>D_FAILEDANDFAILEDTHISOPCYCLE_CNT_U08</td>
+<td>1</td>
+<td>0x03</td>
+</tr>
+<tr class="odd">
+<td>D_TESTNOTCOMPLETEDTHISOPCYCLE_CNT_U08</td>
+<td>1</td>
+<td>0x40</td>
+</tr>
+<tr class="even">
+<td>D_NUMTRQSTEP_CNT_U08</td>
+<td>1</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>D_FALSE_CNT_LGC</td>
+</tr>
+<tr class="odd">
+<td>D_ZERO_ULS_F32</td>
+</tr>
+<tr class="even">
+<td>D_ZERO_CNT_U16</td>
+</tr>
+<tr class="odd">
+<td>D_ZERO_CNT_U8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules">Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>FPM_FixedToFloat_m()</p></li>
+<li><p>FPM_FloatToFixed_m()</p></li>
+<li><p>Limit_m()</p></li>
+<li><p>Abs_f32_m ()</p></li>
+<li><p>IntplVarXY_u16_u16Xu16Y_Cnt()</p></li>
+<li><p>LPF_SvUpdate_s16InFixKTrunc_m()</p></li>
+<li><p>LPF_OpUpdate_s16InFixKTrunc_m()</p></li>
+<li><p>DiagPStep_m()</p></li>
+<li><p>DiagNStep_m()</p></li>
+<li><p>DiagFailed_m()</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<p>The data hiding functions / macros used in this module are identified below,</p>
+<ol type="1">
+<li><p>Rte_Pim_HwTrqTrimData()</p></li>
+<li><p>Rte_Pim_HwTrqScaleData()</p></li>
+<li><p>Rte_Pim_EOLTrqStepData()</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_SetNTCStatus()</p></li>
+<li><p>Rte_Call_HwTrqTrim_WriteBlock()</p></li>
+<li><p>Rte_Call_HwTrqScale_WriteBlock()</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_GetNTCFailed()</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_ResetEventStatus()</p></li>
+<li><p>Rte_Call_HwTrqTrim_GetErrorStatus()</p></li>
+</ol>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<p>The local functions/macros in this module are identified below,</p>
+<ol type="1">
+<li><p>IsTrqScaleInRng_lgc()</p></li>
+<li><p>TrqTrimPerfDiag()</p></li>
+</ol>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-hwtrq_init">Init: HwTrq_Init</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>None</p>
+<h4 id="check-faults-and-initialize-filters">Check Faults and Initialize Filters</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.wmf" /></p>
+<h2 id="periodic-functions">Periodic Functions</h2>
+<h3 id="per-hwtrq_per1">Per: HwTrq_Per1</h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>Rte_Call_HwTrq_Per1_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p>AbsPosStepSignal_Cnt_T_u08 = Rte_IRead_HwTrq_Per1_AbsPosStepSignal_Cnt_u08()</p>
+<p>Torque1_Volt_T_f32 = Rte_Iread_HwTrq_Per1_T1ADC_Volt_f32()</p>
+<p>Torque2_Volt_T_f32 = Rte_Iread_HwTrq_Per1_T2ADC_Volt_f32()</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCStatus(NTC_Num_TrqSensorRecoveryFlt, &amp;DiagTrqRecvStatus_Cnt_T_u08)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCStatus(NTC_Num_T1OutofRange, &amp;DiagT1OutofRangeStatus_Cnt_T_u08)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCStatus(NTC_Num_T2OutofRange, &amp;DiagT2OutofRangeStatus_Cnt_T_u08)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCStatus(NTC_Num_T1vsT2, &amp;DiagT1vsT2Status_Cnt_T_u08)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCStatus(NTC_Num_TrqSensorNotTrimmed, &amp;DiagTrqTrimNotPerfStatus_Cnt_T_u08)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCStatus(NTC_Num_PriSnsrTrqStorFlt, &amp;DiagTrqTrimInvalidStatus_Cnt_T_u08)</p>
+<p>AbsPosStepSignal_Cnt_T_u08 = Limit_m(AbsPosStepSignal_Cnt_T_u08, D_ZERO_CNT_U8, D_NUMTRQSTEP_CNT_U08 - 1U)</p>
+<h4 id="calculate-handwheel-torque-and-scom-validity">Calculate Handwheel Torque and SCom Validity</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.wmf" /></p>
+<h4 id="analog-error-active">Analog Error Active</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>AnaDiffHwTrq_Volt_M_f32 = DiffHwTorque_Volts_T_f32</p>
+<p>AnaHwTorque_HwNm_M_f32 = AnaHwTorque_HwNm_T_f32</p>
+<p>Rte_IWrite_HwTrq_Per1_AnaDiffHwTrq_Volt_f32(DiffHwTorque_Volts_T_f32)</p>
+<p>Rte_Iwrite_HwTrq_Per1_AnaHwTorque_HwNm_f32(AnaHwTorque_HwNm_T_f32)</p>
+<p>Rte_IWrite_HwTrq_Per1_SysCAnaHwTorque_HwNm_f32(AnaHwTorque_HwNm_T_f32)</p>
+<p>Rte_IWrite_HwTrq_Per1_ErrorActiveAnalog_Cnt_enum(ErrorActiveAnalog_Cnt_T_enum)</p>
+<p>Rte_Iwrite_HwTrq_Per1_SrlComHwTrqValid_Cnt_lgc(SrlComHwTrqValid_Cnt_T_lgc)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_HwTrq_Per1_CP1_CheckpointReached()</p>
+<h3 id="per-hwtrq_per2">Per: HwTrq_Per2</h3>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-1">Program Flow Start</h4>
+<p>Rte_Call_HwTrq_Per2_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies-1">Store Module Inputs to Local copies</h4>
+<p>CntrlDisRampComplete_Cnt_T_lgc = Rte_IRead_HwTrq_Per2_CntrlDisRampComplete_Cnt_lgc()</p>
+<p>SysCHwTorqueSqd_HwNmSq_T_f32 = Rte_IRead_HwTrq_Per2_SysCHwTorqueSqd_HwNmSq_f32()</p>
+<p>Torque1_Volt_T_f32 = Rte_Iread_HwTrq_Per2_T1ADC_Volt_f32()</p>
+<p>Torque2_Volt_T_f32 = Rte_Iread_HwTrq_Per2_T2ADC_Volt_f32()</p>
+<p>T1Trim_Volt_T_f32 = Rte_Pim_HwTrqTrimData()-&gt;T1Trim_Volts_f32</p>
+<p>T2Trim_Volt_T_f32 = Rte_Pim_HwTrqTrimData()-&gt;T2Trim_Volts_f32</p>
+<h4 id="t1-t2-out-of-range">T1 &amp; T2 Out of Range</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.wmf" /></p>
+<h4 id="t1-vs-t2-diagnostic">T1 vs T2 Diagnostic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.wmf" /></p>
+<h4 id="torque-recovery-diagnostic">Torque Recovery Diagnostic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.wmf" /></p>
+<h4 id="handwheel-diff-torque-cross-check">Handwheel Diff Torque Cross Check</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-1">Store Local copy of outputs into Module Outputs</h4>
+<p>TrqSum_Volt_M_s4p11 = TrqSum_Volt_T_s4p11</p>
+<p>TDiagFiltOut_Volt_M_s4p11 = TDiagFiltOut_Volt_T_s4p11</p>
+<p>AnaHwTorqueSqd_HwNmSq_D_f32 = AnaHwTorqueSqd_HwNmSq_T_f32</p>
+<p>HWTorqCorrLimDiff_HwNmSq_D_f32 = HwTorqCorrLimDiff_HwNmSq_T_f32</p>
+<p>HwTorqCh1vsCh2CorrLim_HwNmSq_D_f32 = HwTorqCh1vsCh2CorrLim_HwNmSq_T_f32</p>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>Rte_Call_HwTrq_Per2_CP1_CheckpointReached()</p>
+<h3 id="per-hwtrq_per3">Per: HwTrq_Per3</h3>
+<h4 id="design-rationale-3">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-2">Program Flow Start</h4>
+<p>Rte_Call_HwTrq_Per3_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies-2">Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="t1-vs-t2-diagnostic-1">T1 Vs T2 Diagnostic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-2">Store Local copy of outputs into Module Outputs</h4>
+<h4 id="program-flow-end-2">Program Flow End</h4>
+<p>Rte_Call_HwTrq_Per3_CP1_CheckpointReached()</p>
+<h2 id="serial-communication-functions">Serial Communication Functions</h2>
+<h3 id="scomm-hwtrq_scom_clrhwtrqscale">Scomm: HwTrq_Scom_ClrHwTrqScale</h3>
+<h4 id="design-rationale-4">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-3">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-3">Store Module Inputs to Local copies</h4>
+<h4 id="clear-handwheel-torque-scale-service">Clear Handwheel Torque Scale Service</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-3">Store Local copy of outputs into Module Outputs</h4>
+<p>None</p>
+<h4 id="program-flow-end-3">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="scomm-hwtrq_scom_clrhwtrqtrim">Scomm: HwTrq_Scom_ClrHwTrqTrim</h3>
+<h4 id="design-rationale-5">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-4">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-4">Store Module Inputs to Local copies</h4>
+<h4 id="clear-handwheel-torque-trim-service">Clear Handwheel Torque Trim Service</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-4">Store Local copy of outputs into Module Outputs</h4>
+<p>None</p>
+<h4 id="program-flow-end-4">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="scomm-hwtrq_scom_readhwtrqscale">Scomm: HwTrq_Scom_ReadHwTrqScale</h3>
+<h4 id="design-rationale-6">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-5">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-5">Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="read-handwheel-torque-scale-service">Read Handwheel Torque Scale Service</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-5">Store Local copy of outputs into Module Outputs</h4>
+<p>None</p>
+<h4 id="program-flow-end-5">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="scomm-hwtrq_scom_readhwtrqtrim">Scomm: HwTrq_Scom_ReadHwTrqTrim</h3>
+<h4 id="design-rationale-7">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-6">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-6">Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="read-handwheel-torque-trim-service">Read Handwheel Torque Trim Service</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image15.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-6">Store Local copy of outputs into Module Outputs</h4>
+<p>None</p>
+<h4 id="program-flow-end-6">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="scomm-hwtrq_scom_sethwtrqscale">Scomm: HwTrq_Scom_SetHwTrqScale</h3>
+<h4 id="design-rationale-8">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-7">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-7">Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="set-handwheel-torque-scale-service">Set Handwheel Torque Scale Service</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image16.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-7">Store Local copy of outputs into Module Outputs</h4>
+<p>None</p>
+<h4 id="program-flow-end-7">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="scomm-hwtrq_scom_sethwtrqtrim">Scomm: HwTrq_Scom_SetHwTrqTrim</h3>
+<h4 id="design-rationale-9">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-8">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-8">Store Module Inputs to Local copies</h4>
+<p> Rte_Read_T1ADC_Volt_f32(&amp;Torque1_Volt_T_f32)</p>
+<p>Rte_Read_T2ADC_Volt_f32(&amp;Torque2_Volt_T_f32)</p>
+<p>Rte_Read_MECCounter_Cnt_enum(&amp;MECCounter_Cnt_T_enum)</p>
+<h4 id="set-handwheel-torque-trim-service">Set Handwheel Torque Trim Service</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image17.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-8">Store Local copy of outputs into Module Outputs</h4>
+<p>None</p>
+<h4 id="program-flow-end-8">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="manual-set-hand-wheel-torque-trim">Manual Set Hand wheel Torque Trim</h3>
+<h4 id="description">Description</h4>
+<h1 class="unnumbered" id="section"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image18.wmf" /><br />
+</h1>
+<h3 id="scomm-hwtrq_scom_readeoltrqstep">Scomm: HwTrq_SCom_ReadEOLTrqStep </h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TrqStep_HwNm_T_f32</td>
+<td>float * (array of 10 float values)</td>
+<td>-10</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-1">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image19.wmf" /></p>
+<h3 id="scomm-hwtrq_scom_seteoltrqstep">Scomm: HwTrq_SCom_SetEOLTrqStep</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TrqStep_HwNm_T_f32</td>
+<td>float * (array of 10 float values)</td>
+<td>-10</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-2">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image20.wmf" /></p>
+<h2 id="local-functionmacro-definitions">Local Function/Macro Definitions</h2>
+<p>If these are numerous and defined in a separate source file then reference the source file only.</p>
+<h3 id="is-torque-scale-in-range-check">Is Torque Scale In Range Check</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 42%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>IsTrqScaleInRng_lgc</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TrqScale_VoltspDeg_T_f32</td>
+<td>Single Precision Floating Point</td>
+<td>0</td>
+<td>FULL</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>TrqSclInRng_Cnt_T_lgc</td>
+<td>BOOLEAN</td>
+<td>N/A</td>
+<td>N/A</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-3">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image21.wmf" /></p>
+<h3 id="torque-trim-performance-diagnostic">Torque Trim Performance Diagnostic</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 40%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>TrqTrimPerfDiag</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MECCounter_Cnt_T_enum</td>
+<td>ManufModeType</td>
+<td>N/A</td>
+<td>N/A</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-4">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image22.wmf" /></p>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 24%" />
+<col style="width: 31%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Calling Frequency</td>
+<td>System State(s)</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Init</td>
+<td>Once at Initialization</td>
+<td>STARTUP</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Per1</td>
+<td>2ms</td>
+<td>WARM INIT, OPERATE, DISABLE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Per2</td>
+<td>4ms</td>
+<td>WARM INIT, OPERATE, DISABLE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Per3</td>
+<td>100ms</td>
+<td>WARM INIT, OPERATE, DISABLE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Sub-Module called by (Serial Comm Function Name)</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_ClrHwTrqScale()</td>
+<td>EPSInternalPIDWrite(),EPSInternalRoutineControl()</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Scom_ClrHwTrqTrim()</td>
+<td>EPSInternalRoutineControl()</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_ReadHwTrqScale()</td>
+<td>EPSInternalPIDRead()</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Scom_ReadHwTrqTrim()</td>
+<td>EPSInternalPIDRead()</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_SetHwTrqScale()</td>
+<td>EPSInternalPIDWrite()</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Scom_SetHwTrqTrim()</td>
+<td>EPSInternalRoutineControl()</td>
+</tr>
+<tr class="even">
+<td>HwTrq_SCom_ManualSetHwTrqTrim</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>HwTrq_SCom_ReadEOLTrqStep</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>HwTrq_SCom_SetEOLTrqStep</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-1"><br />
+</h1>
+<h1 id="memory-map-definition-requirements">Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Init()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Per1()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Per2()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Per3()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_ClrHwTrqScale()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Scom_ClrHwTrqTrim()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_ReadHwTrqScale()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Scom_ReadHwTrqTrim()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_SetHwTrqScale()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_Scom_SetHwTrqTrim()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_Scom_ManualSetHwTrqTrim</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>HwTrq_SCom_ReadEOLTrqStep</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HwTrq_SCom_SetEOLTrqStep</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>IsTrqScaleInRng_lgc()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>TrqTrimPerfDiag()</td>
+<td>RTE_SA_HWTRQ_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-2"><br />
+</h1>
+<h1 id="known-issues-limitations-with-design">Known Issues / Limitations With Design</h1>
+<h1 id="inline-functions-defined-in-globalmacro.h-are-not-unit-tested">INLINE functions defined in globalmacro.h are not unit tested<br />
+</h1>
+<h1 id="revision-control-log">Revision Control Log</h1>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 68%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1.0</td>
+<td>Initial AutoSAR Release.</td>
+<td>04FEB11</td>
+<td>L.N.</td>
+</tr>
+<tr class="odd">
+<td>2.0</td>
+<td>Rte_Call_CorrDiagFiltSV_SetRamBlockStatus() added in Init() and Cross Check Diag Support Added</td>
+<td>03May11</td>
+<td>N.R.A.R</td>
+</tr>
+<tr class="even">
+<td>3.0</td>
+<td>Updated for anomaly 3258</td>
+<td>17JUN11</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>4.0</td>
+<td>Removed Cross Check Diag Support</td>
+<td>20JUL11</td>
+<td>LWW</td>
+</tr>
+<tr class="even">
+<td>5.0</td>
+<td>Changes as per FDD #04 rev008</td>
+<td>22Nov11</td>
+<td>VK</td>
+</tr>
+<tr class="odd">
+<td>5.1</td>
+<td>Changes to Scom functions passing a null pointer instead of Boolean flag for the writeblock Rte call. Changed SumFltOut_Volt_M_u5p11 and SSDiagFiltOut_Volt_M_s4p11 to display variables</td>
+<td>2Dec11</td>
+<td>VK</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><p>Per3 trigger rate moved to 100ms from 128ms</p>
+<p>Removed residual periodic specifiations</p></td>
+<td>5Dec11</td>
+<td>JJW</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Corrected GetNTCFailed RTE call arguments in Per1</td>
+<td>5Dec11</td>
+<td>VK</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Changed HwTrqScaleStatus, HwTrqTrimStatus to boolean</td>
+<td>13Dec11</td>
+<td>VK</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Matched the names of the elements in HwTrqScale_Datatype and HwTrqTrim_Datatype as in digital hw torque</td>
+<td>14Dec11</td>
+<td>VK</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Corrected Rte read for MEC</td>
+<td>14Dec11</td>
+<td>VK</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>Updated Argument to Set Scale function to match DigHwTrq</td>
+<td>15Dec11</td>
+<td>OT</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Fixed scale validity check logic</td>
+<td>16Dec11</td>
+<td>OT</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>Fixed NTC_STATUS_PASSED path anomaly, added error accumulator macros</td>
+<td>1Feb12</td>
+<td>OT</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>Fixed previous NTC_STATUS_PASSED anomaly fix, changed diff torque limit</td>
+<td>5Mar12</td>
+<td>OT</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td>Added manual write scom function for torque trim block, removed MEC</td>
+<td>20 Apr 12</td>
+<td>VK</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>Updated NTC's NTC_Num_TrqSensorScaleInvalid and NTC_Num_EEPROMDiagTrqSnrStr with NTC_Num_PriSnsrTrqStorFlt and logic to clear the fault</td>
+<td>21-Apr-12</td>
+<td>VK</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>Changes to HwTrq_SCom_ManualSetHwTrqTrim to match the name of the argument being passed. Changes to Per1 updating DiagTrqTrimInvalid_Cnt_T_lgc</td>
+<td>23-Apr-12</td>
+<td>VK</td>
+</tr>
+<tr class="even">
+<td>18</td>
+<td>Removal of polarity input (not called out in FDD)</td>
+<td>27-Apr-12</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>19</td>
+<td>Updated to FDD 04A v005</td>
+<td>06-Jun-12</td>
+<td>OT</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>Updated to FDD 04A v006</td>
+<td>14-Jun-12</td>
+<td>JWJ</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>Removed double de-reference from EOLTrqStepData pointers in Per1 and Scom functions.</td>
+<td>17-Jun-12</td>
+<td>KJS</td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>Brought in Nexteer MEC Counter</td>
+<td>23-Aug-12</td>
+<td>VK</td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>Added double de-reference to EOLTrqStepData pointers in Per1 and Scom functions.</td>
+<td>04-Sep-12</td>
+<td>VK</td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>MDD, Src mismatch corrections</td>
+<td>10-Sep-12</td>
+<td>VK</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>Added checkpoints and memmap software segment is updated for static variables</td>
+<td>27-Sep-12</td>
+<td>Selva</td>
+</tr>
+<tr class="even">
+<td>26</td>
+<td>Implemented FDD 04A v007</td>
+<td>12-Oct-12</td>
+<td>OT</td>
+</tr>
+<tr class="odd">
+<td>27</td>
+<td>Anomaly 2824 – T1 vs T2 comparison cal usage</td>
+<td>24-Oct-12</td>
+<td>OT</td>
+</tr>
+<tr class="even">
+<td>27.1.1</td>
+<td>Anomaly 4683 Correction</td>
+<td>25-Mar-13</td>
+<td>LWW</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,3307 @@
+---
+title: Wheel_Imbalance_Rejection_MDD
+linkTitle: Wheel_Imbalance_Rejection_MDD
+weight: 3
+---
+
+<h1 class="unnumbered" id="module---">Module -- </h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>The Wheel Imbalance Rejection Function corrects Handwheel vibration or oscillation issues by canceling out the appropriate HW torque disturbances detected by the steering system. This module is responsible for calculating the cancellation torque command to apply to the motor.</p>
+<h1 id="figures">Figures</h1>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.tiff" style="width:3.54167in;height:3.34375in" alt="123.tif" /></p>
+<h2 id="diagram-function-data-sharing">Diagram – Function Data Sharing</h2>
+<p>This diagram shows all data that is shared between functions within the module.</p>
+<h3 id="diagram-function-name">Diagram – Function (Name)</h3>
+<p>This diagram describes the functional characteristics and data flow of a given function.</p>
+<h1 id="variable-data-dictionary"><br />
+Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<p>(Note: Full variable names required in table.)</p>
+<p>(Note: All global variables including End Of Line data used should be shown here)</p>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 0%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs</th>
+<th colspan="2">Module Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2">HwTrq_HwNm_f32</td>
+<td>WhlImbRejCmd_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td colspan="2">QualWhlFreqL_Hz_f32</td>
+<td>WIRCmdAmpBlnd_MtrNm_f32</td>
+</tr>
+<tr class="odd">
+<td colspan="2">WhlFreqQualified_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">QualWhlFreqR_Hz_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">VehSpd_Kph_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">WIRMfgEnable_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">DiagStsWIRDisable_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">VehSpdValid_Cnt_lgc</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 13%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MaxMagFlt_Cnt_M_Str</td>
+<td>WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>DCTrendFlt_Cnt_M_Str</td>
+<td>WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>FreqDiagFlt_Cnt_M_Str</td>
+<td>WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>CorrFlt_Cnt_M_Str</td>
+<td>WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>QualFlt_Cnt_M_Str</td>
+<td>WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>MaxPersFlt_Cnt_M_Str</td>
+<td>WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>WIRCmdMag_MtrNm_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>127 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>xRefDelayR_RadpSec_M_f32[41]</td>
+<td>Single Precision Float</td>
+<td>-4</td>
+<td>4</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>xRefDelayL_RadpSec_M_f32[41]</td>
+<td>Single Precision Float</td>
+<td>-4</td>
+<td>4</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>xRefSVR_Uls_M_f32[41]</td>
+<td>Single Precision Float</td>
+<td>-2048</td>
+<td>2048</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>xRefSVL_Uls_M_f32[41]</td>
+<td>Single Precision Float</td>
+<td>-2048</td>
+<td>2048</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>WhlSpdRFiltSV_RadpSec_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>WhlSpdRFiltSV_RadpSec_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>WhlSpdRFiltSV_RadpSec_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>WhlSpdLFiltSV_RadpSec_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>WhlSpdLFiltSV_RadpSec_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>WhlSpdLFiltSV_RadpSec_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>WhlFreqRFiltSV_Hz_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>WhlFreqRFiltSV_Hz_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>WhlFreqRFiltSV_Hz_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>WhlFreqLFiltSV_Hz_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>WhlFreqLFiltSV_Hz_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>WhlFreqLFiltSV_Hz_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>WIREnTime_mS_M_u32p0</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>DistMagEnabled_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>PrevCalcEnable_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>PrevEnable_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>PrevHwTrq_HwNm_M_f32</td>
+<td>Single Precision Float</td>
+<td>-10.0</td>
+<td>10.0</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>WhlImbFltStatus_Cnt_M_b16</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>UGRRDelay1_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-256</td>
+<td>256</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>UGRLDelay1_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-256</td>
+<td>256</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>UGRRDelay2_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-256</td>
+<td>256</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>UGRLDelay2_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-256</td>
+<td>256</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>Stage1SV1_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-65536</td>
+<td>65536</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>Stage1SV2_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-65536</td>
+<td>65536</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>Stage2SV1_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-65536</td>
+<td>65536</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>Stage2SV2_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-65536</td>
+<td>65536</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>MaxMagErrorAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>CmdMagFiltSV1_MtrNm_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>CmdMagFiltSV1_MtrNm_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>CmdMagFiltSV1_MtrNm_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>CmdMagFiltSV2_MtrNm_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>CmdMagFiltSV2_MtrNm_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>CmdMagFiltSV2_MtrNm_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TrendSV_MtrNm_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>TrendSV_MtrNm_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TrendSV_MtrNm_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>TrndThrStartTime_mS_M_u32p0</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>WhlSpdCorrFltTime_mS_M_u32p0</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>RtLmtCurrMagR_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>4 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>RtLmtCurrMagL_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>4 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>EnabledComp_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>FreqEstAvg_Hz_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>40</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>FiltFreqDiffSV_MtrNm_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>FiltFreqDiffSV_MtrNm_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>FiltFreqDiffSV_MtrNm_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>254</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>FreqDiagUGRDelay1_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-256</td>
+<td>256</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>FreqDiagUGRDelay2_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>-256</td>
+<td>256</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>FrqDiagStartTime_mS_M_u32p0</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>BlndCmdMagFiltSV1_MtrNm_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="odd">
+<td>BlndCmdMagFiltSV1_MtrNm_M_Str.K_uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>BlndCmdMagFiltSV1_MtrNm_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>BlndCmdMagFiltSV2_MtrNm_M_Str</td>
+<td>LPF32KSV_Str</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+</tr>
+<tr class="even">
+<td>BlndCmdMagFiltSV2_MtrNm_M_Str.K_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>0.715390457</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>BlndCmdMagFiltSV2_MtrNm_M_Str.SV_Uls_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>LMSOutR_Uls_D_f32</td>
+<td>Single Precision Float</td>
+<td>-245760</td>
+<td>245760</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>LMSOutL_Uls_D_f32</td>
+<td>Single Precision Float</td>
+<td>-245760</td>
+<td>245760</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>FiltWhlSpdR_RadpSec_D_f32</td>
+<td>Single Precision Float</td>
+<td>-4</td>
+<td>4</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>FiltWhlSpdL_RadpSec_D_f32</td>
+<td>Single Precision Float</td>
+<td>-4</td>
+<td>4</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>FiltWhlSpdRScld_RadpSec_D_f32</td>
+<td>Single Precision Float</td>
+<td>-4</td>
+<td>4</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>FiltWhlSpdLScld_RadpSec_D_f32</td>
+<td>Single Precision Float</td>
+<td>-4</td>
+<td>4</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>CurrMagR_Uls_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>4 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>CurrMagL_Uls_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>4 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>CancelTrqOutput_MtrNm_D_f32</td>
+<td>Single Precision Float</td>
+<td>-127</td>
+<td>127</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>WhlSpdCorrPct_Pct_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>100</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>ScaleL_Uls_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>1</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>ScaleR_Uls_D_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>1</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>PeakRightTyH_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>4 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_SAVED_ZONEH_32</td>
+</tr>
+<tr class="odd">
+<td>PeakLeftTyH_Uls_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>4 * π/2</td>
+<td>WHLIMBREJ_START_SEC_VAR_SAVED_ZONEH_32</td>
+</tr>
+<tr class="even">
+<td>WIRCmpActTyH_Cnt_M_u32[3]</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_SAVED_ZONEH_32</td>
+</tr>
+<tr class="odd">
+<td>WIRMaxCompTyH_Pct_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>100</td>
+<td>WHLIMBREJ_START_SEC_VAR_SAVED_ZONEH_32</td>
+</tr>
+<tr class="even">
+<td>TrndThr2StartTime_mS_M_u32p0</td>
+<td>UINT32</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>WHLIMBREJ_START_SEC_VAR_CLEARED_32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Typedef Name</th>
+<th>Element Name</th>
+<th>User Defined Type</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>WIRDiagInfo_Str</td>
+<td>StartTime_mS_u32p0</td>
+<td>uint32</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Failed_Cnt_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ResetFlt_Cnt_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>MaxRecFailed_Cnt_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>RecoveryCntr_Cnt_u8</td>
+<td>uint8</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>k_AdaptiveMu_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_DistMagLPFKn_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td>k_EnSlewPerLoop_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_MagEstDeltaScale_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MagEstDisable_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_MagEstEnable_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MagEstFreq_Hz_f32</td>
+</tr>
+<tr class="even">
+<td>k_MagEstFreqDelta_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MagEstLeak_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_NumberOfTaps_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_FreqDiagEnable_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>k_ScaleCancel_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td>k_UGRPoleMag_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_WhlImbCmdMax_MtrNm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_WhlSpdCorrThresh_Pct_f32</td>
+</tr>
+<tr class="even">
+<td>k_WhlSpdCorrTime_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_WhlSpdLPFKn_Hz_f32</td>
+</tr>
+<tr class="even">
+<td>k_WIRRampDownTime_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>t_FreqScaleTblX_Hz_u7p9[]</td>
+</tr>
+<tr class="even">
+<td>t_FreqScaleTblY_Uls_u2p14[]</td>
+</tr>
+<tr class="odd">
+<td>t_PhaseAdjustX_Hz_u7p9[]</td>
+</tr>
+<tr class="even">
+<td>t_PhaseAdjustY_Deg_s8p7[]</td>
+</tr>
+<tr class="odd">
+<td>k_CmdMagLPFKn1_Hz_f32</td>
+</tr>
+<tr class="even">
+<td>k_CmdMagLPFKn2_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MaxMagFltRecDly_Min_f32</td>
+</tr>
+<tr class="even">
+<td>k_MaxMagFltRecLim_Cnt_u8</td>
+</tr>
+<tr class="odd">
+<td>k_CorrFltRecDly_Min_f32</td>
+</tr>
+<tr class="even">
+<td>k_CorrFltRecLim_Cnt_u8</td>
+</tr>
+<tr class="odd">
+<td>k_DCTrendFltRecDly_Min_f32</td>
+</tr>
+<tr class="even">
+<td>k_DCTrendFltRecLim_Cnt_u8</td>
+</tr>
+<tr class="odd">
+<td>k_FreqDiagFltRecDly_Min_f32</td>
+</tr>
+<tr class="even">
+<td>k_FreqDiagFltRecLim_Cnt_u8</td>
+</tr>
+<tr class="odd">
+<td>k_WIRMaxDur_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_WIRDCTrendLPFKn_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td>k_WIRDCTrendTh_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_WIRDCTrendTime_Sec_f32</td>
+</tr>
+<tr class="odd">
+<td>k_WIRMaxMag_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_WIRMaxMagDiag_Cnt_Str</td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td>k_AutoScaleEnable_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>k_AutoScaleTarget_RadpSec_f32</td>
+</tr>
+<tr class="odd">
+<td>k_CurrMagSlewPerLoop_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_FreqDiagLPFKn_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td>k_FreqDiagThresh_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_FreqDiagTimeout_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_FreqDiagUGRPoleMag_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_FreqDiagWIRAmpThresh_MtrNm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_BlndCmdMagLPFKn1_Hz_f32</td>
+</tr>
+<tr class="even">
+<td>k_BlndCmdMagLPFKn2_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td>k_WIRVehSpdEnable_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_WIRDCTrendTime2_Sec_f32</td>
+</tr>
+<tr class="odd">
+<td>k_WIRDCTrendTh2_MtrNm_f32</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Units</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_WIRQUALFLT_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0001</td>
+</tr>
+<tr class="even">
+<td>D_WIRCORRFLT_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0002</td>
+</tr>
+<tr class="odd">
+<td>D_WIRCORRFLTREC_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0004</td>
+</tr>
+<tr class="even">
+<td>D_WIRDCTRENDFLT_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0040</td>
+</tr>
+<tr class="odd">
+<td>D_WIRDCTRENDFLTREC_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0080</td>
+</tr>
+<tr class="even">
+<td>D_WIRFREQDIAGFLT_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0100</td>
+</tr>
+<tr class="odd">
+<td>D_WIRFREQDIAGFLTREC_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0200</td>
+</tr>
+<tr class="even">
+<td>D_WIRMAXMAGFLT_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0008</td>
+</tr>
+<tr class="odd">
+<td>D_WIRMAXPERSFLT_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0020</td>
+</tr>
+<tr class="even">
+<td>D_WIRMAXMAGFLTREC_CNT_B16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0x0010</td>
+</tr>
+<tr class="odd">
+<td>D_PIDIVTWO_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>1.57079632679</td>
+</tr>
+<tr class="even">
+<td>D_PITIMESSAMPLETIME_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>0.006283185307</td>
+</tr>
+<tr class="odd">
+<td>D_SECPERLOOP_SEC_F32</td>
+<td>Single precision float</td>
+<td>Seconds</td>
+<td>0.002</td>
+</tr>
+<tr class="even">
+<td>D_MSPERMIN_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>60000.0</td>
+</tr>
+<tr class="odd">
+<td>D_STOREDMINSPERCOUNT_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>0.000133333333333</td>
+</tr>
+<tr class="even">
+<td>D_RADPERDEGDIVTWO_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>0.00872664626</td>
+</tr>
+<tr class="odd">
+<td>D_CALMINSPERCOUNT_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>10.0</td>
+</tr>
+<tr class="even">
+<td>D_DURATIONDISABLE_CNT_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>18500</td>
+</tr>
+<tr class="odd">
+<td>D_FILTWHLSPDMAX_RADPSEC_F32</td>
+<td>Single precision float</td>
+<td>Rad/Sec</td>
+<td>4.0</td>
+</tr>
+<tr class="even">
+<td>D_PHASEADJMAX_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>127.0</td>
+</tr>
+<tr class="odd">
+<td>D_CNCLTRQMAX_MTRNM_F32</td>
+<td>Single precision float</td>
+<td>MtrNm</td>
+<td>127.0</td>
+</tr>
+<tr class="even">
+<td>D_UGRSVMAX_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>256.0</td>
+</tr>
+<tr class="odd">
+<td>D_LMSFILTSVMAX_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>2048.0</td>
+</tr>
+<tr class="even">
+<td>D_LEADLAGFILTSVMAX_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>65536.0</td>
+</tr>
+<tr class="odd">
+<td>D_WIRCMDMAX_MTRNM_F32</td>
+<td>Single precision float</td>
+<td>MtrNm</td>
+<td>8.0</td>
+</tr>
+<tr class="even">
+<td>D_ONEHUNDRED_PCT_F32</td>
+<td>Single precision float</td>
+<td>Percent</td>
+<td>100.0</td>
+</tr>
+<tr class="odd">
+<td>D_ONEHALF_ULS_F32</td>
+<td>Single precision float</td>
+<td>Unitless</td>
+<td>0.5</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 class="unnumbered" id="section"></h4>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ZERO_ULS_F32</td>
+</tr>
+<tr class="even">
+<td>D_2PI_ULS_F32</td>
+</tr>
+<tr class="odd">
+<td>D_2MS_SEC_F32</td>
+</tr>
+<tr class="even">
+<td>FLT_EPSILON</td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 11%" />
+<col style="width: 40%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules"><br />
+Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library and functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>TableSize_m</p></li>
+<li><p>FPM_FloatToFixed</p></li>
+<li><p>FPM_FixedToFloat</p></li>
+<li><p>LPF_OpUpdate_u16InFixKTrunc_m</p></li>
+<li><p>LPF_SvUpdate_u16InFixKTrunc_m</p></li>
+<li><p>LPF_SvUpdate_s16InFixKTrunc_m</p></li>
+<li><p>Abs_s16_m</p></li>
+<li><p>Abs_f32_m</p></li>
+<li><p>GetSystemTime_mS_u32</p></li>
+<li><p>DtrmnElapsedTime_mS_u32</p></li>
+<li></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<ol type="1">
+<li><p>Rte_Call_NxtrDiagMgr_SetNTCStatus</p></li>
+<li></li>
+</ol>
+<h2 id="global-functionsmacros-defined-by-this-module">Global Functions/Macros Defined by this Module</h2>
+<h3 id="global-function-1">Global Function #1</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 43%" />
+<col style="width: 12%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th></th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description">Description</h4>
+<p>(Place flowchart/design for local function)</p>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<h3 id="wheel-speed-in-range-check">Wheel Speed In Range Check</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 42%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>WhlSpdInRange</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>WhlSpd_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>InRange_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-1">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.emf" /></p>
+<h3 id="wheel-speed-correlation-check">Wheel Speed Correlation Check</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 42%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 7%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>WhlSpdCorrelationCheck</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>WhlSpdLeft_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WhlSpdRight_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-2">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.emf" /></p>
+<h3 id="wheel-imbalance-rejection-command">Wheel Imbalance Rejection Command</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 41%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>WIRActRejCmd</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>HwTrq_HwNm_T_f32</td>
+<td>float32</td>
+<td>-10</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WhlSpdLeft_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>WhlSpdRight_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>VehSpd_Kph_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>512</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>VehSpdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WIRDisable_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>WIRMfgEnable_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>CancelTrqOutput_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-3">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.emf" /></p>
+<h3 id="unity-gain-resonator-filter">Unity Gain Resonator Filter</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 35%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 18%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>UGRFilter_f32</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>UGRInput_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40 * 2π</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WhlFreqEst_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>UGRPoleMag_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>0.999984741210937</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>UGRDelay1_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-256</td>
+<td>256</td>
+<td>0.0084</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>UGRDelay2_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-256</td>
+<td>256</td>
+<td>0.0084</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>FilterOut_Uls_T_f32</td>
+<td>float32</td>
+<td>-512</td>
+<td>512</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-4">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.emf" /></p>
+<h3 id="calculate-minus-a1-term">Calculate Minus A1 Term</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 6%" />
+<col style="width: 19%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>CalcMinusA1Term</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>PoleMag_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>0.9999847412109375</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WhlFreqEst_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>MinusA1Term_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>1.999969482421875</td>
+<td>0.0000610</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-5">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.emf" /></p>
+<h3 id="resonator-filter">Resonator Filter</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 34%" />
+<col style="width: 10%" />
+<col style="width: 6%" />
+<col style="width: 19%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>ResFilter</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>ResFilterIn_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40 * 2π</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ResFiltTermMinA1_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>1.999969482421875</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ResFiltTermA2_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>0.999969482421875</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>UGRDelay1_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-256</td>
+<td>256</td>
+<td>0.0000153</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>UGRDelay2_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-256</td>
+<td>256</td>
+<td>0.0000153</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>FiltOut_Uls_T_f32</td>
+<td>float32</td>
+<td>-512</td>
+<td>512</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-6">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.emf" /></p>
+<h3 id="determine-enabled-amount">Determine Enabled Amount</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 17%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>DetermineEnabledAmount</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>FreqEstAvg_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>FiltWhlSpdR_RadpSec_T_f32</td>
+<td>float32</td>
+<td>-4</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>FiltWhlSpdL_RadpSec_T_f32</td>
+<td>float32</td>
+<td>-4</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>VehSpd_Kph_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>512</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>VehSpdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WIRDisable_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>WIRMfgEnable_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>Enable_Uls_T_f32</td>
+<td>float32</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0000610</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale">Design Rationale</h4>
+<blockquote>
+<p>DCTrendRecFlt, FreqRecFlt,CorRecFlt of FDD sec 5.6.2 are not checked as these faults will not set with out Setting Non recovery flt and these non recovery flt are already checked.Samething Implies for MaxCompRecFlt.</p>
+</blockquote>
+<h4 id="description-7">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.emf" /></p>
+<h3 id="algorithm-enable-calculation">Algorithm Enable Calculation</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 17%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>EnableCalc</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>FreqEstAvg_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>FiltWhlSpdR_RadpSec_T_f32</td>
+<td>float32</td>
+<td>-4</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>FiltWhlSpdL_RadpSec_T_f32</td>
+<td>float32</td>
+<td>-4</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>VehSpd_Kph_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>512</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>VehSpdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WIRDisable_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>WIRMfgEnable_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>Enable_Uls_T_f32</td>
+<td>float32</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0000610</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-8">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.emf" /></p>
+<h3 id="calculated-disturbance-magnitude">Calculated Disturbance Magnitude</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 35%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 19%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>CalcDistMag</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>CurrMag_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>4*π/2</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Peak_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>4*π/2</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>FreqEstAvg_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>Peak_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>4*π/2</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-9">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.emf" /></p>
+<h3 id="apply-autoscale">Apply AutoScale</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 35%" />
+<col style="width: 10%" />
+<col style="width: 7%" />
+<col style="width: 18%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>ApplyAutoScale</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>FiltWhlSpdR_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-4</td>
+<td>4</td>
+<td>0.00196</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>FiltWhlSpdL_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-4</td>
+<td>4</td>
+<td>0.00196</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>EnabledComp_Uls_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>1.0</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-10">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.emf" /></p>
+<h3 id="least-mean-squared-filter">Least Mean Squared Filter</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 34%" />
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 17%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>LMSFilt_f32</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>Enable_Uls_T_f32</td>
+<td>float32</td>
+<td>0.0</td>
+<td>1.0</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PrevEpsilon_Uls_T_f32</td>
+<td>float32</td>
+<td>-10</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>xRef_Uls_T_f32</td>
+<td>float32</td>
+<td>-4</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>AdaptiveMu_Uls_T_f32</td>
+<td>float32</td>
+<td>0.0</td>
+<td>0.1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>xRefDelay_Uls_T_f32[]</td>
+<td>float32</td>
+<td>-4</td>
+<td>4</td>
+<td>0.00196</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>xRefStateVar_Uls_T_f32[]</td>
+<td>float32</td>
+<td>-2048</td>
+<td>2048</td>
+<td>0.000123</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>NTaps_Cnt_T_u16</td>
+<td>uint16</td>
+<td>1</td>
+<td>30</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>Output_Uls_T_f32</td>
+<td>float32</td>
+<td>-245760</td>
+<td>245760</td>
+<td>0.00391</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-11">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.emf" /></p>
+<h3 id="phase-adjust">Phase Adjust</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 35%" />
+<col style="width: 10%" />
+<col style="width: 8%" />
+<col style="width: 18%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>PhaseAdjust_f32</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>PhaseAdjInput_Uls_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>FreqEstAvg_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>PhaseAdjOutput_Uls_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-12">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.emf" /></p>
+<h3 id="calculate-filter-coefficient">Calculate Filter Coefficient</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 17%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>CalcFilterCoeff</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>Phase_Rad_T_f32</td>
+<td>float32</td>
+<td>-π/4</td>
+<td>π/4</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>FreqEstAvg_Hz_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ZeroCoeff_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>0.244742</td>
+<td>1.0</td>
+<td>0.000123</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PoleCoeff_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>0.244742</td>
+<td>1.0</td>
+<td>0.000123</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>GainCoeff_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>0.249683</td>
+<td>4.005074</td>
+<td>0.000123</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>InvMag_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>0.414213562</td>
+<td>2.414213562</td>
+<td>0.000123</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-13">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.emf" /></p>
+<h3 id="lead-lag-filter">Lead Lag Filter</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 30%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>LeadLagFilter</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>FilterInput_Uls_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ZeroCoeff_Uls_T_f32</td>
+<td>float32</td>
+<td>0.244742</td>
+<td>1.0</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PoleCoeff_Uls_T_f32</td>
+<td>float32</td>
+<td>0.244742</td>
+<td>1.0</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>GainCoeff_Uls_T_f32</td>
+<td>float32</td>
+<td>0.249683</td>
+<td>4.005074</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>InvMag_Uls_T_f32</td>
+<td>float32</td>
+<td>0.414213562</td>
+<td>2.414213562</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>LeadLagSV1_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-65536</td>
+<td>65536</td>
+<td>0.00391</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>LeadLagSV2_Ptr_T_f32</td>
+<td>pointer to float32</td>
+<td>-65536</td>
+<td>65536</td>
+<td>0.00391</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>Output_Uls_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-14">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image15.emf" /></p>
+<h3 id="wir-diagnostics">WIR Diagnostics</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>WIRDiagnostics</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>WhlImbRejCmd_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-15">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image16.emf" /></p>
+<h3 id="diagnose-command-magnitude">Diagnose Command Magnitude</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>DiagnoseCmdMag</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>InputCommand_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-16">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image17.emf" /></p>
+<h3 id="calculate-command-amplitude">Calculate Command Amplitude</h3>
+<table>
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 37%" />
+<col style="width: 19%" />
+<col style="width: 6%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>CalcCmdAmplitude</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>InputCommand_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>CmdMagFiltSV1_Ptr_T_Str</p>
+<p>CmdMagFiltSV1_Ptr_T_Str.k_Uls_f32</p>
+<p>CmdMagFiltSV1_Ptr_T_Str.SV_Uls_f32</p></td>
+<td>Ptr to LPF32KSV_Str</td>
+<td><p>N/A</p>
+<p>0</p>
+<p>0</p></td>
+<td><p>N/A</p>
+<p>0.715390457</p>
+<p>127</p></td>
+<td><p>1.25663E-05</p>
+<p>0.0084</p></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>CmdMagFiltSV2_Ptr_T_Str</p>
+<p>CmdMagFiltSV2_Ptr_T_Str.K_Uls_f32</p>
+<p>CmdMagFiltSV2_Ptr_T_Str.SV_Uls_f32</p></td>
+<td>Ptr to LPF32KSV_Str</td>
+<td><p>N/A</p>
+<p>0</p>
+<p>0</p></td>
+<td><p>N/A</p>
+<p>0.715390457</p>
+<p>127</p></td>
+<td><p>1.25663E-05</p>
+<p>0.0084</p></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>CmdAmp_MtrNm_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>127*π/2 (*See Note)</td>
+<td>0.0084</td>
+</tr>
+</tbody>
+</table>
+<p>*Note: Range of return value is dependent on range of InputCommand input signal multiplied by π/2, therefore return value range may be less than range defined in this table if InputCommand range is lower than the range defined in this table.</p>
+<h4 id="description-17">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image18.emf" /></p>
+<h3 id="diagnose-frequency">Diagnose Frequency</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>DiagnoseFreq</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>WhlImbRejCmd_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-18">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image19.emf" /></p>
+<h3 id="diagnose-dc-trend">Diagnose DC Trend</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>DiagnoseDCTrend</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>InputCommand_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-127</td>
+<td>127</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-19">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image20.emf" /></p>
+<h3 id="process-status-bits">Process Status Bits</h3>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 33%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>ProcessStatusBits</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-20">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image21.emf" /></p>
+<h3 id="update-fault-bits">Update Fault Bits</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 15%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>UpdateFaultBits</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>DiagInfo_Ptr_T_Str</td>
+<td>pointer to WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>FaultMask_Cnt_T_b16</td>
+<td>uint16</td>
+<td>FULL</td>
+<td>FULL</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>RecoveryFaultMask_Cnt_b16</td>
+<td>uint16</td>
+<td>FULL</td>
+<td>FULL</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WhlImbFltStatus_Ptr_T_b16</td>
+<td>pointer to uint16</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-21">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image22.emf" /></p>
+<h3 id="log-compensation-activity">Log Compensation Activity</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>LogCompActivity</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>WIRCmdMag_MtrNm_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>127*π/2</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-22">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image23.emf" /></p>
+<h3 id="check-compensation-persistence">Check Compensation Persistence</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>CheckCompPers</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-23">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image24.emf" /></p>
+<h3 id="wir-fault-recovery">WIR Fault Recovery</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 15%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>WIRFltRecovery</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>DiagInfo_Ptr_T_Str</td>
+<td>pointer to WIRDiagInfo_Str</td>
+<td colspan="2">See DataType Def</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>MaxFltRecLmt_Cnt_T_u8</td>
+<td>uint8</td>
+<td>FULL</td>
+<td>FULL</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>FltRecDly_Min_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>255</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-24">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image25.emf" /></p>
+<h3 id="reset-wir-algorithm">Reset WIR Algorithm</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 32%" />
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+<col style="width: 6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>ResetWIRAlgorithm</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+<th>UTP Tol.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-25">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image26.emf" /></p>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="runtime-environment-rte-initial-values">Runtime Environment (RTE) Initial Values</h2>
+<p>This section lists the initial values of data written by this module but controlled by the RTE. After RTE initialization, the data in this table will contain these values.</p>
+<table>
+<colgroup>
+<col style="width: 53%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>HwTrq_HwNm_f32</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td>QualWhlFreqL_Hz_f32</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td>QualWhlFreqR_Hz_f32</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td>WhlFreqQualified_Cnt_lgc</td>
+<td>TRUE</td>
+</tr>
+<tr class="odd">
+<td>WhlImbRejCmd_MtrNm_f32</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td>WIRCmdAmpBlnd_MtrNm_f32</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td>DiagStsDefVehSpd_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>VehSpd_Kph_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>WIRFnEnable_Cnt_lgc</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>WIRMfgEnable_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-_init1">Init: _Init1</h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>None</p>
+<h4 id="processing">Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image27.emf" /></p>
+<h2 id="periodic-functions"><br />
+Periodic Functions</h2>
+<h3 id="per-_per1">Per: _Per1</h3>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<h4 id="rte_call_whlimbrej_per1_cp0_checkpointreachedstore-module-inputs-to-local-copies">Rte_Call_WhlImbRej_Per1_CP0_CheckpointReached()Store Module Inputs to Local copies</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image28.emf" /></p>
+<h4 id="processing-1">Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image29.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image30.emf" /></p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_WhlImbRej_Per1_CP1_CheckpointReached()</p>
+<h3 id="per-_per2">Per: _Per2</h3>
+<h4 id="design-rationale-3">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-1">Program Flow Start</h4>
+<h4 id="rte_call_whlimbrej_per2_cp0_checkpointreachedstore-module-inputs-to-local-copies">Rte_Call_WhlImbRej_Per2_CP0_CheckpointReached()Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="processing-2">Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image31.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-1">Store Local copy of outputs into Module Outputs</h4>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>Rte_Call_WhlImbRej_Per2_CP1_CheckpointReached()</p>
+<h3 id="per-_per3">Per: _Per3</h3>
+<h4 id="design-rationale-4">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-2">Program Flow Start</h4>
+<p>Rte_Call_WhlImbRej_Per3_CP0_CheckpointReached()Store Module Inputs to Local copies</p>
+<p>N/A</p>
+<h4 id="processing-3">Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image32.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-2">Store Local copy of outputs into Module Outputs</h4>
+<p>N/A</p>
+<h4 id="program-flow-end-2">Program Flow End</h4>
+<p>Rte_Call_WhlImbRej_Per3_CP1_CheckpointReached()</p>
+<h2 id="fault-recovery-functions"><br />
+Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions"><br />
+Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions"><br />
+Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions"><br />
+Serial Communication Functions</h2>
+<h3 id="scomm-whlimbrej_scom_getwirinfo">SComm: WhlImbRej_Scom_GetWIRInfo</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>WhlImbRej_Scom_GetWIRInfo</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>WIRCmpActRng1Ptr_Cnt_u32</td>
+<td>pointer to uint32</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>WIRCmpActRng2Ptr_Cnt_u32</td>
+<td>pointer to uint32</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>WIRCmpActRng3Ptr_Cnt_u32</td>
+<td>pointer to uint32</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>AlgFltStatusPtr_Cnt_b16</td>
+<td>pointer to uint16</td>
+<td>FULL</td>
+<td>FULL</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>WIRMaxCompPtr_Pct_f32</td>
+<td>pointer to float32</td>
+<td>0</td>
+<td>100</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>N/A</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-5">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-3">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p>N/A</p>
+<h4 id="processing-4">Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image33.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-3">Store Local copy of outputs into Module Outputs</h4>
+<p>N/A</p>
+<h4 id="program-flow-end-3">Program Flow End</h4>
+<p>N/A</p>
+<h2 id="section-1"><br />
+</h2>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>The WhlImbRej_Per1() function must be called prior to the module which sums in the WIR output.</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>_Init1</td>
+<td>Once at Init</td>
+<td>Cold Init</td>
+</tr>
+<tr class="even">
+<td>_Per1</td>
+<td>2 ms</td>
+<td>OPERATE</td>
+</tr>
+<tr class="odd">
+<td>_Per2</td>
+<td>4 ms</td>
+<td>OPERATE</td>
+</tr>
+<tr class="even">
+<td>_Per3</td>
+<td>2 ms</td>
+<td>OFF, WARMINIT, DISABLE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>WhlImbRej_Scom_GetWIRInfo</td>
+<td>Diagnostic Services</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-2"></h1>
+<h1 id="memory-map-definition-requirements"><br />
+Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>_Init1</td>
+<td>RTE_START_SEC_AP_WHLIMBREJ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>_Per1</td>
+<td>RTE_START_SEC_AP_WHLIMBREJ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>_Per2</td>
+<td>RTE_START_SEC_AP_WHLIMBREJ_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>_Per3</td>
+<td>RTE_START_SEC_AP_WHLIMBREJ_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>WhlImbRej_Scom_GetWIRInfo</td>
+<td>RTE_START_SEC_AP_WHLIMBREJ_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-3"></h2>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>WhlSpdCorrelationCheck</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>WhlSpdInRange</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>DetermineEnabledAmount</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>EnableCalc</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>WIRActRejCmd</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>CalcDistMag</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>UGRFilter_f32</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>CalcMinusA1Term</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>ResFilter</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>LMSFilt_f32</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>PhaseAdjust_f32</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>CalcFilterCoeff</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>LeadLagFilter</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>WIRDiagnostics</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>DiagnoseCmdMag</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>CalcCmdAmplitude</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>DiagnoseFreq</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>DiagnoseDCTrend</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>LogCompActivity</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>CheckCompPers</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>WIRFltRecovery</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>ResetWIRAlgorithm</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>ApplyAutoScale</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="even">
+<td>ProcessStatusBits</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+<tr class="odd">
+<td>UpdateFaultBits</td>
+<td>N/A (Inline with calling function)</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-4"></h1>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>Inline functions defined in globalmacro.h are not unit tested</p></li>
+<li><p>Safety Critical WIR Diagnostics are not implemented in this ver.</p></li>
+</ol>
+<h1 class="unnumbered" id="revision-control-log"><br />
+Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Item #</strong></th>
+<th><strong>Rev #</strong></th>
+<th><strong>Change Description</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Author Initials</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>Initial version</td>
+<td>14-Jul-11</td>
+<td>LWW</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td>Fixed MDD typos found during UTP. Made changes required from FDD</td>
+<td>21-Jul-11</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>Changed all WIRDiagInfo_T function parameters to be passed through address so that data elements can be modified in functions they are passed to.</td>
+<td>25-Jul-11</td>
+<td>LWW</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>4</td>
+<td>Removed phase adjust enable calibration and added frequency diagnostic enable calibration.</td>
+<td>27-Jul-11</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>5</td>
+<td>Fixed MDD typos found during UTP. Added WIR enable global input</td>
+<td>04-Aug-11</td>
+<td>LWW</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>6</td>
+<td>Corrected anomaly in DiagnoseFreq function, added enum value for SetNTCStatus function.</td>
+<td>17-Oct-11</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>7</td>
+<td>Updates for FDD changes: moved input qualification out of this module to better match FDD, added vehicle speed check and new algorithm Enable signals.</td>
+<td>20-Feb-12</td>
+<td>LWW</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>8</td>
+<td>Updated to define UTP tolerances on local functions that are passed pointers. Anomaly corrections per new FDD revision.</td>
+<td>25-May-12</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>9</td>
+<td><p>Updated as per FDD Ver 005(Excluding SafetyCritical functions) and Ver 006</p>
+<ol type="1">
+<li><p>k_WIRDCTrendTime_Sec_f32 default value and resolution changed.</p></li>
+<li><p>Two new cals are added: k_WIRDCTrendTh2_MtrNm_f32, k_WIRDCTrendTime2_Sec_f32</p></li>
+<li><p>Global Input WIRFnEnable is changed to DiagStatus</p></li>
+<li><p>In Diagnose Freq(), Abs is done after LowPassFilter</p></li>
+<li><p>In DetermineEnableAmt(), MaxMagRecFlt check is removed</p></li>
+<li><p>LPF are changed from Fixed type to Floating type(And related range changes are shown in DD)</p></li>
+</ol></td>
+<td>18-July-12</td>
+<td>NRAR</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>10</td>
+<td>Added checkpoints and memmap software segment is updated for static variables</td>
+<td>24-Sep-12</td>
+<td>Selva</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>11</td>
+<td>Changed Per2 trigger rate from 8ms to 4ms.</td>
+<td>24-Oct-12</td>
+<td>BWL</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>12</td>
+<td>Update NTC number constant to VLF per new version of StdDef.</td>
+<td>13-Nov-12</td>
+<td>BWL</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>13</td>
+<td>Updated the tolerance for the pointer variables in LeadLagFilter()</td>
+<td>01-Apr-13</td>
+<td>VK</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,250 @@
+---
+title: Metrics_Integration_Manual
+linkTitle: Metrics_Integration_Manual
+weight: 3
+---
+
+<h1 class="TOC-Heading" id="contents">Contents</h1>
+<p><a href="#dependencies">1 Dependencies <span>1</span></a></p>
+<p><a href="#configuration">2 Configuration <span>1</span></a></p>
+<p><a href="#build-time-config">2.1 Build Time Config <span>1</span></a></p>
+<p><a href="#generator-config">2.2 Generator Config <span>2</span></a></p>
+<p><a href="#integration-project-changes">3 Memory Mapping <span>2</span></a></p>
+<p><a href="#mapping">3.1 Mapping <span>2</span></a></p>
+<p><a href="#usage">3.2 Usage <span>2</span></a></p>
+<h1 id="dependencies">Dependencies</h1>
+<table>
+<caption><p>: ARM Cortex R4 Memory Usage<br />
+Revision Control Log</p></caption>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Required Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rte</td>
+<td><p>Rte_Task_Dispatch() hooks</p>
+<p>VFB Trace hooks</p></td>
+</tr>
+<tr class="even">
+<td>Dio</td>
+<td>Dio_WriteChannel()</td>
+</tr>
+<tr class="odd">
+<td>Port</td>
+<td>Port_SetPinDirection()</td>
+</tr>
+<tr class="even">
+<td>NxtrLib</td>
+<td><p>DtrmnElapsedTime_uS_u32()</p>
+<p>GetSystemTime_uS_u32()</p></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Os</td>
+<td><p>osdNumberOfAllTasks constant value</p>
+<p>osGetStackUsage</p>
+<p>oskTcbStackTop</p>
+<p>oskTcbStackBottom</p></td>
+</tr>
+</tbody>
+</table>
+<h1 id="configuration">Configuration</h1>
+<h2 id="build-time-config">Build Time Config</h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 50%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+<th>SWC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>BC_METRICS_TASKCPUUSEMASK</td>
+<td>STD_ON enables build of the task use masking functionality to excluded a user defined set of task CPU use times from the CPU use calculation.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>BC_METRICS_STACKUSE</td>
+<td>STD_ON enables build of the Stack Use monitoring</td>
+<td>Metrics</td>
+</tr>
+<tr class="odd">
+<td>BC_METRICS_CPUUSEDIO</td>
+<td>STD_ON enables build of the CPU Use digital output based monitoring</td>
+<td>Metrics</td>
+</tr>
+<tr class="even">
+<td>BC_METRICS_CPUUSETMR</td>
+<td>STD_ON enables build of the CPU Use timer based monitoring</td>
+<td>Metrics</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>ENABLE_CPUUSE_DIO</td>
+<td>If defined then CPU usage is output via a DIO where the DIO is high while the CPU is not in the background task.</td>
+<td>Metrics</td>
+</tr>
+<tr class="odd">
+<td>RTE_VFB_TRACE=1</td>
+<td>Enable Rte’s VFB trace functionality to support Rte_Task_Dispatch() hooks</td>
+<td>Rte</td>
+</tr>
+<tr class="even">
+<td>Rte_Task_Dispatch</td>
+<td>Enable Rte’s Rte_Task_Dispatch() hooks</td>
+<td>Rte</td>
+</tr>
+</tbody>
+</table>
+<h2 id="generator-config">Generator Config</h2>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 53%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+<th>SWC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dio Channel Name: “Metrics”</td>
+<td>Required when ENABLE_CPUUSE_DIO is defined</td>
+<td>Dio</td>
+</tr>
+<tr class="even">
+<td>RTE VFB Trace Hooks</td>
+<td><ol type="1">
+<li><p>Enable the option “Enable VFB Tracing” under Generation Parameters.</p></li>
+<li><p>Define/Import task wait event, and wait event return hooks. Insert task start into the wait event return hook, and task end into wait the wait event hook.</p></li>
+<li><p>Define/Import all desired runnable Start and Return hooks in the “Trace function“ dialog.</p></li>
+</ol>
+<p>Caveats:</p>
+<ul>
+<li><p>The runnable runtime metrics methodology requires all preemption entry and exit points are instrumented with Metrics_TaskStart/End to provide the ability to measure and subsequently account for preemption time in the preempted entity.</p>
+<ul>
+<li><p>Basic Tasks do not provide an Rte Exit hook, therefore the Metrics_TaskEnd( Id ) must be integrated in the return hook of the last runnable in the Task list.</p></li>
+<li><p>Extended Tasks do provide start and end hooks and therefore do not require the integrator to place the Metrics_TaskEnd( Id ) in any runnable end hook.</p></li>
+</ul></li>
+<li><p><strong>Tracking all runnables is likely to impact task run times significantly.</strong> <strong>It may make more sense to enable runnable trace hooks only as necessary.</strong></p></li>
+</ul></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>MPU Global Read Access</td>
+<td>GetSystemTime and Dio_WriteChannel Metrics Channel accessed registers must be readable across all application and ISR contexts.</td>
+<td>Os</td>
+</tr>
+<tr class="even">
+<td>MPU Global Read/Write Access</td>
+<td><p>Metrics data structures must be R/W across all application and ISR contexts.</p>
+<p>ATTENTION! The metrics data structures are very large, so ensure that adequate memory is allocated to the Global Shared region</p></td>
+<td>OS</td>
+</tr>
+</tbody>
+</table>
+<h2 id="integration-project-changes">Integration Project Changes</h2>
+<ol type="1">
+<li><p>Modify the required BSW Irq source functions to place the Metrics_TaskStart and Metrics_TaskEnd hooks around the ISR’s. The recommended practice is to make a copy of the delivered source file renamed to *_NxtrMetrics.c and conditionaly build the altered file in place of the delivered file for Metrics builds.</p></li>
+<li><p>Modify SchM.c to place the Metrics_TaskStart hook and Metrics_TaskEnd calls appropriately at around the tasks. Note that it might be necessary to place the hooks at a point in the task that will be overwritten when the SchM.c is generated. Diligence will need to used after generation to ensure that the hooks are not inadvertently removed.</p></li>
+<li><p>Modify ApplCallbacks.c to place Metrics_TaskStart and Metrics_TaskEnd calls appropriately around tasks. Dilligence will be required to ensure the hooks are not removed.</p></li>
+</ol>
+<h1 id="memory-mapping">Memory Mapping</h1>
+<h2 id="mapping">Mapping</h2>
+<table>
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>METRICS_START_SEC_VAR_CLEARED_UNSPECIFIED</td>
+<td>Writable across all applications</td>
+</tr>
+</tbody>
+</table>
+<p>* Each …START_SEC… constant is terminated by a …STOP_SEC… constant as specified in the AUTOSAR Memory Mapping requirements.</p>
+<h2 id="usage">Usage</h2>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 23%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>RAM</th>
+<th>ROM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Software task time stamping of task execution</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Stack usage monitoring</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Item #</strong></th>
+<th><strong>Rev #</strong></th>
+<th><strong>Change Description</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Author Initials</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>

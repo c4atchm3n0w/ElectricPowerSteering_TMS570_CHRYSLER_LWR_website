@@ -1,0 +1,934 @@
+---
+title: PAwTO_MDD
+linkTitle: PAwTO_MDD
+weight: 5
+---
+
+<h1 class="unnumbered" id="module---">Module -- </h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This function describes the algorithms used to implement the activation logic for torque overlay functionality related to park assist.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="diagram-component-diagram">Diagram – Component Diagram</h2>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:3.06736in;height:4.94028in" /></p>
+<h1 id="variable-data-dictionary"><br />
+Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<p>(Note: Full variable names required in table.)</p>
+<p>(Note: All global variables including End Of Line data used should be shown here)</p>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 0%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs</th>
+<th colspan="2">Module Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2">PATrqOvCmdRqst_HwNm_f32</td>
+<td>PrkAssistActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2">PAEnableRqst_Cnt_lgc</td>
+<td>PrkAssistState_Cnt_u08</td>
+</tr>
+<tr class="odd">
+<td colspan="2">PAIntSystemFltActive_Cnt_lgc</td>
+<td>HandsOnDetect_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2">PAErrInterfaceActive_Cnt_lgc</td>
+<td>PrkAssistSuspend_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td colspan="2">PAExtSystemFltActive_Cnt_lgc</td>
+<td>PABoostCurveSwitch_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2">VehicleSpeed_Kph_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">TrqOvReverseGearEngage_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">PAWheelCriteriaMet_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">LimitPercentFiltered_Uls_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">DiagStsNonRecRmpToZeroFltPres_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">DiagStsRecRmpToZeroFltPres_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">TOEOLDisable_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">HwTorque_HwNm_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">PrkAsstSlewComplete_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">PrkAsstFuncPresent_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">PAWhlDirRLStat_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">PAWhlDirRRStat_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">PAWhlPlsCntRLValid_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">PAWhlPlsCntRRValid_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">PAManoeuvrePhase_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">IWSSCalcVspd_Kph_f32</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PAwTO_PrkAssistState_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>PAWTO_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>PAwTO_VSpdActvnMet_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>PAWTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_IWSSComputedSpin_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>PAWTO_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>PAwTO_HandsOnHwTrqSV_HwNm_M_s4p27</td>
+<td>7.45058E-09</td>
+<td>-10</td>
+<td>10</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_BoostCurveSwitchTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>PAwTO_LimitPercentFilteredTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_RvsGearTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>PAwTO_TrqOvRqNotZeroTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_VehSpdNotLowTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>PAwTO_IWSSWhlSpinTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_IWSSWhlSpinClrTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>PAwTO_ExcessVehSpdTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_ExcessVehSpdClrTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>PAwTO_MovMismatchTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>PAwTO_MovMismatchClrTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>PAwTO_VehicleSpeedMismatchTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>PAWTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>k_HandsOnLPFKn_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_TrqOverlayHandsOnTrq_HwNm_u5p27</td>
+</tr>
+<tr class="odd">
+<td>k_PARvsGearChkTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_PATrqOvNotZeroChkTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_PAVehSpdNotLowTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_PAVSpdNotLowMin_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_PAVSpdNotLowMax_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_PAIWSSWhlSpinSetTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_PAIWSSWhlSpinClrTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_PAExcessVehSpdSetTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_PAExcessVehSpdClrTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_PAExcessVehSpd_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_PAMovMismatchSetTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_PAMovMismatchClrTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_PAMovMismatchVSpd_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_PAVspdMismatchSetTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_PAEIWSSChkVspd_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_PABoostCurveTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_TrqOverlayLimitPerc_Uls_f32</td>
+</tr>
+<tr class="even">
+<td>k_TrqOverlaySuspendTime_mS_u16</td>
+</tr>
+</tbody>
+</table>
+<h2 id="program-fixed-constants">Program (fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Units</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_PASTATEINACTIVE_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>D_PASTATEACTIVE_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_PASTATEINHIBITED_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>D_PASTATERECOVERABLE_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>D_STDSTIL_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>D_FORWARD_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_BACKWRD_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>D_INVALID_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>D_MANOEUVREPAHSEBKWD_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>D_MANOEUVREPAHSEFWD_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_PARVSGEARMASK_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>D_PATRQOVNOTZEROMASK_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>D_PAVSPDNOTLOW_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<h4 class="unnumbered" id="section"></h4>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ZERO_ULS_F32</td>
+</tr>
+<tr class="even">
+<td>D_ONE_CNT_U8</td>
+</tr>
+<tr class="odd">
+<td>FLT_EPSILON</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 11%" />
+<col style="width: 40%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T2_IWSSCOMPSPIN_CNT_U08</td>
+<td>1</td>
+<td><p>{</p>
+<p>{D_STDSTIL_CNT_U08, D_FORWARD_CNT_U08, D_BACKWRD_CNT_U08, D_STDSTIL_CNT_U08},</p>
+<p>{D_FORWARD_CNT_U08, D_FORWARD_CNT_U08, D_FORWARD_CNT_U08, D_FORWARD_CNT_U08},</p>
+<p>{D_BACKWRD_CNT_U08, D_FORWARD_CNT_U08, D_BACKWRD_CNT_U08, D_BACKWRD_CNT_U08},</p>
+<p>{D_STDSTIL_CNT_U08, D_FORWARD_CNT_U08, D_BACKWRD_CNT_U08, D_INVALID_CNT_U08}</p>
+<p>};</p></td>
+<td>PAWTO_START_SEC_CONST_8</td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules"><br />
+Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library and functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>FPM_FloatToFixed_m</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_SetNTCStatus</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_GetNTCActive</p></li>
+<li><p>Rte_Call_SystemTime_GetSystemTime_mS_u32</p></li>
+<li><p>Rte_Call_SystemTime_DtrmnElapsedTime_mS_u16</p></li>
+<li><p>LPF_SvUpdate_s16InFixKTrunc_m</p></li>
+<li><p>Abs_s32_m</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<ol type="1">
+<li><p>Rte_Mode_SystemState_Mode</p></li>
+</ol>
+<ol type="1">
+<li></li>
+</ol>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="runtime-environment-rte-initial-values">Runtime Environment (RTE) Initial Values</h2>
+<p>This section lists the initial values of data written by this module but controlled by the RTE. After RTE initialization, the data in this table will contain these values.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DiagStsNonRecRmpToZeroFltPres_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>DiagStsRecRmpToZeroFltPres_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>HandsOnDetect_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>HwTorque_HwNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>IWSSCalcVspd_Kph_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>LimitPercentFiltered_Uls_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>PABoostCurveSwitch_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PAEnableRqst_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>PAErrInterfaceActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PAExtSystemFltActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>PAIntSystemFltActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PAManoeuvrePhase_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>PATrqOvCmdRqst_HwNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>PAWheelCriteriaMet_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>PAWhlDirRLStat_Cnt_u08</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>PAWhlDirRRStat_Cnt_u08</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>PAWhlPlsCntRLValid_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PAWhlPlsCntRRValid_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>PrkAssistActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PrkAssistState_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>PrkAssistSuspend_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PrkAsstFuncPresent_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>PrkAsstSlewComplete_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>TOEOLDisable_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>TrqOvReverseGearEngage_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>VehicleSpeed_Kph_f32</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-pawto_init1void">Init: PAwTO_Init1(void)</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>This init function initializes the hand wheel torque low pass filter, and the fault timers. Also initializes the state from the perspective of the SCom module.</p>
+<h4 id="module-outputs">Module Outputs</h4>
+<p>None</p>
+<h4 id="module-internal">Module Internal </h4>
+<p>HwTorque_HwNm_T_f32 = Rte_IRead_PAwTO_Init1_HwTorque_HwNm_f32()</p>
+<p>PAwTO_HandsOnHwTrqSV_HwNm_M_s4p27 = FPM_FloatToFixed_m(HwTorque_HwNm_T_f32, s4p27_T)</p>
+<p>Rte_Call_SystemTime_GetSystemTime_mS_u32(&amp;Time_mS_T_u32)</p>
+<p>PAwTO_BoostCurveSwitchTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_LimitPercentFilteredTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_RvsGearTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_TrqOvRqNotZeroTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_VehSpdNotLowTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_IWSSWhlSpinTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_IWSSWhlSpinClrTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_ExcessVehSpdTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_ExcessVehSpdclrTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_MovMismatchTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_MovMismatchClrTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>PAwTO_VehicleSpeedMismatchTimer_mS_M_u32 = Time_mS_T_u32</p>
+<p>Rte_Call_PrkAssistState_SCom_Transition(D_PASTATEINACTIVE_CNT_U08)</p>
+<h2 id="periodic-functions"><br />
+Periodic Functions</h2>
+<p>(Note: For multiple periodic functions, insert new headers at the “Header 2” level – subset of “5.2 Periodic Functions” and follow the same sub-section design shown below)</p>
+<h3 id="per-pawto_per1void">Per: PAwTO_Per1(void)</h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>This periodic handles all portions of PAwTO with a 2ms trigger rate.</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>Rte_Call_PAwTO_Per1_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p>DiagStsNonRecRmpToZeroFltPres_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_DiagStsNonRecRmpToZeroFltPres_Cnt_lgc()</p>
+<p>DiagStsRecRmpToZeroFltPres_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_DiagStsRecRmpToZeroFltPres_Cnt_lgc()</p>
+<p>HwTorque_HwNm_T_f32 = Rte_IRead_PAwTO_Per1_HwTorque_HwNm_f32()</p>
+<p>LimitPercentFiltered_Uls_T_f32 = Rte_IRead_PAwTO_Per1_LimitPercentFiltered_Uls_f32()</p>
+<p>PAEnableRqst_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PAEnableRqst_Cnt_lgc()</p>
+<p>PAErrInterfaceActive_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PAErrInterfaceActive_Cnt_lgc()</p>
+<p>PAExtSystemFltActive_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PAExtSystemFltActive_Cnt_lgc()</p>
+<p>PAIntSystemFltActive_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PAIntSystemFltActive_Cnt_lgc()</p>
+<p>PAWheelCriteriaMet_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PAWheelCriteriaMet_Cnt_lgc()</p>
+<p>PrkAsstFuncPresent_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PrkAsstFuncPresent_Cnt_lgc()</p>
+<p>PrkAsstSlewComplete_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_PrkAsstSlewComplete_Cnt_lgc()</p>
+<p>TrqOvReverseGearEngage_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_TrqOvReverseGearEngage_Cnt_lgc()</p>
+<p>TOEOLDisable_Cnt_T_lgc = Rte_IRead_PAwTO_Per1_TOEOLDisable_Cnt_lgc()</p>
+<p>VSpdActvnMet_Cnt_T_lgc = PAwTO_VSpdActvnMet_Cnt_M_lgc</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_ExVoltageLow, &amp;NTCLowBattVtg_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_02, &amp;ParkAsstActvnFailed_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_08, &amp;NTCPAVspdMismatch_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_05, &amp;NTCPAIWSSVspdValidity_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_06, &amp;NTCPAExcessVspd_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_07, &amp;NTCPARationalityChk_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_InvalidMsg_W, &amp;NTCTireCircmInvalid_Cnt_T_lgc)</p>
+<h4 id="hands-on-detection">Hands On Detection</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.wmf" /></p>
+<h4 id="process-for-prkassist_activate-flag">Process for PrkAssist_Activate Flag</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.emf" /></p>
+<h4 id="process-pa_boostcurv_switch-output">Process PA_BoostCurv_Switch Output</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.emf" /></p>
+<h4 id="processing-for-prkassist_suspend-flag">Processing for PrkAssist_Suspend Flag</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.emf" /></p>
+<h4 id="prkassist_state">PrkAssist_State</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.wmf" /></p>
+<h4 id="inactive-transitions">Inactive Transitions</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.emf" /></p>
+<h4 id="active-transitions">Active Transitions</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.emf" /></p>
+<h4 id="recoverable-transitions">Recoverable Transitions</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.emf" /></p>
+<h4 id="transition-complete">Transition Complete</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_PawTO_Per1_HandsOnDetect_Cnt_lgc(HandsOnDetect_Cnt_T_lgc)</p>
+<p>Rte_Iwrite_PawTO_Per1_PABoostCurveSwitch_Cnt_lgc(PABoostCurveSwitch_Cnt_T_lgc)</p>
+<p>Rte_Iwrite_PawTO_Per1_PrkAssistActive_Cnt_lgc(PrkAssistActive_Cnt_T_lgc)</p>
+<p>Rte_Iwrite_PawTO_Per1_PrkAssistState_Cnt_u08(PrkAssistState_Cnt_T_u08)</p>
+<p>Rte_Iwrite_PawTO_Per1_PrkAssistSuspend_Cnt_lgc(PrkAssistSuspend_Cnt_T_lgc)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_PawTO_Per1_CP1_CheckpointReached()</p>
+<h3 id="per-pawto_per2void"><br />
+Per: PawTO_Per2(void)</h3>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<p>This periodic handles all portions of PawTO with a 10ms trigger rate.</p>
+<h4 id="program-flow-start-1">Program Flow Start</h4>
+<p>Rte_Call_PawTO_Per2_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies-1">Store Module Inputs to Local copies</h4>
+<p>IWSSCalcVspd_Kph_T_f32 = Rte_Iread_PawTO_Per2_IWSSCalcVspd_Kph_f32()</p>
+<p>PAEnableRqst_Cnt_T_lgc = Rte_Iread_PawTO_Per2_PAEnableRqst_Cnt_lgc()</p>
+<p>PAManoeuvrePhase_Cnt_u08 = Rte_Iread_PawTO_Per2_PAManoeuvrePhase_Cnt_u08()</p>
+<p>PATrqOvCmdRqst_HwNm_T_f32 = Rte_Iread_PawTO_Per2_PATrqOvCmdRqst_HwNm_f32()</p>
+<p>PAWhlDirRLStat_Cnt_T_u08 = Rte_Iread_PawTO_Per2_PAWhlDirRLStat_Cnt_u08()</p>
+<p>PAWhlDirRRStat_Cnt_T_u08 = Rte_Iread_PawTO_Per2_PAWhlDirRRStat_Cnt_u08()</p>
+<p>PAWhlPlsCntRLValid_Cnt_T_lgc = Rte_Iread_PawTO_Per2_PAWhlPlsCntRLValid_Cnt_lgc()</p>
+<p>PAWhlPlsCntRRValid_Cnt_T_lgc = Rte_Iread_PawTO_Per2_PAWhlPlsCntRRValid_Cnt_lgc()</p>
+<p>TrqOvReverseGearEngage_Cnt_T_lgc = Rte_Iread_PawTO_Per2_TrqOvReverseGearEngage_Cnt_lgc()</p>
+<p>VehicleSpeed_Kph_T_f32 = Rte_Iread_PawTO_Per2_VehicleSpeed_Kph_f32()</p>
+<p>PrkAssistState_Cnt_T_u08 = PawTO_PrkAssistState_Cnt_M_u08</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_05, &amp;NTCPAIWSSVspdValidity_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_06, &amp;NTCPAExcessVspd_Cnt_T_lgc)</p>
+<p>Rte_Call_NxtrDiagMgr_GetNTCActive(NTC_Num_VLF_07, &amp;NTCPARationalityChk_Cnt_T_lgc)</p>
+<p>PAWhlDirRLStat_Cnt_T_u08 = Min_m(PAWhlDirRLStat_Cnt_T_u08, D_INVALID_CNT_U08)</p>
+<p>PAWhlDirRRStat_Cnt_T_u08 = Min_m(PAWhlDirRRStat_Cnt_T_u08, D_INVALID_CNT_U08)</p>
+<p>PrkAsstFuncPresent_Cnt_T_lgc = Rte_IRead_PAwTO_Per2_PrkAsstFuncPresent_Cnt_lgc()</p>
+<h4 id="incorrect-park-assist-activation-diagnostic">Incorrect Park Assist Activation Diagnostic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.emf" /></p>
+<h4 id="torque-overlay-zero-check">Torque Overlay Zero Check</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.emf" /></p>
+<h4 id="vehicle-speed-check">Vehicle Speed Check</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.emf" /></p>
+<h4 id="iwss-signal-validity-check-and-wheel-spin-signal-processing">IWSS Signal Validity Check and Wheel Spin Signal Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.emf" /></p>
+<h4 id="iwss-wheel-spin-inactive">IWSS Wheel Spin Inactive</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image15.emf" /></p>
+<h4 id="calculate-iwss-computed-spin">Calculate IWSS Computed Spin</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image16.wmf" /></p>
+<h4 id="excessive-vehicle-speed-condition">Excessive Vehicle Speed Condition</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image17.emf" /></p>
+<h4 id="excess-veh-speed-inactive">Excess Veh Speed Inactive</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image18.emf" /></p>
+<h4 id="actual-vehicle-longitudinal-movement-and-pppa-computed-movement-mismatch-condition">Actual Vehicle Longitudinal Movement and PPPA Computed Movement Mismatch Condition</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image19.emf" /></p>
+<h4 id="move-mismatch-inactive">Move Mismatch Inactive</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image20.emf" /></p>
+<h4 id="esc-and-iwss-vehicle-speed-signal-mismatch-condition">ESC and IWSS Vehicle Speed Signal Mismatch Condition</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image21.emf" /></p>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>Rte_Call_PawTO_Per2_CP1_CheckpointReached()</p>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>The order of execution of the two periodic is not important.</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PawTO_Per1</td>
+<td>2ms</td>
+<td>Warm Init, Disable, Operate</td>
+</tr>
+<tr class="even">
+<td>PawTO_Per2</td>
+<td>10ms</td>
+<td>Warm Init, Disable, Operate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt;None&gt;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-1"></h1>
+<h1 id="memory-map-definition-requirements">Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PawTO_Init1</td>
+<td>RTE_START_SEC_AP_HALFTO_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>PawTO_Per1</td>
+<td>RTE_START_SEC_AP_HALFTO_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>PawTO_Per2</td>
+<td>RTE_START_SEC_AP_HALFTO_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-2"></h2>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>Inline functions in GlobalMacro.h are not unit tested.</p></li>
+</ol>
+<h1 id="revision-control-log"><br />
+Revision Control Log</h1>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 68%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Initial component creation.</td>
+<td>5-Nov-12</td>
+<td>BWL</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Anomaly 4434,4534 PawTO_IWSSWhlSpinTimer_mS_M_u32 used multiple times</td>
+<td>21-MAR-13</td>
+<td>MRS</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Anomaly fixes 4767,4768,4777</td>
+<td>12-APR-13</td>
+<td>Srikanth</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Anomaly 4815, 4816</td>
+<td>18-Apr-13</td>
+<td>Srikanth</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Update to FDD 40B v004</td>
+<td>09-May-13</td>
+<td>BDO</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Update to FDD 40B v005</td>
+<td>19-Jun-13</td>
+<td>SP</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Update to CF-08A v001</td>
+<td>09-Jul-13</td>
+<td>SP</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Added logic to pass the NTCs if the enable criteria is FALSE</td>
+<td>08-Oct13</td>
+<td>MR</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Changed GetNTCFailed to GetNTCActive macro.</td>
+<td>22-Oct-13</td>
+<td>MR</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>Updated to CF-08A Park Assist rev 004</td>
+<td>05-Feb-14</td>
+<td>VT</td>
+</tr>
+</tbody>
+</table>

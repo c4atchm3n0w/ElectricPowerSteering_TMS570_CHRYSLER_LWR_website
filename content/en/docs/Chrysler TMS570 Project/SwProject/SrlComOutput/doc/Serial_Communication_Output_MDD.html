@@ -1,0 +1,1189 @@
+---
+title: Serial_Communication_Output_MDD
+linkTitle: Serial_Communication_Output_MDD
+weight: 17
+---
+
+<h1 class="unnumbered" id="module-serial-communications-output">Module – Serial Communications Output</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>The <strong>Serial Communications</strong> <strong>Output</strong> module provides a signal level interface between the EPS application layer and the serial communications software. Provide for the network management functionality for the serial communications interface. This module will be customized for each distinct vehicle platform. This module will be responsible for converting the range and resolution of the Application Layer variables to the range and resolution of the associated serial communications signals.</p>
+<p>This module processes the data for transmit signals that are sent from the EPS controller to other ECUs on the communication bus. Global application input data is scaled appropriately and then transferred to the serial communications Interaction Layer using function calls or macros provided. Similarly, the Serial Communications <strong>Input</strong> module, takes the signal data that is received from the Interaction Layer, scales the data as required by the EPS controller and transfers the updated global data to the EPS application software.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="component-diagram">Component Diagram</h2>
+<p>This diagram shows all data that is shared between functions within the module.</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:2.51528in;height:4.2in" /></p>
+<h1 id="variable-data-dictionary">Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<p>(Note: Full variable names required in table.)</p>
+<table>
+<colgroup>
+<col style="width: 48%" />
+<col style="width: 51%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Module Inputs (Global Variable Name)</td>
+<td>Module Outputs (Global Variable Name)</td>
+</tr>
+<tr class="even">
+<td>ATermActive_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>ActiveFunctionBits_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>ActiveTunSet_Cnt_u16</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>CanMsgReceived_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DSTEOLDisable_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>DSTExtSystemFltActive_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SystemState_Mode</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>DSTState_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DiagStsRecRmpToZeroFltPres_Cnt_lgc(</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>DiagStsNonRecRmpToZeroFltPres_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>RampDwnStatusComplete_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>EngRPM_Cnt_u16</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>HaLFState_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>HaLFSuspend_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>HandsOnDetect_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>HwTrq_HwNm_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>PrkAssistState_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>PrkAssistSuspend_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SrlComHwTrqValid_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>SrlComVehSpdValid_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SumLmtTrqCmd_MtrNm_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>SupplyCurrent_Amp_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>VehicleSpeed_Kph_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>CFG_STAT_RQ_Cnt_u16</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>EPS_MODE_REQ_Cnt_u16</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>CTermActive_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SpStPrsnt_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>OutputRampMult_Uls_f32;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 22%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Variable Name</td>
+<td>Resolution</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>NMBusWaitSleepCancel_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>CanMsgReceived_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>MtrTrqValid_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>MCEPS1_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>NMFirstMsg_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>NMBusWaitSleepCancel_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>EPS1_M_str</td>
+<td>1</td>
+<td>0</td>
+<td>FULL</td>
+<td>SRLCOMOUTPUT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 29%" />
+<col style="width: 21%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Typedef Name</td>
+<td>Element Name</td>
+<td>User Defined Type</td>
+<td><p>Legal Range</p>
+<p>(min)</p></td>
+<td><p>Legal Range</p>
+<p>(max)</p></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section"><br />
+</h1>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td>k_VehSpdAstLmt_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_StrClmTrqPolarity_Cnt_s08</td>
+</tr>
+<tr class="even">
+<td>k_InvGearRatio_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td>k_StrClmTrqPolarity_Cnt_s08</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 66%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Value</td>
+</tr>
+<tr class="even">
+<td>D_SUPPLYCURROFFSET_ULS_F32</td>
+<td>50.0</td>
+</tr>
+<tr class="odd">
+<td>D_EPSCURR_HILMT_AMP_F32</td>
+<td>203.0</td>
+</tr>
+<tr class="even">
+<td>D_EPSCURR_LOLMT_AMP_F32</td>
+<td>-50.0</td>
+</tr>
+<tr class="odd">
+<td>D_CRCINIT_CNT_U8</td>
+<td>0xFF</td>
+</tr>
+<tr class="even">
+<td>D_CRCXORVALUE_CNT_U8</td>
+<td>0xFF</td>
+</tr>
+<tr class="odd">
+<td>D_COUNTERCYCLE16_CNT_U16</td>
+<td>0x10</td>
+</tr>
+<tr class="even">
+<td>D_UNUSED0MSG221_CNT_U8</td>
+<td>0xFF</td>
+</tr>
+<tr class="odd">
+<td>D_STRCLMTRQLOLIMIT_HWNM_F32</td>
+<td>-8.0</td>
+</tr>
+<tr class="even">
+<td>D_STRCLMTRQHILIMIT_HWNM_F32</td>
+<td>7. 9765625</td>
+</tr>
+<tr class="odd">
+<td>D_STRCLMTRQOFFSET_HWNM_F32</td>
+<td>8.0</td>
+</tr>
+<tr class="even">
+<td>D_STRCLMTRQ_SIGNOTAVAL_CNTS_U16</td>
+<td>0x07FF</td>
+</tr>
+<tr class="odd">
+<td>D_ASSTTRQ_HILMT_HWNM_F32</td>
+<td>104.65</td>
+</tr>
+<tr class="even">
+<td>D_ASSTTRQ_LOLMT_HWNM_F32</td>
+<td>-100.0</td>
+</tr>
+<tr class="odd">
+<td>D_ASSTTRQ_OFFSET_HWNM_F32</td>
+<td>100.0</td>
+</tr>
+<tr class="even">
+<td>D_ASSTTRQ_ENGTOCNTS_SCALE_HWNM_F32</td>
+<td>20.0</td>
+</tr>
+<tr class="odd">
+<td>D_HALFSTATEINACTIVE_CNT_U08</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>D_HALFSTATEACTIVE_CNT_U08</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_HALFSTATEINHIBITED_CNT_U08</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>D_HALFSTATERECOVERABLE_CNT_U08</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>D_PPPAFUNCBIT_CNT_U08</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>D_DSTFUNCBIT_CNT_U08</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>D_HALFFUNCBIT_CNT_U08</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>D_PASTATEINACTIVE_CNT_U08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>D_PASTATEACTIVE_CNT_U08</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>D_PASTATEINHIBITED_CNT_U08</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>D_PASTATERECOVERABLE_CNT_U08</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>D_EPSMTRTRQ_HILMT_MTRNM_F32</td>
+<td>1.998046875</td>
+</tr>
+<tr class="odd">
+<td>D_EPSMTRTRQ_LOLMT_MTRNM_F32</td>
+<td>-2.0</td>
+</tr>
+<tr class="even">
+<td>D_EPSMTRTRQ_OFFSET_ULS_F32</td>
+<td>2.0</td>
+</tr>
+<tr class="odd">
+<td>D_EPSMTRTRQ_SIGNOTAVAL_CNT_U16</td>
+<td>0xFFFF</td>
+</tr>
+<tr class="even">
+<td>D_NMAWAKENWST_CNT_U08</td>
+<td>0x01U</td>
+</tr>
+<tr class="odd">
+<td>D_NMAWAKEDIAGACTV_CNT_U08</td>
+<td>0x02</td>
+</tr>
+<tr class="even">
+<td>D_NMAWAKERAMPOUT_CNT_U08</td>
+<td>0x04</td>
+</tr>
+<tr class="odd">
+<td>D_NMAWAKEVSSHIGH_CNT_U08</td>
+<td>0x08</td>
+</tr>
+<tr class="even">
+<td>D_NMAWAKEENGRPMHIGH_CNT_U08</td>
+<td>0x10</td>
+</tr>
+<tr class="odd">
+<td>D_NMAWAKEIGNHIGH_CNT_U08</td>
+<td>0x20</td>
+</tr>
+<tr class="even">
+<td>D_NMSTARTUPSLEEPDELAY_MS_U32</td>
+<td>0x50000</td>
+</tr>
+<tr class="odd">
+<td>D_NMWAKEUPREASONIGN_CNT_U08</td>
+<td>0x01</td>
+</tr>
+<tr class="even">
+<td>D_ENGONRPM_CNT_U16</td>
+<td>0x12</td>
+</tr>
+<tr class="odd">
+<td>D_ENGRPMINVLD_CNT_U16</td>
+<td>0xFFFF</td>
+</tr>
+<tr class="even">
+<td>EPSA1_AsstStat</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><em>EPSA1_AsstStat_Active</em></td>
+<td>0x00</td>
+</tr>
+<tr class="even">
+<td><em>EPSA1_AsstStat_Off</em></td>
+<td>0x01</td>
+</tr>
+<tr class="odd">
+<td><em>EPSA1_AsstStat_ThrmRed</em></td>
+<td>0x02</td>
+</tr>
+<tr class="even">
+<td><em>EPSA1_AsstStat_SigNotAval</em></td>
+<td>0x07</td>
+</tr>
+<tr class="odd">
+<td>EPSA1_WarnDisp</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><em>EPSA1_WarnDisp_FuncActive</em></td>
+<td>0x00</td>
+</tr>
+<tr class="odd">
+<td><em>EPSA1_WarnDisp_ServPwrSteer</em></td>
+<td>0x01</td>
+</tr>
+<tr class="even">
+<td><em>EPSA1_WarnDisp_PwrSteerOvTmp</em></td>
+<td>0x02</td>
+</tr>
+<tr class="odd">
+<td><em>EPSA1_WarnDisp_ServReqdHighPri</em></td>
+<td>0x03</td>
+</tr>
+<tr class="even">
+<td><em>EPSA1_WarnDisp_SigNotAval</em></td>
+<td>0x07</td>
+</tr>
+<tr class="odd">
+<td>kDescStateSessionDefault</td>
+<td>0x01</td>
+</tr>
+<tr class="even">
+<td>D_TXAWAKE_NWST_CNT_U08</td>
+<td>0x01</td>
+</tr>
+<tr class="odd">
+<td>D_TXAWAKE_DIAGACTIVE_CNT_U08</td>
+<td>0x02</td>
+</tr>
+<tr class="even">
+<td>D_TXAWAKE_RAMPOUT_CNT_U08</td>
+<td>0x04</td>
+</tr>
+<tr class="odd">
+<td>D_TXAWAKE_VSSHIGH_CNT_U08</td>
+<td>0x08</td>
+</tr>
+<tr class="even">
+<td>D_TXAWAKE_ENGRPM_CNT_U08</td>
+<td>0x10</td>
+</tr>
+<tr class="odd">
+<td>D_TXAWAKE_IGNHIGH_CNT_U08</td>
+<td>0x20</td>
+</tr>
+<tr class="even">
+<td>D_SLEEPINDICATORCLEAR_U08</td>
+<td>0x40</td>
+</tr>
+<tr class="odd">
+<td>D_SLEEPSTATE_U08</td>
+<td>0x00U</td>
+</tr>
+<tr class="even">
+<td>D_ENGONRPM_CNT_U16</td>
+<td>0x12C</td>
+</tr>
+<tr class="odd">
+<td>D_ENGRPMINVLD_CNT_U16</td>
+<td>0xFFFF</td>
+</tr>
+<tr class="even">
+<td>TOCSTATE_PNA</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<h4 class="unnumbered" id="section-1"><br />
+</h4>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Constant Name</td>
+<td>Resolution</td>
+<td>Value</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>none</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules">Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>None</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<p>The data hiding functions / macros used in this module are identified below,</p>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<p>(Note if they are defined in another source file, then reference the appropriate header file)</p>
+<p>The local functions/macros in this module are identified below,</p>
+<ol type="1">
+<li><p>CalcCRC_EPS_1( void)</p></li>
+<li><p>DetermineWarnDisp(void)</p></li>
+<li><p>ScaleSignal_u16( float32 Signal_Uls_T_f32, float32 LoLmt_Uls_T_f32, float32 HiLmt_Uls_T_f32, float32 Scale_Uls_T_f32, Offset_Uls_T_f32)</p></li>
+<li><p>SrlComOutput_WriteBits(uint32 Data_T_Cnt_u32, uint8* Buffer_T_Cnt_u08, uint16 StartBit_Cnt_T_u16, uint16 EndBit_Cnt_T_u16)</p></li>
+</ol>
+<h1 class="unnumbered" id="section-2"><br />
+</h1>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-srlcomoutput_init1">Init: SrlComOutput_Init1</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<h4 id="module-outputs">Module Outputs</h4>
+<h4 id="module-internal">Module Internal </h4>
+<h5 id="set-default-messages">Set Default Messages</h5>
+<p>EPSA1_T_str.s.unused0 = 0x00</p>
+<p><strong>SetValueTxEPS_AsstStat</strong>(EPSA1_T_str, 0x01)</p>
+<p><strong>SetValueTxEPS_Warn_Disp_Rq</strong>(EPSA1_T_str, 0x00)</p>
+<p>EPSA1_T_str.s.unused1 = 0x00</p>
+<p>EPSA1_T_str.s.unused2 = 0x00</p>
+<p><strong>SetValueTxEPS_Curr</strong>(EPSA1_T_str, 0xFF)</p>
+<p>EPSA1_T_str.s.unused3 = 0x00</p>
+<p>EPSA1_T_str.s.unused4 = 0x00</p>
+<p>EPSA1_T_str.s.unused5 = 0x00</p>
+<p>EPSA1_T_str.s.unused6 = 0x00</p>
+<p><strong>dbkPutTxEPS_A1_PKT</strong>(EPSA1_T_str)</p>
+<p><strong>CclEnableCommunication</strong>()</p>
+<p><strong>DpmExternalRequest</strong>(DPM_EPS)</p>
+<p><strong>SetValueTxWakeupRsn_EPS</strong>(WakeupEPS_T_str, D_NMWAKEUPREASONIGN_CNT_U08)</p>
+<p><strong>SetValueTxWakeupCnt</strong>(WakeupEPS_T_str, 0x00)</p>
+<p>WakeupEPS_T_str.s.unused0 = 0x00</p>
+<p><strong>nmpduPutWakeup_EPS</strong>(WakeupEPS_T_str)</p>
+<p><strong>SetValueTxTOI_Act_Sts</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxStrClmTrqVD</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxStrClmTrq</strong>(EPS1_M_str, 0x07FF)</p>
+<p><strong>SetValueTxAssistanceTorque</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxPTSDriveStyleSts</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxDSTTorqueOverlayFault</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxHALFTorqueOverlayFault</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxHALFTorqueOverlayIntActivated</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxEPSMotorTorque</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxEPSMotorTorqueValidData</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxEPSHandsOnRecognition</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxEPSTemporaryDeactivationLDW</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxPTSTorqueOverlayFault</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxPTSTorqueOverlayIntActivated</strong>(EPS1_M_str, 0x00)</p>
+<p><strong>SetValueTxMC_EPS_1</strong>(EPS1_M_str, MCEPS1_Cnt_M_u08)</p>
+<p><strong>CalcCRC_EPS_1</strong>()</p>
+<p><strong>dbkPutTxEPS_1_PKT</strong>(EPS1_M_str)</p>
+<p><strong>Rte_Call_SystemTime_GetSystemTime_mS_u32</strong>(&amp;NMFirstMsg_mS_M_u32)</p>
+<h2 id="periodic-functions">Periodic Functions</h2>
+<h3 id="per-srlcomoutput_per1">Per: SrlComOutput_Per1 </h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>Process and update Transmit signal data.</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p><strong>Rte_Read_ATermActive_Cnt_lgc</strong>(&amp;ATermActive_Cnt_T_lgc)</p>
+<p><strong>Rte_Read_EngRPM_Cnt_u16</strong>(&amp;EngRPM_Cnt_T_u16)</p>
+<p><strong>Rte_Read_VehicleSpeed_Kph_f32</strong>(&amp;VehSpd_Kph_T_f32)</p>
+<p><strong>Rte_Read_SrlComVehSpdValid_Cnt_lgc</strong>(&amp;VehSpdValid_Cnt_T_lgc)</p>
+<p><strong>Rte_Read_RampDwnStatusComplete_Cnt_lgc</strong>(&amp;RampStatusComplete_T_Cnt_lgc)</p>
+<p><strong>Rte_Read_Ap_SrlComOutput_CanMsgReceived_Cnt_lgc</strong>(&amp;CanMsgReceived_Cnt_T_lgc)</p>
+<p>Rte_Read_Ap_SrlComOutput_OutputRampMult_Uls_f32(&amp;OutputRampMult_Uls_T_f32)</p>
+<h4 id="description">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>See section above.</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>N/A</p>
+<h2 class="unnumbered" id="section-3"></h2>
+<h2 id="fault-recovery-functions"> Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions"> Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions"> Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions"> Serial Communication Functions</h2>
+<p>None</p>
+<h2 id="transition-functions">Transition Functions</h2>
+<h3 id="srlcomoutput_">SrlComOutput_</h3>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<h4 id="program-flow-start-1">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-1">Store Module Inputs to Local copies</h4>
+<p>*See below</p>
+<h4 id="description-1">Description</h4>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-1">Store Local copy of outputs into Module Outputs</h4>
+<p>See section above.</p>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>N/A</p>
+<h2 id="local-functionmacro-definitions">Local Function/Macro Definitions</h2>
+<p>If these are numerous and defined in a separate source file then reference the source file only.</p>
+<h3 id="calccrc_eps_1">CalcCRC_EPS_1</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>CalcCRC_EPS_1</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-2">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.wmf" /></p>
+<h3 id="determinewarndisp">DetermineWarnDisp</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DetermineWarnDisp</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>FinalOutput_Cnt_T_u08</td>
+<td>uint8</td>
+<td>0</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-3">Description</h4>
+<h1 class="unnumbered" id="section-4"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.wmf" /><br />
+</h1>
+<h1 class="unnumbered" id="section-5"></h1>
+<h3 id="scalesignal_u16">ScaleSignal_u16</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ScaleSignal_u16</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>Signal_Uls_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>LoLmt_Uls_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HiLmt_Uls_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Scale_Uls_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Offset_Uls_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>Signal_Cnt_T_u16</td>
+<td>Uint16</td>
+<td>0</td>
+<td>Full</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-4">Description</h4>
+<h1 class="unnumbered" id="section-6"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.wmf" /><br />
+</h1>
+<h3 id="eps1_pktconfirmation">EPS1_PKTConfirmation</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>EPS1_PKTConfirmation</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-5">Description</h4>
+<h1 class="unnumbered" id="section-7"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.wmf" /> </h1>
+<h1 class="unnumbered" id="section-8"></h1>
+<h3 id="applcclcomstart">ApplCclComStart</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ApplCclComStart</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-6">Description</h4>
+<h1 class="unnumbered" id="section-9"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.wmf" /><br />
+</h1>
+<h3 id="srlcomoutput_writebits">SrlComOutput_WriteBits</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 41%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>SrlComOutput_WriteBits</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>Data_T_Cnt_u32</td>
+<td>uint32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Buffer_T_Cnt_u08</td>
+<td>uint8</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>StartBit_Cnt_T_u16</td>
+<td>uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>EndBit_Cnt_T_u16</td>
+<td>uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-7">Description</h4>
+<h1 class="unnumbered" id="section-10"><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.wmf" /><br />
+</h1>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>(Describe in words relevant details about the execution sequence of the different sub modules.)</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 47%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Calling Frequency</td>
+<td>System State(s) in which the function is called</td>
+</tr>
+<tr class="even">
+<td>SrlComOutput_Init1()</td>
+<td>Once</td>
+<td>START UP</td>
+</tr>
+<tr class="odd">
+<td>SrlComOutput_Per1()</td>
+<td>10ms</td>
+<td>WARM INIT, OPERATE, DISABLE</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Function Name</td>
+<td>Sub-Module called by (Serial Comm Function Name)</td>
+</tr>
+<tr class="even">
+<td>N/A</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="memory-map-definition-requirements"><br />
+Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>SrlComOutput_Init1()</td>
+<td>RTE_AP_SRLCOMOUTPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>SrlComOutput_Per1()</td>
+<td>RTE_AP_SRLCOMOUTPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>SrlComOutput_Trns1()</td>
+<td>RTE_AP_SRLCOMOUTPUT_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Name of Sub Module</td>
+<td>Software Segment</td>
+</tr>
+<tr class="even">
+<td>CalcCRC_EPS_1 ()</td>
+<td>AP_SRLCOMOUTPUT_CODE</td>
+</tr>
+<tr class="odd">
+<td>DetermineWarnDisp</td>
+<td>AP_SRLCOMOUTPUT_CODE</td>
+</tr>
+<tr class="even">
+<td>ScaleSignal_u16</td>
+<td>AP_SRLCOMOUTPUT_CODE</td>
+</tr>
+<tr class="odd">
+<td>EPS1_PKTConfirmation</td>
+<td>AP_SRLCOMOUTPUT_CODE</td>
+</tr>
+<tr class="even">
+<td>ApplCclComStart</td>
+<td>AP_SRLCOMOUTPUT_CODE</td>
+</tr>
+<tr class="odd">
+<td>SrlComOutput_WriteBits</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>INLINE functions defined in “GlobalMacro.h” are not unit tested</p></li>
+</ol>
+<h1 id="revision-control-log">Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 65%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Item #</strong></td>
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.0</td>
+<td>Initial Version</td>
+<td>29May13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2.0</td>
+<td>Anomaly 5014 DetermineWarnDisp</td>
+<td>16JUN13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3.0</td>
+<td>Anomaly 5416</td>
+<td>12AUG13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4.0</td>
+<td>Fully implemented A001 A002 A003 A004</td>
+<td>13SEP13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5.0</td>
+<td>Changes for 01.00.01 version of CL</td>
+<td>30SEP13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6.0</td>
+<td>Changes for 01.00.03 version of CL</td>
+<td>25OCT13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7.0</td>
+<td>Changes for NM anomaly 5911</td>
+<td>31OCT13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8.0</td>
+<td>Import prior changes to L path</td>
+<td>20NOV13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9.0</td>
+<td>Anomaly 6408</td>
+<td>10APR14</td>
+<td>M. Story</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,877 @@
+---
+title: HaLFTO_MDD
+linkTitle: HaLFTO_MDD
+weight: 5
+---
+
+<h1 class="unnumbered" id="module----halfto">Module -- HaLFTO</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This function describes the activation logic used to implement the torque overlay functionality related to lane departure warning with haptic lane feedback.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="component-diagram">Component Diagram</h2>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.png" style="width:3.06944in;height:4.56528in" /></p>
+<h3 id="diagram-function-halfto_per1">Diagram – Function HaLFTO_Per1</h3>
+<p>This diagram describes the functional characteristics and data flow of a given function.</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.wmf" /></p>
+<h1 id="variable-data-dictionary"><br />
+Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 0%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs</th>
+<th colspan="2">Module Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2">HaLFEnableRqst_Cnt_lgc</td>
+<td>HaLFActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2"></td>
+<td>HaLFState_Cnt_u08</td>
+</tr>
+<tr class="odd">
+<td colspan="2">HaLFIntSystemFltActive_Cnt_lgc</td>
+<td>HaLFSuspend_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2">HaLFErrInterfaceActive_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">HaLFExtSystemFltActive_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">VehicleSpeed_Kph_f32</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">HaLFSWATrqFail_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">HaLFTrqOvReverseGearEngage_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">HaLFSlewComplete_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">HaLFFuncPresent_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">HwTorque_HwNm_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">SystemState_Mode</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">LimitPercentFiltered_Uls_f32</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">DSTState_Cnt_u08</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">TOEOLDisable_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">PrevHaLFEnableRqst_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">PrevHaLFTrqOvCmdRqst_MtrNm_f32</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 16%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>HaLFTO_DeactDSTStateChkFail_Cnt_D_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>HALFTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>HaLFTO_IncorHaLFActvnFailed_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>HALFTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>HaLFTO_HaLFDeactLongFailed_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>HALFTO_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>HaLFTO_IncorHaLFActvnHwTrqTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>HaLFTO_IncorHaLFActvnVehSpdTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>HaLFTO_IncorHaLFActvnRevGearTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>HaLFTO_HaLFDeactHwTrqTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>HaLFTO_HaLFDeactVehSpdTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>HaLFTO_HaLFDeactRevGearTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>HaLFTO_DSTSyncTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="even">
+<td>HaLFTO_LimitPercentFilteredTimer_mS_M_u32</td>
+<td>1</td>
+<td>FULL</td>
+<td>FULL</td>
+<td>HALFTO_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>HaLFTO_State_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>HALFTO_START_SEC_VAR_CLEARED_8</td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>k_HaLFActvHwTrqTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_HaLFActvMaxHwTrq_mS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFActvVehSpdTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_HaLFActvMinVehSpd_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFActvMaxVehSpd_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_HaLFActvRevGearTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFDeactHwTrqTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_HaLFDeactMaxHwTrq_HwNm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFDeactVehSpdTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_HaLFDeactMinVehSpd_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFDeactMaxVehSpd_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_HaLFDeactRevGearTime_mS_u16</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFDSTSyncTime_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_TrqOverlayLimitPerc_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td>k_TrqOverlaySuspendTime_mS_u16</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Units</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_HALFSTATEINACTIVE_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>D_HALFSTATEACTIVE_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_HALFSTATEIHIBITED_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>D_HALFSTATERECOVERABLE_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>D_DSTACTIVE1_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>D_DSTACTIVE2_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>D_DSTACTIVE3_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>D_INCORHALFACTVNMASK_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_HALFDEACTLONGMASK_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ZERO_ULS_F32</td>
+</tr>
+<tr class="even">
+<td>FLT_EPSILON</td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules"><br />
+Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library and functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>Abs_f32_m</p></li>
+<li><p>Rte_Call_SystemTime_GetSystemTime_mS_u32</p></li>
+<li><p>Rte_Call_SystemTime_DtrmnElapsedTime_mS_u16</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_GetNTCFailed</p></li>
+<li><p>Rte_Call_NxtrDiagMgr_SetNTCStatus</p></li>
+<li><p>Rte_Call_HaLFState_SCom_Transition</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<ol type="1">
+<li><p>Rte_Mode_SystemState_Mode</p></li>
+<li></li>
+</ol>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<h3 id="common-hwtrqvehspdrevgear-check">Common HwTrqVehSpdRevGear Check</h3>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 31%" />
+<col style="width: 23%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>HwTrqVehSpdRevGearCheck</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UTP Tol.</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>HwTrqTime_mS_T_u16</td>
+<td>Uint16</td>
+<td>0</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HwTrqTimerPtr_mS_T_u32</td>
+<td>Uint32*</td>
+<td>0</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>MaxHwTrq_HwNm_T_f32</td>
+<td>float32</td>
+<td>0.0</td>
+<td>10.0</td>
+<td>0.00390625</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>VehSpdTime_mS_T_u16</td>
+<td>Uint16</td>
+<td>0</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>VehSpdTimerPtr_mS_T_u32</td>
+<td>Uint32*</td>
+<td>0</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>MinVehSpd_Kph_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>255</td>
+<td>.0078125</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>MaxVehSpd_Kph_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>255</td>
+<td>.0078125</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>RevGearChkTime_mS_T_u16</td>
+<td>Uint16</td>
+<td>0</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>RevGearTimerPtr_mS_T_u32</td>
+<td>Uint32*</td>
+<td>0</td>
+<td>FULL</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>HaLFDiagStatus_Cnt_T_enum</td>
+<td>Uint8 NxtrDiagMgrStatus</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="description">Description</h4>
+<p>HaLFEnableRqst_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFEnableRqst_Cnt_lgc()</p>
+<p>HwTorque_HwNm_T_f32 = Rte_IRead_HaLFTO_Per1_HwTorque_HwNm_f32()</p>
+<p>HaLFTrqOvReverseGearEngage_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFTrqOvReverseGearEngage_Cnt_lgc()</p>
+<p>VehicleSpeed_Kph_T_f32 = Rte_IRead_HaLFTO_Per1_VehicleSpeed_Kph_f32()</p>
+<p>HaLFDiagStatus_Cnt_T_enum = NTC_STATUS_PASSED</p>
+<h4 id="hw-trq-check">Hw Trq Check</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.emf" /></p>
+<h4 id="vehicle-speed-check">Vehicle Speed Check</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.emf" /></p>
+<h4 id="reverse-gear-check">Reverse Gear Check</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.emf" /></p>
+<h1 class="unnumbered" id="section"></h1>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="runtime-environment-rte-initial-values">Runtime Environment (RTE) Initial Values</h2>
+<p>This section lists the initial values of data written by this module but controlled by the RTE. After RTE initialization, the data in this table will contain these values.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DSTState_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>DiagStsNonRecRmpToZeroFltPres_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>DiagStsRecRmpToZeroFltPres_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>HaLFActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>HaLFEnableRqst_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>HaLFErrInterfaceActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>HaLFExtSystemFltActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>HaLFFuncPresent_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>HaLFIntSystemFltActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>HaLFSWATrqFail_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>HaLFSlewComplete_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>HaLFState_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>HaLFSuspend_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>HwTorque_HwNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>LimitPercentFiltered_Uls_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>HaLFTrqOvReverseGearEngage_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>VehicleSpeed_Kph_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>TOEOLDisable_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>PrevHaLFEnableRqst_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>PrevTrqOvCmdRqst_MtrNm_f32</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-halfto_init1void">Init: HaLFTO_Init1(void)</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>The init function here sets all timers to some valid value, and informs SCom that the module is transitioning into the inactive state.</p>
+<h4 id="initial-state-transition">Initial State Transition</h4>
+<p>Rte_Call_HaLFState_SCom_Transition(D_HALFSTATEINACTIVE_CNT_U08)</p>
+<h4 id="module-internal">Module Internal </h4>
+<p>Rte_Call_SystemTime_GetSystemTime_mS_u32(&amp;Time_mS_u32)</p>
+<p>HaLFTO_IncorHaLFActvnHwTrqTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_IncorHaLFActvnVehSpdTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_IncorHaLFActvnRevGearTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_HaLFDeactHwTrqTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_HaLFDeactVehSpdTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_HaLFDeactRevGearTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_DSTSyncTimer_mS_M_u32 = Time_mS_u32</p>
+<p>HaLFTO_LimitPercentFilteredTimer_mS_M_u32 = Time_mS_u32</p>
+<p>(void)Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_VLF_04, 0x0U, NTC_STATUS_PASSED);</p>
+<h2 id="periodic-functions"><br />
+Periodic Functions</h2>
+<h3 id="per-_per1void">Per: _Per1(void)</h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>Rte_Call_HaLFTO_Per1_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p>DSTState_Cnt_T_u08 = Rte_IRead_HaLFTO_Per1_DSTState_Cnt_u08()</p>
+<p>DiagStsNonRecRmpToZeroFltPres_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_DiagStsNonRecRmpToZeroFltPres_Cnt_lgc()</p>
+<p>DiagStsRecRmpToZeroFltPres_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_DiagStsRecRmpToZeroFltPres_Cnt_lgc()</p>
+<p>HaLFEnableRqst_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFEnableRqst_Cnt_lgc()</p>
+<p>HaLFErrInterfaceActive_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFErrInterfaceActive_Cnt_lgc()</p>
+<p>HaLFExtSystemFltActive_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFExtSystemFltActive_Cnt_lgc()</p>
+<p>HaLFFuncPresent_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFFuncPresent_Cnt_lgc()</p>
+<p>HaLFIntSystemFltActive_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFIntSystemFltActive_Cnt_lgc()</p>
+<p>HaLFSWATrqFail_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFSWATrqFail_Cnt_lgc()</p>
+<p>HaLFSlewComplete_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_HaLFSlewComplete_Cnt_lgc()</p>
+<p>LimitPercentFiltered_Uls_T_f32 = Rte_IRead_HaLFTO_Per1_LimitPercentFiltered_Uls_f32()</p>
+<p>TOEOLDisable_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_TOEOLDisable_Cnt_lgc()</p>
+<p>PrevHaLFEnableRqst_Cnt_T_lgc = Rte_IRead_HaLFTO_Per1_PrevHaLFEnableRqst_Cnt_lgc()</p>
+<p>PrevTrqOvCmdRqst_MtrNm_T_f32 = Rte_IRead_HaLFTO_Per1_PrevHaLFTrqOvCmdRqst_MtrNm_f32()</p>
+<h4 id="initialize-faults">Initialize Faults</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.emf" /></p>
+<h4 id="incorrect-half-activation-diagnostic">Incorrect HaLF Activation Diagnostic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.emf" /></p>
+<h4 id="half-deactivation-diagnostic">HaLF Deactivation Diagnostic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.emf" /></p>
+<h4 id="half-deactivation-diagnostic-continued">HaLF Deactivation Diagnostic continued…</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.emf" /></p>
+<h4 id="half-torque-overlay-enable">HalF Torque Overlay Enable</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.emf" /></p>
+<h4 id="transition-vector-logic">Transition Vector Logic</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.wmf" /></p>
+<h4 id="inactive-transitions">Inactive Transitions</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.emf" /></p>
+<h4 id="active-transitions">Active Transitions</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.emf" /></p>
+<h4 id="recoverable-transitions">Recoverable Transitions</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image15.emf" /></p>
+<h4 id="transitions-complete">Transitions Complete</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image16.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_HaLFTO_Per1_HaLFState_Cnt_u08(HaLFTO_State_Cnt_M_u08)</p>
+<p>Rte_IWrite_HaLFTO_Per1_HaLFSuspend_Cnt_lgc(HaLFSuspend_T_lgc)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_HaLFTO_Per1_CP1_CheckpointReached()</p>
+<h2 id="execution-requirements"><br />
+Execution Requirements</h2>
+<h3 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h3>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>HaLFTO_Per1</td>
+<td>2ms</td>
+<td>Warm Init, Disable, Operate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h3>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt;None&gt;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-1"></h1>
+<h1 id="memory-map-definition-requirements"><br />
+Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>HaLFTO_Init1</td>
+<td>RTE_START_SEC_AP_HALFTO_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>HaLFTO_Per1</td>
+<td>RTE_START_SEC_AP_HALFTO_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-2"></h2>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>HwTrqVehSpdRevGearCheck</td>
+<td>RTE_AP_HALFTO_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-3"></h1>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>Inline functions in GlobalMacro.h are not unit tested.</p></li>
+</ol>
+<h1 id="revision-control-log"><br />
+Revision Control Log</h1>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 68%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Initial component creation.</td>
+<td>5-Nov-12</td>
+<td>BWL</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Corrected vehicle speed check Incorrect HaLF activation(DST Active State Deactivation)</td>
+<td>20-Feb-13</td>
+<td>SR</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Corrected Transition T5 from Recoverable to Inactive as per anomaly 4527</td>
+<td>26-Feb-13</td>
+<td>SR</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Update to FDD 40D v004</td>
+<td>09-May-13</td>
+<td>BDO</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Updated to CF 08A V001</td>
+<td>09-Jul-13</td>
+<td>SP</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Added logic to pass the NTCs if the enable criteria is FALSE.</td>
+<td>08-Oct-13</td>
+<td>MR</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Updated to FDD CF-08C v004</td>
+<td>23-Jan-14</td>
+<td>VT</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Updated to FDD CF-08C v005</td>
+<td>04-Feb-14</td>
+<td>VT</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Unit Testing Finding Fixes</td>
+<td>20-Feb-14</td>
+<td>KPIT-PM</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>Updated to FDD CF-08C v006</td>
+<td>24-Feb-14</td>
+<td>VT</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>Updated to FDD CF-08C v007</td>
+<td>06-Mar-14</td>
+<td>VT</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>Updated per Design Review and Updated to FDD CF-08Cv008</td>
+<td>24-Apr-14</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>A6806 anomaly fix 11959</td>
+<td>20-May-14</td>
+<td>SB</td>
+</tr>
+</tbody>
+</table>

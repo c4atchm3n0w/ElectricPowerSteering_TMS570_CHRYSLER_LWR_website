@@ -1,0 +1,977 @@
+---
+title: Motor_Position_MDD
+linkTitle: Motor_Position_MDD
+weight: 5
+---
+
+<h1 class="unnumbered" id="module---">Module -- </h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This module calculates the cumulative and corrected motor positions. It also outputs the sine and cosine position signals used for diagnostics and motor electrical and mechanical position.</p>
+<h1 id="figures">Figures</h1>
+<h4 id="component-diagram">Component Diagram</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.emf" style="width:3.16929in;height:3.16929in" alt="mtrpos.emf" /></p>
+<h1 id="variable-data-dictionary"><br />
+Variable Data Dictionary</h1>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 0%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs</th>
+<th colspan="2">Module Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2"></td>
+<td>MtrPos_MechMtrPos_Rev_G_u0p16</td>
+</tr>
+<tr class="even">
+<td colspan="2"></td>
+<td>MtrPos_CorrectedMtrPos_Rev_G_u0p16</td>
+</tr>
+<tr class="odd">
+<td colspan="2"></td>
+<td>MtrPos_SinTheta1_Volts_G_s2p13</td>
+</tr>
+<tr class="even">
+<td colspan="2"></td>
+<td>MtrPos_CosTheta1_Volts_G_s2p13</td>
+</tr>
+<tr class="odd">
+<td colspan="2"></td>
+<td>MtrPos_SampleTime_uS_G_u32</td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 8%" />
+<col style="width: 13%" />
+<col style="width: 14%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SinTheta2_Uls_D_s2p13</td>
+<td>2<sup>-13</sup></td>
+<td>-2</td>
+<td>2</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>MtrPos_CorrectedMtrPos_Rev_M_u0p16 [D_MTRPOSDBLBUFFSZ_CNT_U08]</td>
+<td>2<sup>-16</sup></td>
+<td>0</td>
+<td>0.99998</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>MtrPos_Cos1Scaled_Volts_M_u3p13 [D_MTRPOSDBLBUFFSZ_CNT_U08]</td>
+<td>2<sup>-13</sup></td>
+<td>0</td>
+<td>5</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>MtrPos_Sin1Scaled_Volts_M_u3p13 [D_MTRPOSDBLBUFFSZ_CNT_U08]</td>
+<td>2<sup>-13</sup></td>
+<td>0</td>
+<td>5</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="odd">
+<td>MtrPos_MechMtrPos_Rev_M_u0p16 [D_MTRPOSDBLBUFFSZ_CNT_U08]</td>
+<td>2<sup>-16</sup></td>
+<td>0</td>
+<td>0.99998</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_16</td>
+</tr>
+<tr class="even">
+<td>MtrPos_CumMtrPosOff_Deg_M_f32</td>
+<td></td>
+<td>0</td>
+<td>360</td>
+<td>MTRPOS_START_SEC_VAR_NOINIT_32</td>
+</tr>
+<tr class="odd">
+<td>MtrPos_CumMtrPosInputBfr_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_8</td>
+</tr>
+<tr class="even">
+<td>MtrPos_CumMtrPosOffComplete_Cnt_M_lgc</td>
+<td>N/A</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>MTRPOS_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>tempAlignedCumMtrPosMRF_Rev_M_s15p16</td>
+<td>2<sup>-16</sup></td>
+<td>-32768</td>
+<td>32767</td>
+<td>MTRPOS_START_SEC_VAR_NOINIT_32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 28%" />
+<col style="width: 14%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Typedef Name</th>
+<th>Element Name</th>
+<th>User Defined Type</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MtrPosCal_DataType</td>
+<td><p>BEMFCal_Rev_u0p16</p>
+<p>R_BEMFCal_Rev_u0p16</p>
+<p>Sin1Offset_Volts_u3p13</p>
+<p>Sin1AmpRec_Uls_u3p13</p>
+<p>Cos1Offset_Volts_u3p13</p>
+<p>Cos1AmpRec_Uls_u3p13</p>
+<p>SinDelta1_Uls_s2p13</p>
+<p>CosDelta1Rec_Uls_u3p13</p>
+<p>Sin1OffCorr_Volts_s2p13</p>
+<p>Sin1GainCorr_Uls_u1p15</p>
+<p>Cos1OffCorr_Volts_s2p13</p>
+<p>Cos1GainCorr_Uls_u1p15</p>
+<p>SinHarTbl_Cnt_sm6p13[144]</p>
+<p>CosHarTbl_Cnt_sm6p13[144]</p></td>
+<td><p>u0p16_T</p>
+<p>u0p16_T</p>
+<p>u3p13_T</p>
+<p>u3p13_T</p>
+<p>u3p13_T</p>
+<p>u3p13_T</p>
+<p>s2p13_T</p>
+<p>u3p13_T</p>
+<p>s2p13_T</p>
+<p>u1p15_T</p>
+<p>s2p13_T</p>
+<p>u1p15_T</p>
+<p>sm6p13_T</p>
+<p>sm6p13_T</p></td>
+<td><p>0</p>
+<p>0</p>
+<p>2.2</p>
+<p>0.25</p>
+<p>2.2</p>
+<p>0.25</p>
+<p>-0.0174524</p>
+<p>0.99985</p>
+<p>-0.5</p>
+<p>0.8</p>
+<p>-0.5</p>
+<p>0.8</p>
+<p>-0.0155</p>
+<p>-0.0155 </p></td>
+<td><p>1</p>
+<p>1</p>
+<p>2.8</p>
+<p>2.5</p>
+<p>2.8</p>
+<p>2.5</p>
+<p>0.0174524</p>
+<p>1</p>
+<p>0.5</p>
+<p>1.2</p>
+<p>0.5</p>
+<p>1.2</p>
+<p>0.0155</p>
+<p>0.0155 </p></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>*In FDD 06B, Ver 6, range for SinHarTbl and CosHarTbl is given as -1 to 1 which is incorrect as it’s a 8bit signal. Informed to FDD Owner and will be updated accordingly.</p></li>
+</ul>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 13%" />
+<col style="width: 21%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Units</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ADCREF_VOLTS_F32</td>
+<td>floating point</td>
+<td>Volts</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>D_ADCFULLSCALE_CNTS_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>4095</td>
+</tr>
+<tr class="odd">
+<td>D_CNVRTP29TOP13_CNT_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td>D_SCALE_VOLTSPERCOUNT_U3P29</td>
+<td>2<sup>-29</sup></td>
+<td>Volts per Count</td>
+<td>D_ADCREF_VOLTS_F32/D_ADCFULLSCALE_CNTS_U16</td>
+</tr>
+<tr class="odd">
+<td>D_SIGCORRLOLMT_ULS_S5P26</td>
+<td>2<sup>-26</sup></td>
+<td>Unitless</td>
+<td>-3</td>
+</tr>
+<tr class="even">
+<td>D_SIGCORRHILMT_ULS_S5P26</td>
+<td>2<sup>-26</sup></td>
+<td>Unitless</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>D_SINCOSHILMT_ULS_S2P13</td>
+<td>2<sup>-13</sup></td>
+<td>Unitless</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>D_SINCOSLOLMT_ULS_S2P13</td>
+<td>2<sup>-13</sup></td>
+<td>Unitless</td>
+<td>-2</td>
+</tr>
+<tr class="odd">
+<td>D_HARPOSROUNDFACTOR_ULS_U0P16</td>
+<td>2<sup>-16</sup></td>
+<td>Counts</td>
+<td>0.003472222222</td>
+</tr>
+<tr class="even">
+<td>D_HALFPREC13_CNT_S32</td>
+<td>1</td>
+<td>Counts</td>
+<td>4096</td>
+</tr>
+<tr class="odd">
+<td>D_SHIFT13_CNT_S16</td>
+<td>1</td>
+<td>Counts</td>
+<td>13</td>
+</tr>
+<tr class="even">
+<td>D_SIGNBITSHIFT32_CNT_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>31</td>
+</tr>
+<tr class="odd">
+<td>D_HARTBLSIZE_CNT_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>144</td>
+</tr>
+<tr class="even">
+<td>D_PIREV_REV_U1P15</td>
+<td>2<sup>-15</sup></td>
+<td>Rev</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td>D_MASK16BITS_CNT_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0xFFFF</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 11%" />
+<col style="width: 33%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MtrPos_EOLDataPtr_Cnt_M_Str</td>
+<td>N/A</td>
+<td>Constant Pointer to Rte_Pim_MtrPosSnsr_EOLData()</td>
+<td>MTRPOS_START_SEC_CONST_UNSPECIFIED</td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules"><br />
+Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library and functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>_atan2_asm_</p></li>
+<li><p>Limit_m</p></li>
+<li><p>Sign_s16_m</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<ol type="1">
+<li><p>Adc2_GetSinTheta1_Cnt_u16_m</p></li>
+<li><p>Adc2_GetCosTheta1_Cnt_u16_m</p></li>
+<li><p>Rte_Pim_MtrPosSnsr_EOLData</p></li>
+</ol>
+<h2 id="global-functionsmacros-defined-by-this-module">Global Functions/Macros Defined by this Module</h2>
+<ol type="1">
+<li><p>MtrPos_Per1</p></li>
+</ol>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<h3 id="signal-correction">Signal Correction</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>SignalCorrect</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>Signal_Volts_T_u3p13</td>
+<td>u3p13_T</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Offset_Volts_T_u3p13</td>
+<td>u3p13_T</td>
+<td>1.7</td>
+<td>3.8</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>AmpRec_Uls_T_u3p13</td>
+<td>u3p13_T</td>
+<td>0.2</td>
+<td>3.3</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>Signal_Uls_T_s2p13</td>
+<td>s2p13_T</td>
+<td>-3</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>This function is responsible for scaling and correcting the motor sense board sine and cosine signals based upon End Of Line calibrations. The correction uses the sensor calibrations to subtract the DC offset and normalize each signal to a nominal amplitude of +/- 1.</p>
+<h4 id="description">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.emf" /></p>
+<h3 id="quadrature-correction">Quadrature Correction</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 40%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>QuadCorrect</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>CorrSin_Uls_T_s2p13</td>
+<td>s2p13_T</td>
+<td>-3</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>CorrCos_Uls_T_s2p13</td>
+<td>s2p13_T</td>
+<td>-3</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SinDelta_Uls_T_s2p13</td>
+<td>s2p13_T</td>
+<td>-0.0174524</td>
+<td>0.0174524</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>CorrCos_Uls_T_s2p13</td>
+<td>s2p13_T</td>
+<td>-3</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>This function is responsible for adjusting the cosine signal for any quadrature error between the sine and cosine signals. Ideally, the sine and cosine signals are exactly 90 degrees out of phase of eachother. This function will adjust the cosine signal based upon sensor calibrations to correct for any error from the ideal 90 degree phase difference.</p>
+<p>The Quadrature correction should follow the following algorithm per requirements…</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.wmf" /></p>
+<p>However, “δ” becomes a small enough number that the cos(δ) term becomes close enough to “1” to have a negligible effect on the signal. Therefore, in order to reduce throughput of this algorithm, the application of 1/cos(δ) is omitted.</p>
+<h4 id="description-1">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.emf" /></p>
+<h3 id="round-and-shift-by-13-bits">Round and Shift by 13 Bits</h3>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 40%" />
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>RoundAndShift13_s32</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>x</td>
+<td>sint32</td>
+<td>-2^31</td>
+<td>(2^31)-(2^12)-1</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>See Function</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<p>This function will perform a rounding before applying a shift of 13 bits on the variable passed to the function. The function will use the sign bit of the input to help determine the value to be added to the signal before performing the shift operation. For a positive value, the value to be added is simply half of 2^[#bits to shift]… for this function, 13 bits are shifted off so 2^12 should be added to the signal before the shift is performed. However, for negative numbers, the value to be added is 2^[#bits to shift] -1. Therefore, the sign bit of the input is subtracted from 2^[#bits to shift], and this will result in the correct value for both positive and negative numbers.</p>
+<p>Note that this function is designed to produce identical results to the <strong>FPM_FixWithRound_m</strong> that will cause a shift of 13 bits, but has a restricted input range as shown above.</p>
+<h4 id="description-2">Description</h4>
+<p><strong>return</strong> (((x)+(D_HALFPREC13_CNT_S32-((x)&gt;&gt;D_SIGNBITSHIFT32_CNT_U16)))&gt;&gt;D_SHIFT13_CNT_S16)</p>
+<h3 id="get-sine-voltage-macro-function">Get Sine Voltage Macro Function</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>Adc2_GetSinTheata1_Cnt_u16_m</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>SinSignal_Volts_T_u3p13</td>
+<td>U16</td>
+<td>0</td>
+<td>4095</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-3">Design Rationale</h4>
+<p>The actual implementation of this function is in macro form. When called, the function (macro) will return the ADC reading for the corresponding analog input.</p>
+<h3 id="get-cosine-voltage-macro-function">Get Cosine Voltage Macro Function</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Function Name</strong></th>
+<th>Adc2_GetCosTheata1_Cnt_u16_m</th>
+<th>Type</th>
+<th>Min</th>
+<th>Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Arguments Passed</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>CosSignal_Volts_T_u3p13</td>
+<td>U16</td>
+<td>0</td>
+<td>4095</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-4">Design Rationale</h4>
+<p>The actual implementation of this function is in macro form. When called, the function (macro) will return the ADC reading for the corresponding analog input.</p>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="runtime-environment-rte-initial-values">Runtime Environment (RTE) Initial Values</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rte_InitValue_AlignedCumMtrPosMRF_Deg_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_CumMtrPosMRF_Deg_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_CumMtrPosCRF_Deg_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_SysCCumMtrPosMRF_Deg_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_SysCCumMtrPosCRF_Deg_f32</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-_init1">Init: _Init1</h3>
+<h4 id="design-rationale-5">Design Rationale</h4>
+<p>None</p>
+<h4 id="module-internal-and-outputs">Module Internal and Outputs</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.emf" /></p>
+<h2 id="periodic-functions"><br />
+Periodic Functions</h2>
+<h3 id="per-_per1">Per: _Per1</h3>
+<h4 id="design-rationale-6">Design Rationale</h4>
+<p>The computation of AlignedCumMtrPosMRF_Rev_M_s15p16 is optimized to take advantage of the fact that the relative position is sized to be a modulo 65536 value (i.e. rolls over at the16 bit value boundary). The operation specified to the compiler is to:</p>
+<ul>
+<li><p>Perform an unsigned subtraction of the z-1 and current position</p></li>
+<li><p>Explicitly mask the subtraction result to 16bits to ensure, that in the event that the compiler determines that a 32 bit subtraction is appropriate, the result is masked to only provide the lower 16 bits of the result.</p></li>
+<li><p>Cast the unsigned result of the mask as a signed 16 bit value so that rollovers occurring in the subtraction correctly indicate the integer amount of change.</p></li>
+<li><p>Finally cast the expression up to this point to a signed 32 bit number to promote the signed 16 integer and sign extend it to allow it to be added properly to the 32 bit accumulator, AlignedCumMtrPosMRF_Rev_M_s15p16</p></li>
+</ul>
+<blockquote>
+<p>The above method eliminates any need for a conditional branch expression to handle the rollover points, thus avoiding the branching penalty.</p>
+</blockquote>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.emf" /></p>
+<h4 id="signal-processing">Signal Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.emf" /></p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>N/A</p>
+<h3 id="per-_per2">Per: _Per2</h3>
+<h4 id="design-rationale-7">Design Rationale</h4>
+<p>This function accesses the AlignedCumMtrPosMRF_Rev_M_s15p16 signal produced by Per1 which is running in the MtrCtrl ISR. Ther is no concern for data consistency in this case because the signal is 32 bits wide and it is assumed that the target processor supports atomic 32 data accesses (i.e as is the case for the TMS570).</p>
+<p>This function should be run before MtrPos3_Per1, as the comparisons (in both the main and diverse paths) on the generated signals assume that this order will be followed.</p>
+<h4 id="program-flow-start-1">Program Flow Start</h4>
+<p>Rte_Call_MtrPos2_Per1_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies-1">Store Module Inputs to Local copies</h4>
+<p>AssistAsmPolarity_T_f32 = Rte_IRead_MtrPos_Per2_AssistAssemblyPolarity_Cnt_s08()</p>
+<h4 id="processing-of-function">Processing of function</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-1">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_MtrPos_Per2_AlignedCumMtrPosMRF_Deg_f32(AlignedCumMtrPosMRF_Deg_T_f32)</p>
+<p>Rte_IWrite_MtrPos_Per2_CumMtrPosMRF_Deg_f32(CumMtrPosMRF_Deg_T_f32)</p>
+<p>Rte_IWrite_MtrPos_Per2_SysCCumMtrPosMRF_Deg_f32(CumMtrPosMRF_Deg_T_f32)</p>
+<p>Rte_IWrite_MtrPos_Per2_CumMtrPosCRF_Deg_f32(CumMtrPosMRF_Deg_T_f32 * AssistAsmPolarity_T_f32)</p>
+<p>Rte_IWrite_MtrPos_Per2_SysCCumMtrPosCRF_Deg_f32(CumMtrPosMRF_Deg_T_f32 * AssistAsmPolarity_T_f32)</p>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>N/A</p>
+<h2 id="fault-recovery-functions"><br />
+Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions">Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions">Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions">Serial Communication Functions</h2>
+<h3 id="scom-_scom_readeolmtrcals">SCom: _SCom_ReadEOLMtrCals</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Arguments Passed</strong></th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MtrCalDataPtr</td>
+<td>MtrPosCal_DataType *</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-8">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start-2">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-2">Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="processing-of-function-1">Processing of function</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.emf" /></p>
+<h3 id="scom-_scom_seteolmtrcals">SCom: _SCom_SetEOLMtrCals</h3>
+<table>
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Arguments Passed</strong></th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MtrCalDataPtr</td>
+<td>MtrPosCal_DataType *</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-rationale-9">Design Rationale</h4>
+<h4 class="unnumbered" id="provide-exclusive-area-around-eol-data-update-to-ensure-the-data-stays-consistent.-if-the-bemf-rc-check-for-example-pre-empts-this-update-while-the-bemf-and-r_bemf-values-are-inconsistent-a-false-failure-will-be-detected.-for-simplicity-this-implementation-of-the-exclusive-area-protection-does-not-provide-a-configurable-type-of-protection-but-rather-always-uses-suspendresume-interrupts.-if-the-need-arises-in-the-future-this-design-can-be-updated.">Provide exclusive area around EOL Data update to ensure the data stays consistent. If the BEMF R/C check, for example, pre-empts this update while the BEMF and R_BEMF values are inconsistent, a false failure will be detected. For simplicity, this implementation of the exclusive area protection does not provide a configurable type of protection, but rather always uses Suspend/Resume interrupts. If the need arises in the future this design can be updated.</h4>
+<h4 id="program-flow-start-3">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies-3">Store Module Inputs to Local copies</h4>
+<p>None</p>
+<h4 id="processing-of-function-2">Processing of function</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-2">Store Local copy of outputs into Module Outputs</h4>
+<p>N/A</p>
+<h4 id="program-flow-end-2">Program Flow End</h4>
+<p>N/A</p>
+<h2 id="section"><br />
+</h2>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>_Init1</td>
+<td>Once</td>
+<td>COLD_INIT</td>
+</tr>
+<tr class="even">
+<td>_Per1</td>
+<td>62.5 us</td>
+<td>ALL</td>
+</tr>
+<tr class="odd">
+<td>_Per2</td>
+<td>1 ms</td>
+<td>ALL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MtrPos2_SCom_ReadEOLMtrCals</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>MtrPos2_SCom_SetEOLMtrCals</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-1"></h1>
+<h1 id="memory-map-definition-requirements"><br />
+Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>_Init1</td>
+<td>RTE_START_SEC_SA_MTRPOS_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>_Per1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>_Per2</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-2"></h2>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SignalCorrect</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>QuadCorrect</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>RoundAndShift13_s32</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-3"></h1>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>INLINE functions in GlobalMacro.h are not unit tested</p></li>
+</ol>
+<h1 id="revision-control-log"><br />
+Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Item #</strong></th>
+<th><strong>Rev #</strong></th>
+<th><strong>Change Description</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Author Initials</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>Initial MDD version.</td>
+<td>11 Jul 12</td>
+<td>JWJ</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td>Added missing input/output/module internal variables</td>
+<td>13 Jul 12</td>
+<td>JWJ</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>Implemented FDD 06B v004</td>
+<td>23-Oct-12</td>
+<td>OT</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>4</td>
+<td>UTP Updates</td>
+<td>21-Nov-12</td>
+<td>OT</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>5</td>
+<td>Updated Component design methodology to encapsulate component internal data flow outside of the Rte.</td>
+<td>20-Feb-13</td>
+<td>JJW</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>6</td>
+<td>Changed cumulative position algorithm to eliminate the rollover synchronization issue between the atan and rollover detection methods.</td>
+<td>20-Mar-13</td>
+<td>JJW</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>7</td>
+<td>MDD updates as per Src ver 7</td>
+<td>14-june-13</td>
+<td>NRAR</td>
+</tr>
+</tbody>
+</table>

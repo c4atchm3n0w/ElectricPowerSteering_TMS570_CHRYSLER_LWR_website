@@ -1,0 +1,210 @@
+---
+title: PWMCdd_Integration_Manual
+linkTitle: PWMCdd_Integration_Manual
+weight: 4
+---
+
+<h1 class="TOC-Heading" id="contents">Contents</h1>
+<p><a href="#dependencies">1 Dependencies <span>2</span></a></p>
+<p><a href="#swcs">1.1 SWCs <span>2</span></a></p>
+<p><a href="#configuration-files-to-be-provided-by-integration-project-project-specific">1.2 Configuration Files to be provided by Integration Project (Project Specific) <span>2</span></a></p>
+<p><a href="#functions-provided-to-integration-project">1.3 Functions provided to Integration Project <span>2</span></a></p>
+<p><a href="#configuration">2 Configuration <span>3</span></a></p>
+<p><a href="#build-time-config">2.1 Build Time Config <span>3</span></a></p>
+<p><a href="#generator-config">2.2 Generator Config <span>3</span></a></p>
+<p><a href="#integration">3 Integration <span>4</span></a></p>
+<p><a href="#global-data">3.1 Global Data <span>4</span></a></p>
+<p><a href="#component-conflicts">3.2 Component Conflicts <span>4</span></a></p>
+<p><a href="#project-specific">3.2.1 Project Specific <span>4</span></a></p>
+<p><a href="#include-path">3.3 Include Path <span>4</span></a></p>
+<p><a href="#runnable-scheduling">4 Runnable Scheduling <span>5</span></a></p>
+<p><a href="#memory-mapping">5 Memory Mapping <span>5</span></a></p>
+<p><a href="#mapping">5.1 Mapping <span>5</span></a></p>
+<p><a href="#usage">5.2 Usage <span>5</span></a></p>
+<p><a href="#revision-control-log">6 Revision Control Log <span>6</span></a></p>
+<h1 id="dependencies">Dependencies</h1>
+<h2 id="swcs">SWCs</h2>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Required Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CDD_Data</td>
+<td>Global variables for DC Phs Comp (for using in Nhet/)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-files-to-be-provided-by-integration-project-project-specific">Configuration Files to be provided by Integration Project (Project Specific)</h2>
+<p>PWMCdd_Cfg.h ( Note : Make sure Macro assignments match correct global variable included in PWMCdd_Cfg.h . File below is a template. Necessary definition changes needs to be made to template before integration).</p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.emf" /></p>
+<h2 id="functions-provided-to-integration-project">Functions provided to Integration Project</h2>
+<p>CDDPorts_ClearPhsReasSum(uint16 DataAccessBfr_Cnt_T_u16)</p>
+<p>CDD_ApplyPWMMtrElecMechPol(sint8 MtrElecMechPol_Cnt_s8)</p>
+<h1 id="configuration">Configuration</h1>
+<h2 id="build-time-config">Build Time Config</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 53%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+<th>SWC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="generator-config">Generator Config</h2>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 47%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+<th>SWC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="integration">Integration</h1>
+<h2 id="global-data">Global Data</h2>
+<p>The following global symbols must be defined in CDD_Data.c and .h (populated by PwmCdd):</p>
+<ul>
+<li><p>uint16: CDD_DCPhsComp_Cnt_G_u16[3]</p></li>
+<li><p>uint16: CDD_PWMPeriod_Cnt_G_u16</p></li>
+</ul>
+<h2 id="component-conflicts">Component Conflicts</h2>
+<h3 id="project-specific">Project Specific </h3>
+<ul>
+<li><p><strong>NHET/EPWM</strong> version corresponding PWMCdd component spilt and using global variables CDD_DCPhsComp_Cnt_G_u16 and CDD_PWMPeriod_Cnt_G_u16 should be used.</p></li>
+</ul>
+<h2 id="include-path">Include Path</h2>
+<p>The “include” directory of this SWC needs to be included in the integration project include search path.</p>
+<h1 id="runnable-scheduling">Runnable Scheduling</h1>
+<p>This section specifies the required runnable scheduling.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 45%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Runnable</th>
+<th>Scheduling Requirements</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PwmCdd_Init</td>
+<td>Place in EcuStartup. Execute along with NHET initialization.</td>
+<td>Init</td>
+</tr>
+<tr class="even">
+<td>PwmCdd_Per1</td>
+<td>Must be placed in the motor control ISR, before Nhet (or whichever function populates the global variables used byNhet).</td>
+<td>Cyclic (ISR) *</td>
+</tr>
+</tbody>
+</table>
+<p>*Note: don’t forget include header file from PWMCDD where PwmCdd_Per1 is called</p>
+<h1 id="memory-mapping">Memory Mapping</h1>
+<h2 id="mapping">Mapping</h2>
+<table>
+<colgroup>
+<col style="width: 48%" />
+<col style="width: 25%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Memory Section</th>
+<th>Contents</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PWMCDD_START_SEC_VAR_CLEARED_16</td>
+<td>Variable Definitions</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>* Each …START_SEC… constant is terminated by a …STOP_SEC… constant as specified in the AUTOSAR Memory Mapping requirements.</p>
+<h2 id="usage">Usage</h2>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 23%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>RAM</th>
+<th>ROM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Full driver</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Table 1: ARM Cortex R4 Memory Usage</p>
+<h1 id="revision-control-log">Revision Control Log</h1>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 71%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Rev #</strong></th>
+<th><strong>Change Description</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Author</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Initial version</td>
+<td>14-Feb-13</td>
+<td>Selva</td>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,227 @@
+---
+title: Dbkom
+linkTitle: Dbkom
+weight: 4
+---
+
+<p><strong>Module -- Dbkom</strong></p>
+<p><a href="#references">1 References <span>2</span></a></p>
+<p><a href="#configuration-settings">2 Configuration Settings <span>2</span></a></p>
+<p><a href="#il_dbkom-configuration">2.1 Il_Dbkom Configuration <span>2</span></a></p>
+<p><a href="#tx-messages">2.2 Tx Messages <span>2</span></a></p>
+<p><a href="#known-issues-limitations-with-configuration">3 Known Issues / Limitations With Configuration <span>3</span></a></p>
+<p><a href="#revision-control-log">4 Revision Control Log <span>4</span></a></p>
+<h1 id="references">References</h1>
+<ol type="1">
+<li><p>DBKOM Technical Reference v2.08.00 (<a href="../../../../../../../Vector/CBD1210021_D01_Tmsx70/external/Doc/TechnicalReferences/TechnicalReference_DBKOM_2_xx.pdf">TechnicalReference_DBKOM_2_xx.pdf</a>)</p></li>
+<li><p>TMS570LS Series Microcontroller Technical Reference Manual (TMS570 Tech Ref_spnu489.pdf)</p></li>
+</ol>
+<h1 id="configuration-settings">Configuration Settings</h1>
+<h2 id="il_dbkom-configuration">Il_Dbkom Configuration</h2>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 35%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Attribute Name</strong></th>
+<th><strong>Value</strong></th>
+<th><strong>Rationale</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="3">Configurable Options</td>
+</tr>
+<tr class="even">
+<td>User Config File</td>
+<td>None</td>
+<td>Default setting</td>
+</tr>
+<tr class="odd">
+<td colspan="3">Write access to rx buffer</td>
+</tr>
+<tr class="even">
+<td>Byte</td>
+<td>No</td>
+<td>Default setting</td>
+</tr>
+<tr class="odd">
+<td>Word</td>
+<td>No</td>
+<td>Default setting</td>
+</tr>
+<tr class="even">
+<td>nByte</td>
+<td>No</td>
+<td>Default setting</td>
+</tr>
+<tr class="odd">
+<td colspan="3">Timing parameters</td>
+</tr>
+<tr class="even">
+<td>Start Delay Time Area [ms]</td>
+<td>200</td>
+<td>Default setting</td>
+</tr>
+<tr class="odd">
+<td colspan="3">Channel0</td>
+</tr>
+<tr class="even">
+<td>TxCycle</td>
+<td>2</td>
+<td>2ms is a common factor of the transmission rates 10ms and 100ms and also ensures that the message trigger jitter is less than the required +/- 5ms.</td>
+</tr>
+<tr class="odd">
+<td>RxCycle</td>
+<td>10</td>
+<td>Default setting</td>
+</tr>
+<tr class="even">
+<td colspan="3">Transceiver Settings</td>
+</tr>
+<tr class="odd">
+<td>Transceiver Config File</td>
+<td>None</td>
+<td>Default setting</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tx-messages">Tx Messages</h2>
+<h3 id="d_rs_eps">D_RS_EPS</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 35%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Attribute Name</strong></th>
+<th><strong>Value</strong></th>
+<th><strong>Rationale</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="3">D_RS_EPS</td>
+</tr>
+<tr class="even">
+<td>Generate</td>
+<td>Yes</td>
+<td>Default setting</td>
+</tr>
+<tr class="odd">
+<td>Start delay time [ms]</td>
+<td>n/a</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="3">ECU_APPL_EPS</td>
+</tr>
+<tr class="odd">
+<td>Generate</td>
+<td>Yes</td>
+<td>Default setting</td>
+</tr>
+<tr class="even">
+<td>Start delay time [ms]</td>
+<td>n/a</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="3">EPS_1</td>
+</tr>
+<tr class="even">
+<td>Generate</td>
+<td>Yes</td>
+<td>Required tx message</td>
+</tr>
+<tr class="odd">
+<td>Start delay time [ms]</td>
+<td>0</td>
+<td>Arbitrarily set to 0, however, the time between this 10ms cyclic message and the EPS_A1 100ms cyclic message must be greater than 2 ms.</td>
+</tr>
+<tr class="even">
+<td colspan="3">EPS_A1</td>
+</tr>
+<tr class="odd">
+<td>Generate</td>
+<td>Yes</td>
+<td>Required tx message</td>
+</tr>
+<tr class="even">
+<td>Start delay time [ms]</td>
+<td>4</td>
+<td>5ms offset is the optimal spacing for offsetting this message from EPS_1. The current system tick is 2ms, so 4ms was selected. 4ms provides a guaranteed 2ms message spacing even under extreme jitter.</td>
+</tr>
+<tr class="odd">
+<td colspan="3">NM_EPS</td>
+</tr>
+<tr class="even">
+<td>Generate</td>
+<td>Yes</td>
+<td>Default setting</td>
+</tr>
+<tr class="odd">
+<td>Start delay time [ms]</td>
+<td>n/a</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="3">SD_RS_EPS</td>
+</tr>
+<tr class="odd">
+<td>Generate</td>
+<td>Yes</td>
+<td>Default setting</td>
+</tr>
+<tr class="even">
+<td>Start delay time [ms]</td>
+<td>0</td>
+<td>Default setting</td>
+</tr>
+</tbody>
+</table>
+<h1 id="known-issues-limitations-with-configuration">Known Issues / Limitations With Configuration</h1>
+<ol type="1">
+<li><p>The configuration is only partially documented due to lack of time.</p></li>
+</ol>
+<h1 id="revision-control-log"><br />
+Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Item #</strong></th>
+<th><strong>Rev #</strong></th>
+<th><strong>Change Description</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Author Initials</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1.0</td>
+<td>Initial Creation</td>
+<td>30JUL13</td>
+<td>JJW</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>

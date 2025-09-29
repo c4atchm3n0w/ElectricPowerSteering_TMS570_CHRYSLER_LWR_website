@@ -1,0 +1,945 @@
+---
+title: Arbiter_Limiter_Chrysler_MDD
+linkTitle: Arbiter_Limiter_Chrysler_MDD
+weight: 2
+---
+
+<h1 class="unnumbered" id="module">Module – </h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This module arbitrates between the HaLF, DST, and PA features to produce the input and output torque overlay signals. It also provides an output showing which features are enabled.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="component-diagram">Component Diagram</h2>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:3.24375in;height:2.79097in" /></p>
+<h1 id="variable-data-dictionary"><br />
+Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 0%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs</th>
+<th colspan="2">Module Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2">HaLFTrqOvCmdRqst_MtrNm_f32</td>
+<td>OpTrqOvr_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td colspan="2">DSTTrqOvCmdRqst_HwNm_f32</td>
+<td>IpTrqOvr_HwNm_f32</td>
+</tr>
+<tr class="odd">
+<td colspan="2">PATrqOvCmdRqst_HwNm_f32</td>
+<td>ActiveFunctionBits_Cnt_u08</td>
+</tr>
+<tr class="even">
+<td colspan="2">HaLFActive_Cnt_lgc</td>
+<td>DSTSlewComplete_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td colspan="2">DSTActive_Cnt_lgc</td>
+<td>HaLFSlewComplete_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2">VehicleSpeed_Kph_f32</td>
+<td>PPPASlewComplete_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td colspan="2">DSTState_Cnt_u08</td>
+<td>PAReturnSclFct_Uls_f32</td>
+</tr>
+<tr class="even">
+<td colspan="2">HalfTOState_Cnt_u08</td>
+<td>PICmpDisableLearning_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td colspan="2">PrkAssistState_Cnt_u08</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 17%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DSTScalarSlew_Uls_M_f32</td>
+<td>Single Precision Float`</td>
+<td>0</td>
+<td>1</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>HaLFScalarSlew_Uls_M_f32</td>
+<td>Single Precision Float`</td>
+<td>0</td>
+<td>1</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>DSTSlew_HwNm_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>1</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>HaLFSlew_MtrNm_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>1</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="odd">
+<td>PPPASlew_HwNm_M_f32</td>
+<td>Single Precision Float</td>
+<td>0</td>
+<td>1</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_32</td>
+</tr>
+<tr class="even">
+<td>DSTLowSpdPri_Cnt_M_lgc</td>
+<td>boolean</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>PrevDSTActive_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>PrevDSTRampActive_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>PrevHaLFRampActive_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>PPPAPriority_Cnt_D_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>SlewActive_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>PrevDSTSlewState_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="odd">
+<td>PrevHaLFSlewState_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td>PrevPPPASlewState_Cnt_M_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>ARBLMT_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Typedef Name</th>
+<th>Element Name</th>
+<th>User Defined Type</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>k_PPPAPriorityVehSpd_Kph_f32</td>
+</tr>
+<tr class="even">
+<td>k_RateLimit_UlspS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_DSTSlewRate_NmpS_f32</td>
+</tr>
+<tr class="even">
+<td>k_HaLFSlewRate_NmpS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_PPPASlewRate_NmpS_f32</td>
+</tr>
+<tr class="even">
+<td>t2_AsstY0_MtrNm_s4p11[][]</td>
+</tr>
+<tr class="odd">
+<td>t2_HwtX0_HwNm_u8p8[][]</td>
+</tr>
+<tr class="even">
+<td>t_PPPAVehSpd_Kph_u9p7[]</td>
+</tr>
+<tr class="odd">
+<td>k_HalFPICmpThresh_MtrNm_f32</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Units</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_4MS_S_F32</td>
+<td>Single Precision Float</td>
+<td>S</td>
+<td>0.004</td>
+</tr>
+<tr class="even">
+<td>D_PPPAFUNCBIT_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>D_DSTFUNCBIT_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>D_HALFFUNCBIT_CNT_U08</td>
+<td>1</td>
+<td>Counts</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>D_PPPALOLMT_MTRNM_F32</td>
+<td>Single Precision Float</td>
+<td>MtrNm</td>
+<td>-0.1</td>
+</tr>
+<tr class="even">
+<td>D_PPPAHILMT_MTRNM_F32</td>
+<td>Single Precision Float</td>
+<td>MtrNm</td>
+<td>8.8</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ONE_ULS_F32</td>
+</tr>
+<tr class="even">
+<td>D_ZERO_ULS_F32</td>
+</tr>
+<tr class="odd">
+<td>D_ZERO_CNT_U8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 11%" />
+<col style="width: 40%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules"><br />
+Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library and functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>Limit_m</p></li>
+<li><p>Abs_f32_m</p></li>
+<li><p>FPM_FloatToFixed_m</p></li>
+<li><p>FPM_FixedToFloat_m</p></li>
+<li><p>Sign_f32_m</p></li>
+<li><p>BilinearXMYM_s16_u16XMs16YM_Cnt</p></li>
+<li><p>TableSize_m</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<ol type="1">
+<li><p>None</p></li>
+</ol>
+<h2 id="global-functionsmacros-defined-by-this-module">Global Functions/Macros Defined by this Module</h2>
+<p>None</p>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<h3 id="abriter-slew-limit">Abriter Slew Limit</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 38%" />
+<col style="width: 13%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ArbiterSlewLimit</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UT Tolerance</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TrqOvCmdRqst_HwNm_T_f32</td>
+<td>Float32</td>
+<td>-10</td>
+<td>10</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SlewState_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SlewRate_NmpS_T_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>2</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TrqOvCmdOut_HwNm_T_f32</td>
+<td>*Float32</td>
+<td>-10</td>
+<td>10</td>
+<td>3.05E-05</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SlewComplete_Cnt_T_lgc</td>
+<td>*Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>CmdActive_Cnt_T_lgc</td>
+<td>*Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Slew_Uls_T_f32</td>
+<td>*Float32</td>
+<td>-10</td>
+<td>10</td>
+<td>3.05E-05</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PrevSlewState_Cnt_T_lgc</td>
+<td>*Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.emf" /></p>
+<h3 id="arbiter-priority">Arbiter Priority</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 38%" />
+<col style="width: 13%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ArbiterPriority</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UT Tolerance</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>VehSpd_Kph_T_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>511</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTCmdActive_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PPPACmdActive_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFCmdActive_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HaLFPriActive_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PPPAPriActive_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>DSTPriActive_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-1">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.emf" /></p>
+<h3 id="arbiter-ramping">Arbiter Ramping</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 38%" />
+<col style="width: 13%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ArbiterRamping</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+<td>UT Tolerance</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTEnable_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DSTSlewComplete_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HaLFEnable_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFSlewComplete_Cnt_T_lgc</td>
+<td>Boolean</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>DSTScalar_Uls_T_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>1</td>
+<td>3.05E-05</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFScalar_Uls_T_f32</td>
+<td>Float32</td>
+<td>0</td>
+<td>1</td>
+<td>3.05E-05</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-2">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.emf" /></p>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="runtime-environment-rte-initial-values">Runtime Environment (RTE) Initial Values</h2>
+<p>This section lists the initial values of data written by this module but controlled by the RTE. After RTE initialization, the data in this table will contain these values.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rte_InitValue_ActiveFunctionBits_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_DSTActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_DSTSlewComplete_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_DSTState_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_DSTTrqOvCmdRqst_HwNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_HaLFActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_HaLFSlewComplete_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_HaLFTOState_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_HaLFTrqOvCmdRqst_MtrNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_IpTrqOvr_HwNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_OpTrqOvr_MtrNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_PAReturnSclFct_Uls_f32</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_PATrqOvCmdRqst_HwNm_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_PrkAssistState_Cnt_u08</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>Rte_InitValue_PrkAsstSlewComplete_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="even">
+<td>Rte_InitValue_VehicleSpeed_Kph_f32</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<p>None</p>
+<h2 id="periodic-functions"><br />
+Periodic Functions</h2>
+<h3 id="per-_per1">Per: _Per1</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>None</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>Rte_Call_ArbLmt_Per1_CP0_CheckpointReached()</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p>DSTActive_Cnt_T_lgc = Rte_IRead_ArbLmt_Per1_DSTActive_Cnt_lgc()</p>
+<p>HaLFActive_Cnt_T_lgc = Rte_IRead_ArbLmt_Per1_HaLFActive_Cnt_lgc()</p>
+<p>DSTState_Cnt_T_u08 = Rte_IRead_ArbLmt_Per1_DSTState_Cnt_u08()</p>
+<p>DSTTrqOvCmdRqst_HwNm_T_f32 = Rte_IRead_ArbLmt_Per1_DSTTrqOvCmdRqst_HwNm_f32()</p>
+<p>HaLFTrqOvCmdRqst_MtrNm_T_f32 = Rte_IRead_ArbLmt_Per1_HaLFTrqOvCmdRqst_MtrNm_f32()</p>
+<p>HaLFTOState_Cnt_T_u08 = Rte_IRead_ArbLmt_Per1_HaLFTOState_Cnt_u08()</p>
+<p>PATrqOvCmdRqst_HwNm_T_f32 = Rte_IRead_ArbLmt_Per1_PATrqOvCmdRqst_HwNm_f32()</p>
+<p>PrkAssistState_Cnt_T_u08 = Rte_IRead_ArbLmt_Per1_PrkAssistState_Cnt_u08()</p>
+<p>VehicleSpeed_Kph_T_f32 = Rte_IRead_ArbLmt_Per1_VehicleSpeed_Kph_f32()</p>
+<h4 id="dst-slew">DST Slew</h4>
+<p>c</p>
+<h4 id="half-slew">HaLF Slew</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.emf" /></p>
+<h4 id="pppa-slew">PPPA Slew</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.emf" /></p>
+<h4 id="priority">Priority</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.emf" /></p>
+<h4 id="ramping">Ramping</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.emf" /></p>
+<h4 id="arbiter">Arbiter</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_ArbLmt_Per1_ActiveFunctionBits_Cnt_u08(ActiveFunctionBits_Cnt_T_u08)</p>
+<p>Rte_IWrite_ArbLmt_Per1_DSTSlewComplete_Cnt_lgc(DSTSlewComplete_Cnt_T_lgc)</p>
+<p>Rte_IWrite_ArbLmt_Per1_HaLFSlewComplete_Cnt_lgc(HaLFSlewComplete_Cnt_T_lgc)</p>
+<p>Rte_IWrite_ArbLmt_Per1_IpTrqOvr_HwNm_f32(IpTrqOvr_HwNm_T_f32)</p>
+<p>Rte_IWrite_ArbLmt_Per1_OpTrqOvr_MtrNm_f32(OpTrqOvr_MtrNm_T_f32)</p>
+<p>Rte_IWrite_ArbLmt_Per1_PAReturnSclFct_Uls_f32(PAReturnSclFct_Uls_T_f32)</p>
+<p>Rte_IWrite_ArbLmt_Per1_PrkAsstSlewComplete_Cnt_lgc(PPPASlewComplete_Cnt_T_lgc)</p>
+<p>Rte_IWrite_ArbLmt_Per1_PICmpDisableLearning_Cnt_lgc(PICmpDisableLearning_Cnt_T_lgc)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_ArbLmt_Per1_CP1_CheckpointReached()</p>
+<h2 id="fault-recovery-functions"><br />
+Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions">Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions">Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions">Serial Communication Functions</h2>
+<p>None</p>
+<h2 id="section"><br />
+</h2>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ArbLmt_Per1</td>
+<td>4 ms</td>
+<td>ALL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-1"></h1>
+<h1 id="memory-map-definition-requirements"><br />
+Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ArbLmt_Per1</td>
+<td>RTE_START_SEC_AP_ARBLMT_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-2"></h2>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ArbiterSlewLimit</td>
+<td>N/A</td>
+</tr>
+<tr class="even">
+<td>ArbiterPriority</td>
+<td>N/A</td>
+</tr>
+<tr class="odd">
+<td>ArbiterRamping</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-3"></h1>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>INLINE functions defined in GlobalMacro.h are not unit tested.</p></li>
+</ol>
+<h1 id="revision-control-log"><br />
+Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 64%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Item #</strong></td>
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.0</td>
+<td>Initial Version</td>
+<td>29-Oct-12</td>
+<td>OT</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2.0</td>
+<td>Anomaly 4668</td>
+<td>22-Mar-13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3.0</td>
+<td>Update to FDD ver 003</td>
+<td>15-May-13</td>
+<td>Jared</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4.0</td>
+<td>UTP corrections</td>
+<td>30-May-13</td>
+<td>Jared</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5.0</td>
+<td>Updated to FDD ver 004</td>
+<td>10-Jul-13</td>
+<td>SP</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6.0</td>
+<td>Anomaly 6467</td>
+<td>14-MAR-14</td>
+<td>M. Story</td>
+</tr>
+</tbody>
+</table>

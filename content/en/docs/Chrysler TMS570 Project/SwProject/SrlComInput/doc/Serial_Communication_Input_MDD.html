@@ -1,0 +1,6134 @@
+---
+title: Serial_Communication_Input_MDD
+linkTitle: Serial_Communication_Input_MDD
+weight: 16
+---
+
+<h1 class="unnumbered" id="module-serial-communications-input">Module – Serial Communications Input</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>The <strong>Serial Communications</strong> <strong>Input</strong> module provides a signal level interface between the EPS application layer and the serial communications software. Provide for the network management functionality for the serial communications interface. This module will be customized for each distinct vehicle platform. This module will be responsible for converting the range and resolution of the Application Layer variables to the range and resolution of the associated serial communications signals.</p>
+<p>This module processes the data for signals that are received by the EPS controller from other ECUs on the communication bus. Serial Communications signal input data is scaled appropriately and then transferred to the global application data for use by the EPS application software. Similarly, the Serial Communications <strong>Output</strong> module, takes the global data to the EPS application software scales the data as required by the serial communication transmit signal and transfers the updated signal to the communication bus.</p>
+<h1 id="figures">Figures</h1>
+<h2 id="component-diagram">Component Diagram </h2>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:1.41667in;height:7.83333in" /></p>
+<h1 id="variable-data-dictionary">Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs (Global Variable Name)</th>
+<th>Module Outputs (Global Variable Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DSTSlewStart_Cnt_lgc</td>
+<td>BattVolt_Volt_f32</td>
+</tr>
+<tr class="even">
+<td>DSTState_Cnt_u08</td>
+<td>CMDIgnStat_Cnt_u08</td>
+</tr>
+<tr class="odd">
+<td>DefaultVehSpd_Cnt_lgc</td>
+<td>CanMsgReceived_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>HaLFState_Cnt_u08(</td>
+<td>DSTEOLDisable_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td>HaLFSuspend_Cnt_lgc</td>
+<td>DSTEnableRqst_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>HandsOnDetect_Cnt_lgc</td>
+<td>DSTErrCntrRecvLevel_Cnt_u08</td>
+</tr>
+<tr class="odd">
+<td>PABoostCurveSwitch_Cnt_lgc</td>
+<td>DSTExtSystemFltActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td>PrkAssistState_Cnt_u08</td>
+<td>DSTFuncPresent_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td>PrkAssistSuspend_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>StrClmTrq_HwNm_f32</td>
+<td>DSTTOCState_Uls_enum</td>
+</tr>
+<tr class="odd">
+<td>RxMsgsSrlComSvcDft_Cnt_lgc</td>
+<td>DSTTrqOvCmdRqst_HwNm_f32</td>
+</tr>
+<tr class="even">
+<td>MEC_Cnt_enum</td>
+<td>DSTTrqOvRqstValid_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td>EstFric_HwNm_f32</td>
+<td>EssEngStop_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>DesiredTunPers_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DesiredTunSet_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>EngRPM_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFEnableRqst_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HaLFErrInterfaceActive_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFExtSystemFltActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HaLFFuncPresent_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFIntSystemFltActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HaLFSWATrqFail_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td>..</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>HaLFState_Cnt_T_u8</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFTrqOvCmdRqst_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>IWSSCalcVspd_Kph_f32</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ODO_HwNmSq_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PAEnableRqst_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PAErrInterfaceActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PAExtSystemFltActive_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PAIntSystemFltActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PAManoeuvrePhase_Cnt_u08</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PATrqOvCmdRqst_HwNm_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PAWheelCriteriaMet_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PAWhlDirRLStat_Cnt_u08</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PAWhlDirRRStat_Cnt_u08</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PAWhlPlsCntRLValid_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PAWhlPlsCntRRValid_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PrkAssistState_Cnt_T_u8</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PrkAsstFuncPresent_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SpStPrsnt_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SrlComVehSpd_Kph_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SrlComVehSpdValid_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>StrgWhlAngl_HwDeg_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>StrgWhlAnglValid_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>TrqOvReverseGearEngage_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>VehAccel_KphpS_f32</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Nvm_VehicleInfo_Cnt_u8[4]</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>AirTempOutside_DegC_f32</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>AmbTempAvg_DegC_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SrlComLWhlSpdVld_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SrlComRWhlSpdVld_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SrlComLWhlSpd_Hz_f32</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SrlComRWhlSpd_Hz_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>EngOilTemp_DegC_f32</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>NET_CFG_STAT_PT_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>LongAcceleration_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>CfgStatRQ_Cnt_T_u8</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>EPS_Mode_Req_Cnt_T_u8</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>PrevHaLFTrqOvRqst_MtrNm_f32</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>PrevHaLFEnableRqst_Cnt_lgc</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Any input signals that are not listed in the ‘Module Inputs’ section above but shown in the component diagram as a receiver port are dummy signals which are used to determine loss of a certain message when data receive error event is triggered.</p>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 10%" />
+<col style="width: 13%" />
+<col style="width: 12%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevDSTState_Cnt_M_u8</td>
+<td>1</td>
+<td>0</td>
+<td>8</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTActiveStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>DSTXorCptNTC18F_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevHaLFState_Cnt_M_u8</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevPAState_Cnt_M_u8</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehSpdVldStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VehSpdMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>IgnStatVldStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>IgnStatMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>EngRPMVldStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>EngRPMMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>SWAVldStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>SWAMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTTOCMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>NETCFGPTMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>HalfMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PTSMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevMC_29Fh_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PTSTrqOverlayAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PSTTrqOvrlChngeLmt_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevVC_PPPA_PrsntTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTTOCMsgCntAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>DSTTOCMsgTmrAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>MC_29Fh_Bad_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>MC_292h_Bad_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevMC_292h_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevMtrTorqOverlayStrReq_Cnt_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevVC_TIRE_CIRCUMF_mm_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VC_TIRE_CIRCUMF_mm_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevWhlPlsCnt_RL_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>254</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevWhlPlsCnt_RR_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>254</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevMC_292h_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>MC_292h_Bad_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>HalfMaxTrqStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevHaLFPresent_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PASlewStep_Nm_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>HaLFSlewStep_Nm_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PAIntSystemFltActive_Cnt_M_bit</td>
+<td>2^x</td>
+<td>0</td>
+<td>2048</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>HaLFIntSystemFltActive_Cnt_M_bit</td>
+<td>2^x</td>
+<td>0</td>
+<td>2048</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevMC_11Ch_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>MC_11Ch_Bad_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PAErrInterfaceActive_Cnt_M_bit</td>
+<td>2^x</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>HaLFErrInterfaceActive_Cnt_M_bit</td>
+<td>2^x</td>
+<td>0</td>
+<td>2048</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTRevGearValid_Cnt_M_bit</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>NetCfg_HaLF_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_PTS_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevNetCfg_HaLF_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevNetCfg_PTS_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevNetCfg_TCM_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>HaLFTrqOvrlChngeAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>CRC294DiagAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PSTTrqOvrlSlewLmt_Nm_M_f32</td>
+<td>0.1</td>
+<td>-8.8</td>
+<td>8.8</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>HaLFTrqOvrlSlewLmt_Nm_M_f32</td>
+<td>0.1</td>
+<td>-8.8</td>
+<td>8.8</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTTrqOvrlSlewLmt_Nm_M_f32</td>
+<td>0.1</td>
+<td>-8.8</td>
+<td>8.8</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>CRC11CDiagAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>CRC29FDiagAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>CRC292DiagAcc_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevMC_294h_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>DSTErrCntrRecvLevel_Cnt_M_bit</td>
+<td>2^x</td>
+<td>0</td>
+<td>2048</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_ESC_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevNetCfg_ESC_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>HaLFTrqOvCmdRqst_MtrNm_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PATrqOvCmdRqst_HwNm_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>TO_Req_HwNm_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevDSTPresent_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ESP4AMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>BattVoltInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ECMA3MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>ESP4AInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>IC1AInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>IC1AMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>NET_CFG_STAT_PT_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>NetCfg_CBC_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_ECM_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>NetCfg_IC_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_SCCM_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevNetCfg_CBC_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevNetCfg_ECM_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevNetCfg_IC_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevNetCfg_SCCM_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>BattVoltMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevVCBodyStyle_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>0x0F</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevVCCountry_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>0x1F</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevVCModelYear_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>0x3F</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevVCVehLine_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>0xFF</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehCfg1InvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VehCfg1MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VINInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VINMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>CBCNodeAbsStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>BattVoltHighRecTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>BattVoltHighStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>BattVoltLowRecTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>BattVoltLowStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>DSLNodeAbsStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>StrWhlAnglRatStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VehAccel_Y_Cnt_M_f32</td>
+<td>0.08</td>
+<td>-10.24</td>
+<td>10.08</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehAccel_X_Cnt_M_f32</td>
+<td>0.08</td>
+<td>-10.24</td>
+<td>10.08</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VehCfg3InvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehSpd_Kph_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>255</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevHALFSystemSts_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevVINData_Cnt_M_u08[7]</td>
+<td>1</td>
+<td>0</td>
+<td>2^56</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>StrgWhlAngl_M_f32</td>
+<td>0.5</td>
+<td>-1024</td>
+<td>1024</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VINRxCount_Cnt_M_u08[3]</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>EnableTorqueOverlay_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>CurrentVINPending_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>StartVinOdo_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>CurrentVinPendingStart_Km_M_f32</td>
+<td>0.1</td>
+<td>0</td>
+<td>429496729.6</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevEngON_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>WHEELSPEED2MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>WHEELSPEED2InvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>WRSFaultStatus_Cnt_M_b16</td>
+<td>1</td>
+<td>0</td>
+<td>65535</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevWheelFreqFL_Hz_T_f32</td>
+<td>0.001953125</td>
+<td>0</td>
+<td>0.2499923828125</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevWheelFreqFR_Hz_T_f32</td>
+<td>0.001953125</td>
+<td>0</td>
+<td>0.2499923828125</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>EngCfgMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>EngOilTempMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>TrnsmsnType_Cnt_M_u8</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>TRNSSTATMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>TRNSSTATInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevDesiredTunSet_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>256</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>RevGearTempMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehCfg5MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VehCfg5MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehCfg5MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VehCfg5MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>VehCfg5MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>VCTireCircRcvd_Cnt_M_Lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ESPA6MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>CfgRQCMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>CfgRQMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>EcuCfg6InvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>GWLINIC2InvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>GWLINIC2MisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>PrevTOReq_HwNm_M_f32</td>
+<td>0.01</td>
+<td>18.0</td>
+<td>-18.0</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>TrqBandHi_Nm_M_f32</td>
+<td>0.01</td>
+<td>18.0</td>
+<td>-18.0</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>TrqBandLow_Nm_M_f32</td>
+<td>0.01</td>
+<td>18.0</td>
+<td>-18.0</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>TrqBndEstab_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>TrqStckStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTTOCInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>DSTExtSystemFltActive_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DSTTOCInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PerMisMchFlt_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>PrevMtrTrqOvrlyStrngReq_Nm_M_f32</td>
+<td>0.01</td>
+<td>18.0</td>
+<td>-18.0</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>MtrTrqOvrlyStrRqMax_Nm_M_f32</td>
+<td>0.01</td>
+<td>18.0</td>
+<td>-18.0</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>ManualVehSpd_Kph_M_f32</td>
+<td>1</td>
+<td>0</td>
+<td>255</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>ManualVehSpdOvrRide_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>HaLFFuncPresentTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>SRLCOMINPUT_START_SEC_VAR_SAVED_ZONEH_8</td>
+</tr>
+<tr class="even">
+<td>DSTFuncPresentTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>SRLCOMINPUT_START_SEC_VAR_SAVED_ZONEH_8</td>
+</tr>
+<tr class="odd">
+<td>VC_PPPA_PrsntTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>SRLCOMINPUT_START_SEC_VAR_SAVED_ZONEH_8</td>
+</tr>
+<tr class="even">
+<td>TuningSetForNextCycleTypH_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>SRLCOMINPUT_START_SEC_VAR_SAVED_ZONEH_16</td>
+</tr>
+<tr class="odd">
+<td>TOC_Sts_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>15</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>PrevDesiredTunPers_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>15</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>HalfTrqMax_Nm_M_f32</td>
+<td>0.1</td>
+<td>-8.8</td>
+<td>8.8</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>HndsOnDrngPPAStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>TuningPerformedStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>EC_SteeringIvld_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="odd">
+<td>TuningPerformedTypH_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>15</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>NetCfg_PTSTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_HaLFTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="even">
+<td>NetCfg_ESCTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_CBCTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="even">
+<td>NetCfg_ECMTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="odd">
+<td>NetCfg_ICTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="even">
+<td>NetCfg_SCCMTypH_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="odd">
+<td>SpStPrsnt_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="even">
+<td>Gear_Cnt_M_u16</td>
+<td>1</td>
+<td>0</td>
+<td>2^16</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>TRNSSPDMisMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="even">
+<td>GrInvMsgStartTime_mS_M_u32</td>
+<td>1</td>
+<td>0</td>
+<td>2^32</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC124Set_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT)</td>
+</tr>
+<tr class="even">
+<td>DSTState_Cnt_M_u08</td>
+<td>1</td>
+<td>0</td>
+<td>0xFF</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+<tr class="odd">
+<td>EnableRqst_Cnt_M_lgc</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>AP_SRLCOMINPUT_VAR_INIT</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 25%" />
+<col style="width: 21%" />
+<col style="width: 9%" />
+<col style="width: 0%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Typedef Name</th>
+<th>Element Name</th>
+<th>User Defined Type</th>
+<th colspan="2"><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section"></h1>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>k_VehSpdMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_VehSpdValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_IgnStatMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_IgnStatValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_EngRPMMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_EngRPMValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_SWAValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_StrgWhlAnglPol_s08</td>
+</tr>
+<tr class="odd">
+<td>k_SWAMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_PSTMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_VehCfg5MisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_HalfMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_NETCFGMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_EcuCfg6MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_PSTTrqOverlayDiag_Cnt_str</td>
+</tr>
+<tr class="even">
+<td>k_PSTTrqOverlayLmt_Cnt_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MC292hMsg_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_MC11ChMsg_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTOCProgCnt1Diag_Cnt_str</td>
+</tr>
+<tr class="even">
+<td>k_DSTTOCProgCnt2Diag_Cnt_str</td>
+</tr>
+<tr class="odd">
+<td>k_MC29FhMsg_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_HalfTrqMax_Nm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MsgMaxHalfTorqTO_mS_u32p0</td>
+</tr>
+<tr class="even">
+<td>k_PASlewRate_NmpS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_PSTTrqOvrlChngeLmt_NmpS_f32</td>
+</tr>
+<tr class="even">
+<td>k_PSTTrqOvrlChngeLmtDiag_Cnt_str</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFSlewRate_NmpS_f32</td>
+</tr>
+<tr class="even">
+<td>k_HaLFTrqOvrlChngeLmt_NmpS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFTrqOverlayDiag_Cnt_str</td>
+</tr>
+<tr class="even">
+<td>k_CRC292DiagMsg_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_CRC29FDiagMsg_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_CRC11CDiagMsg_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_IWSSVSpdConst_Cnt_f32</td>
+</tr>
+<tr class="even">
+<td>k_BattVoltInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_BattVoltMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ECMA3MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_ESP4AInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ESP4AMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_IC1AAInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_IC1AMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_VehCfg1AInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_VehCfg1MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_VINInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_VINMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_BattMsgVoltHighTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_BattMsgVoltLowTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_CBCNodeAbsTime_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_DSLNodeAbsTime_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_StrWhlAnglRatTime_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_VehCfg3InvMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_CRC294DiagThr1_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_CRC294DiagThr2_Cnt_str</td>
+</tr>
+<tr class="odd">
+<td>k_DSTMisMsgThr0_ms_u16</td>
+</tr>
+<tr class="even">
+<td>k_DSTTOCActMisMsgThr1_Cnt_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTOCActMisMsgThr2_Cnt_str</td>
+</tr>
+<tr class="even">
+<td>k_DSTTOCNotActMisMsgThr1_Cnt_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTOCNotActMisMsgThr2_Cnt_str</td>
+</tr>
+<tr class="even">
+<td>k_DSTTOCProgCntDiagThr2_Cnt_str</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTOCProgCntThr1_Cnt_u16</td>
+</tr>
+<tr class="even">
+<td>k_MsgMaxHalfTorqTO_Nm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTrqMax_HwNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_DSTTrqOvrlSlewLmt_NmpS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_MaxDSTActiveTime_mS_u32p0</td>
+</tr>
+<tr class="even">
+<td>k_MaxDSTXorCptNTC18F_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_maxFreqChg_RevpSec_f32</td>
+</tr>
+<tr class="even">
+<td>k_WSP2AInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_WSP2TimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_EngCfgMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_EngOilTempMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ECMA3InvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_RevGearMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_TrnsStatInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_TrnsStatTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_VehCfg5MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_ESPA5MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ESPA5ValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_ESPA6MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ESPA6ValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_TireCircRcvdTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_TrqOvrlMaxSlewDiag_Cnt_str</td>
+</tr>
+<tr class="odd">
+<td>k_CfgRQCMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_CfgRQMisMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_EcuCfg6InvMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ESPA5MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_ESPA5ValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_ESPA6MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_ESPA6ValTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_GWLINIC2InvMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_GWLINIC2MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_VehCfg7InvMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_VehCfg7MsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_StuckTrqBnd_Nm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_TrqStckActv_HwNm_M_f32</td>
+</tr>
+<tr class="even">
+<td>k_TrqStckHiSWATime_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_TrqStckLowSWATime_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_TrqStckSWA_HwDeg_f32</td>
+</tr>
+<tr class="odd">
+<td>k_DSTTOCInvMsgTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_MaxHlfRmpOutRt_Nm_F32</td>
+</tr>
+<tr class="odd">
+<td>k_MtrTrqOvrlyStrRqMax_Nm_f32</td>
+</tr>
+<tr class="even">
+<td>k_PerMisMchCntLmt_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_PerMisMchFltThr_Cnt_u08</td>
+</tr>
+<tr class="even">
+<td>k_AnaHwTorquePerLim_HwNm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFTrqPerLim_HwNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_DesiredTuning_Cnt_u16[2][15]</td>
+</tr>
+<tr class="odd">
+<td>k_TuningPerformedTimeOut_mS_u16p0</td>
+</tr>
+<tr class="even">
+<td>k_AnaHwTorquePerLim_HwNm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFTrqPerLim_HwNm_f32</td>
+</tr>
+<tr class="even">
+<td>k_HalfTrqMaxSpt_Nm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFTrqOvrlSlewLmtSpt_NmpS_f32</td>
+</tr>
+<tr class="even">
+<td>k_HalfTrqMaxNrm_Nm_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HaLFTrqOvrlSlewLmtNrm_NmpS_f32</td>
+</tr>
+<tr class="even">
+<td>k_EstFricLim_HwNm_T_f32</td>
+</tr>
+<tr class="odd">
+<td>k_HndsOnDrngPAA_mS_u16</td>
+</tr>
+<tr class="even">
+<td>k_PTSDrStylTunSet_Cnt_u16</td>
+</tr>
+<tr class="odd">
+<td>k_MtrTorqOvrlStrReqPol_Cnt_f32</td>
+</tr>
+<tr class="even">
+<td>k_TOReqPol_Cnt_f32</td>
+</tr>
+<tr class="odd">
+<td>k_TorqOvrlStrReqPol_Cnt_f32</td>
+</tr>
+<tr class="even">
+<td>k_GrInvTimeOut_mS_u16p0</td>
+</tr>
+<tr class="odd">
+<td>k_TRNSSPMsgTimeOut_mS_u16p0</td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-1"></h2>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 51%" />
+<col style="width: 22%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_TUNNINGSETOFFSET_CNT_U16</td>
+<td>1</td>
+<td>0x1EU</td>
+</tr>
+<tr class="even">
+<td>D_CRCINIT_CNT_U8</td>
+<td>1</td>
+<td>0xFFu</td>
+</tr>
+<tr class="odd">
+<td>D_CRCXORVALUE_CNT_U8</td>
+<td>1</td>
+<td>0xFFu</td>
+</tr>
+<tr class="even">
+<td>D_COUNTERCYCLE16_CNT_U16</td>
+<td>1</td>
+<td>0x10u</td>
+</tr>
+<tr class="odd">
+<td>D_VEHSPEEDNOTAVAILABLE_CNT_U16</td>
+<td>1</td>
+<td>0xFFFFu</td>
+</tr>
+<tr class="even">
+<td>D_VEHSPEEDSCALE_KPH_F32</td>
+<td></td>
+<td>0.0078125f</td>
+</tr>
+<tr class="odd">
+<td>D_LRWSCALE_HWDEG_F32</td>
+<td></td>
+<td>0.5f</td>
+</tr>
+<tr class="even">
+<td>D_LRWOFFSET_HWDEG_F32</td>
+<td></td>
+<td>2048.0f</td>
+</tr>
+<tr class="odd">
+<td>D_LRWRHPSCALE_HWDEG_F32</td>
+<td></td>
+<td>0.1f</td>
+</tr>
+<tr class="even">
+<td>D_LRWRHPOFFSET_HWDEG_F32</td>
+<td></td>
+<td>0.4f</td>
+</tr>
+<tr class="odd">
+<td>D_TORQOVERLAYSTRREQOFF_CNT_F32</td>
+<td></td>
+<td>8.0f</td>
+</tr>
+<tr class="even">
+<td>D_MTRTORQOVERLAYSTRREQ_CNT_F32</td>
+<td></td>
+<td>2.0f</td>
+</tr>
+<tr class="odd">
+<td>D_LRWOFF_CNT_F32</td>
+<td></td>
+<td>2048.0f</td>
+</tr>
+<tr class="even">
+<td>D_LRWRHPOFF_CNT_F32</td>
+<td></td>
+<td>0.4f</td>
+</tr>
+<tr class="odd">
+<td>D_TOREQOFF_CNT_F32</td>
+<td></td>
+<td>8.0f</td>
+</tr>
+<tr class="even">
+<td>D_VEHCFGSTATPROG_CNT_U16</td>
+<td>1</td>
+<td>0x01u</td>
+</tr>
+<tr class="odd">
+<td>D_IWSSALCVSPD_CNT_F32</td>
+<td></td>
+<td>(3.6f/k_IWSSVSpdConst_Cnt_f32)</td>
+</tr>
+<tr class="even">
+<td>D_VEHCFG4STATPROG_CNT_U16</td>
+<td>1</td>
+<td>1U</td>
+</tr>
+<tr class="odd">
+<td>D_NETCFGSTATPROG_CNT_U16</td>
+<td>1</td>
+<td>1U</td>
+</tr>
+<tr class="even">
+<td>D_ODOSCALE_CNT_F32</td>
+<td></td>
+<td>((float32).1)</td>
+</tr>
+<tr class="odd">
+<td>D_INVALIDODO_U32</td>
+<td>1</td>
+<td>0x00FFFFFFU</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTCCLR_CNT_U16</td>
+<td>1</td>
+<td>0x0000U</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC13A_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 0)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC13B_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 1)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC192_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 2)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC194_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 3)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC193_CNT_U16</td>
+<td>1</td>
+<td>0x0001U &lt;&lt; 4)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC195_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 5)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC196_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 6)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC1C6_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 7)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC19A_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 8)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC19B_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 9)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC19C_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 10)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC19D_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 11)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC1B6_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 12)</td>
+</tr>
+<tr class="even">
+<td>D_SYSFLTACTNTC0EE_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 13)</td>
+</tr>
+<tr class="odd">
+<td>D_SYSFLTACTNTC0E9_CNT_U16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 14)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTCCLR_CNT_U32</td>
+<td>1</td>
+<td>0x0000U</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC100_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 1)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC138_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 2)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC190_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 3)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC191_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 4)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC199_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 5)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC120_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 6)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC121_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 7)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC139_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 8)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC124_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 9)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC1B9_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 10)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC1A8_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 11)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC1DE_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 12)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC1DF_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 13)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC1C8_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 14)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC1D0_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 15)</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC170_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 16)</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC1A9_CNT_U32</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 17)</td>
+</tr>
+<tr class="even">
+<td>D_DSTREVGRVLDCNTLCLR_CNT_u16</td>
+<td>1</td>
+<td>0x0000U</td>
+</tr>
+<tr class="odd">
+<td>D_DSTREVGRVLDCNTL1B9_CNT_u16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 0)</td>
+</tr>
+<tr class="even">
+<td>D_DSTREVGRVLDCNTL1A8_CNT_u16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 1)</td>
+</tr>
+<tr class="odd">
+<td>D_DSTREVGRVLDCNTL1A9_CNT_u16</td>
+<td>1</td>
+<td>(0x0001U &lt;&lt; 2)</td>
+</tr>
+<tr class="even">
+<td>D_DSTERRCNTRCLCLR_CNT_u16</td>
+<td>1</td>
+<td>0x0000U</td>
+</tr>
+<tr class="odd">
+<td>D_DSTERRCNTRCLGR0_CNT_u16</td>
+<td>1</td>
+<td>0x0001U</td>
+</tr>
+<tr class="even">
+<td>D_DSTERRCNTRCLTH1_CNT_u16</td>
+<td>1</td>
+<td>0x0002U</td>
+</tr>
+<tr class="odd">
+<td>D_DSTERRCNTRCLTH2_CNT_u16</td>
+<td>1</td>
+<td>0x0004U</td>
+</tr>
+<tr class="even">
+<td>D_DSTERRCPTLEV0_CNT_U8</td>
+<td>1</td>
+<td>0U</td>
+</tr>
+<tr class="odd">
+<td>D_DSTERRCPTLEV1_CNT_U8</td>
+<td>1</td>
+<td>1U</td>
+</tr>
+<tr class="even">
+<td>D_DSTERRCPTLEV2_CNT_U8</td>
+<td>1</td>
+<td>2U</td>
+</tr>
+<tr class="odd">
+<td>D_DSTERRCPTLEV3_CNT_U8</td>
+<td>1</td>
+<td>3U</td>
+</tr>
+<tr class="even">
+<td>D_PASTATEINACTIVE_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0U)</td>
+</tr>
+<tr class="odd">
+<td>D_PASTATEACTIVE_CNT_U08</td>
+<td>1</td>
+<td>((uint8)1U)</td>
+</tr>
+<tr class="even">
+<td>D_PASTATEINHIBITED_CNT_U08</td>
+<td>1</td>
+<td>((uint8)2U)</td>
+</tr>
+<tr class="odd">
+<td>D_PASTATERECOVERABLE_CNT_U08</td>
+<td>1</td>
+<td>((uint8)3U)</td>
+</tr>
+<tr class="even">
+<td>D_HALFSYSSTSNOTFAULTED_U16</td>
+<td>1</td>
+<td>0U</td>
+</tr>
+<tr class="odd">
+<td>D_HALFSYSSTSFAULTED_U16</td>
+<td>1</td>
+<td>1U</td>
+</tr>
+<tr class="even">
+<td>D_HALFSTATEINACTIVE_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0U)</td>
+</tr>
+<tr class="odd">
+<td>D_HALFSTATEACTIVE_CNT_U08</td>
+<td>1</td>
+<td>((uint8)1U)</td>
+</tr>
+<tr class="even">
+<td>D_HALFSTATEINHIBITED_CNT_U08</td>
+<td>1</td>
+<td>((uint8)2U)</td>
+</tr>
+<tr class="odd">
+<td>D_HALFSTATERECOVERABLE_CNT_U08</td>
+<td>1</td>
+<td>((uint8)3U)</td>
+</tr>
+<tr class="even">
+<td>TOCSTATE_OFF</td>
+<td>1</td>
+<td>(0U)</td>
+</tr>
+<tr class="odd">
+<td>TOCSTATE_TNA</td>
+<td>1</td>
+<td>(1U)</td>
+</tr>
+<tr class="even">
+<td>TOCSTATE_PNA</td>
+<td>1</td>
+<td>(2U)</td>
+</tr>
+<tr class="odd">
+<td>TOCSTATE_READY</td>
+<td>1</td>
+<td>(3U)</td>
+</tr>
+<tr class="even">
+<td>TOCSTATE_REQUESTDENIED</td>
+<td>1</td>
+<td>(4U)</td>
+</tr>
+<tr class="odd">
+<td>TOCSTATE_ACTIVEMODE05</td>
+<td>1</td>
+<td>(5U)</td>
+</tr>
+<tr class="even">
+<td>TOCSTATE_ACTIVEMODE06</td>
+<td>1</td>
+<td>(6U)</td>
+</tr>
+<tr class="odd">
+<td>TOCSTATE_ACTIVEMODE07</td>
+<td>1</td>
+<td>(7U)</td>
+</tr>
+<tr class="even">
+<td>TOCSTATE_NOTAVAILABLE</td>
+<td>1</td>
+<td>(8U)</td>
+</tr>
+<tr class="odd">
+<td>D_VCMODELYEARSNA_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0x3FU)</td>
+</tr>
+<tr class="even">
+<td>D_VCVEHLINESNA_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0xFFU)</td>
+</tr>
+<tr class="odd">
+<td>D_VCCOUNTRYSNA_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0x1FU)</td>
+</tr>
+<tr class="even">
+<td>D_VCBODYSTYLESNA_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0x0FU)</td>
+</tr>
+<tr class="odd">
+<td>D_ESSENGSTDSBL_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0x07U)</td>
+</tr>
+<tr class="even">
+<td>D_ESSENGSTSTPRTCT_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0x05U)</td>
+</tr>
+<tr class="odd">
+<td>D_ESSENGSTSNA_CNT_U08</td>
+<td>1</td>
+<td>((uint8)0x0FU)</td>
+</tr>
+<tr class="even">
+<td>RESET_RESPONSE_ECURESET_REQUIRED</td>
+<td>1</td>
+<td>((uint8)2U)</td>
+</tr>
+<tr class="odd">
+<td>RESET_RESPONSE_NOT_REQUIRED</td>
+<td>1</td>
+<td>((uint8)0U)</td>
+</tr>
+<tr class="even">
+<td>D_TESTMODE_CNT_U08</td>
+<td>1</td>
+<td>0xFFU</td>
+</tr>
+<tr class="odd">
+<td>D_MTRTQOVLYSTRREQRES_f32</td>
+<td>0.001953125</td>
+<td>0.001953125</td>
+</tr>
+<tr class="even">
+<td>D_VINSIZE_CNT_U08</td>
+<td>1</td>
+<td>17</td>
+</tr>
+<tr class="odd">
+<td>D_ERRINTACTNTC139_CNT_U16</td>
+<td>1</td>
+<td>0x0080</td>
+</tr>
+<tr class="even">
+<td>D_ERRINTACTNTC124_CNT_U16</td>
+<td>1</td>
+<td>0x0100</td>
+</tr>
+<tr class="odd">
+<td>D_CFGSETHI_CNT_U08</td>
+<td>1</td>
+<td>0x02</td>
+</tr>
+<tr class="even">
+<td>D_WHLRPMVEHSPLIM_KPH_F32</td>
+<td>0.1</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>D_TUNINGPERFORMED_CNT_U16</td>
+<td>1</td>
+<td>0xA5A5</td>
+</tr>
+<tr class="even">
+<td>D_TIRECIRCUMFSAVD_CNT_U16</td>
+<td>1</td>
+<td>0xA5A5</td>
+</tr>
+<tr class="odd">
+<td>D_AUTOTRANS_CNT_U8</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>D_MANTRANS_CNT_U8</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>none</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules">Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library functions / Macros that are called by the various sub modules are identified below,</p>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<p>The data hiding functions / macros used in this module are identified below,</p>
+<ol type="1">
+<li><p>None</p></li>
+</ol>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<p>(Note if they are defined in another source file, then reference the appropriate header file)</p>
+<p>The local functions/macros in this module are identified below,</p>
+<ol type="1">
+<li><p>ReadSCCM_STW_ANGL_STAT()</p></li>
+<li><p>ReadECM_A1()</p></li>
+<li><p>ReadCBC_PT2()</p></li>
+<li><p>ReadPTS_StrCtrl()</p></li>
+<li><p>ReadESP_A8()</p></li>
+<li><p>ReadESP_A5()</p></li>
+<li><p>ReadESP_A6()</p></li>
+<li><p>ReadVehCfg5()</p></li>
+<li><p>ReadHALF_MTO_SteerControl()</p></li>
+<li><p>ReadNET_CFG_PT()</p></li>
+<li><p>ReadEcuCfg6()</p></li>
+<li><p>ReadDST_TOC()</p></li>
+<li><p>ReadTRNSSTAT()</p></li>
+<li><p>ReadVehCfg4()</p></li>
+<li><p>ReadBATTVOLT()</p></li>
+<li><p>ReadVehCfg1()</p></li>
+<li><p>ReadENGCFG()</p></li>
+<li><p>ReadVIN()</p></li>
+<li><p>ReadICA1()</p></li>
+<li><p>ReadECMA3()</p></li>
+<li><p>ReadESPA4()</p></li>
+<li><p>ReadWHEELSPEED2()</p></li>
+<li><p>ReadCfgRQ()</p></li>
+<li><p>ReadCfgRQC()</p></li>
+<li><p>ReadGWLinIC2()</p></li>
+<li><p>ReadEcmIndicators()</p></li>
+<li><p>ReadVehCfg7()</p></li>
+<li><p>ReadCBC_PT1()</p></li>
+<li><p>DiagNTC189()</p></li>
+<li><p>DiagCRC294()</p></li>
+<li><p>DiagNTC18B()</p></li>
+<li><p>DSTDiagNTC18CReqOutOfRange()</p></li>
+<li><p>DSTDiagNTC18DDeltaOutOfRange()</p></li>
+<li><p>DSTDiagNTC18EMaxActiveTime()</p></li>
+<li><p>DSTDiagNTC18FRawXORTest()</p></li>
+<li><p>DSTDiagCondtions18CDF()</p></li>
+<li><p>DiagCRC292()</p></li>
+<li><p>DiagNTC190()</p></li>
+<li><p>DiagNTC193()</p></li>
+<li><p>DiagNTC194()</p></li>
+<li><p>DiagNTC195()</p></li>
+<li><p>DiagNTC196()</p></li>
+<li><p>DiagNTC1C6()</p></li>
+<li><p>DiagCRC11C()</p></li>
+<li><p>DiagNTC13B_MC11C()</p></li>
+<li><p>DiagCRC29F()</p></li>
+<li><p>DiagNTC19B()</p></li>
+<li><p>DiagNTC19C()</p></li>
+<li><p>DiagNTC19D()</p></li>
+<li><p>DiagNTC1B6()</p></li>
+<li><p>DiagNTC14E()</p></li>
+<li><p>DiagNTC14F()</p></li>
+<li><p>DiagNTC102()</p></li>
+<li><p>DiagNTC104()</p></li>
+<li><p>DiagNTC124()</p></li>
+<li><p>DiagNTC170()</p></li>
+<li><p>SrlComInput_WriteBits()</p></li>
+<li><p>ResetTimers()</p></li>
+<li><p>DSTDiagNTC188()</p></li>
+<li><p>DiagNTC0EE()</p></li>
+<li><p>DiagNTC0E9()</p></li>
+<li><p>VehSpdOverRide()</p></li>
+<li><p>DiagNTC091()</p></li>
+<li><p>ClearHALFNTC_MessageNotRcvd()</p></li>
+<li><p>ClearHALFNTC_RcvdMesgNotValid()</p></li>
+<li><p>ClearPTSNTC_MessageNotRcvd()</p></li>
+<li><p>ClearPTSNTC_RcvdMesgNotValid()</p></li>
+<li><p>ClearDSTTOCNTC_MessageNotRcvd()</p></li>
+<li><p>ClearDSTTOCNTC_RcvdMesgNotValid()</p></li>
+<li><p><mark>ReadTRNSSPD</mark>()</p></li>
+</ol>
+<h1 class="unnumbered" id="section-2"><br />
+</h1>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-srlcominput_init1">Init: SrlComInput_Init1 </h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<p>None</p>
+<h4 id="module-internal">Module Internal </h4>
+<p>Rte_Call_SystemTime_GetSystemTime_mS_u32(&amp;SystemTime_mS_T_u32)</p>
+<p>DSTActiveStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>SWAVldStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>SWAMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>EngRPMVldStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>EngRPMMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>IgnStatVldStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>IgnStatMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>VehSpdVldStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>VehSpdMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>PTSMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>HalfMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>NETCFGPTMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>DSTTOCMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>HalfMaxTrqStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>ESP4AMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>EcuCfg6MsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>VehCfg7MisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>CfgRQCMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>CfgRQMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>EcuCfg6InvMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>GWLINIC2InvMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>GWLINIC2MisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32</p>
+<p>HndsOnDrngPPAStartTime_mS_M_u32 = SystemTime_mS_T_u32.</p>
+<p>TuningPerformedStartTime_mS_M_u32 = SystemTime_mS_T_u32;</p>
+<p>TRNSSPDMisMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32;</p>
+<p>GrInvMsgStartTime_mS_M_u32 = SystemTime_mS_T_u32;</p>
+<p>PSTTrqOvrlSlewLmt_Nm_M_f32 = k_PSTTrqOvrlSlewLmt_NmpS_f32/100.0f</p>
+<p>HaLFTrqOvrlSlewLmt_Nm_M_f32 = k_HaLFTrqOvrlSlewLmtNrm_NmpS_f32/100.0f</p>
+<p>DSTTrqOvrlSlewLmt_Nm_M_f32 = k_DSTTrqOvrlSlewLmt_NmpS_f32/100.0f</p>
+<p>MC_292h_Bad_Cnt_M_u16 = 0U</p>
+<p>PAIntSystemFltActive_Cnt_M_bit = D_SYSFLTACTNTCCLR_CNT_U16</p>
+<p>PAErrInterfaceActive_Cnt_M_bit = D_ERRINTACTNTCCLR_CNT_U32</p>
+<p>HaLFErrInterfaceActive_Cnt_M_bit = D_ERRINTACTNTCCLR_CNT_U32</p>
+<p>HaLFIntSystemFltActive_Cnt_M_bit = D_SYSFLTACTNTCCLR_CNT_U16</p>
+<p>DSTErrCntrRecvLevel_Cnt_M_bit = D_DSTERRCNTRCLCLR_CNT_u16</p>
+<p>DSTRevGearValid_Cnt_M_bit = D_DSTREVGRVLDCNTLCLR_CNT_u16</p>
+<p>PrevVCModelYear_Cnt_M_u08 = D_VCMODELYEARSNA_CNT_U08</p>
+<p>PrevVCVehLine_Cnt_M_u08 = D_VCVEHLINESNA_CNT_U08</p>
+<p>PrevVCCountry_Cnt_M_u08 = D_VCCOUNTRYSNA_CNT_U08</p>
+<p>PrevVCBodyStyle_Cnt_M_u08 = D_VCBODYSTYLESNA_CNT_U08</p>
+<p>EnableTorqueOverlay_Cnt_M_lgc = TRUE</p>
+<p>PrevHaLFState_Cnt_M_u8 = TOCSTATE_OFF</p>
+<p>PrevHaLFState_Cnt_M_u8 = D_HALFSTATEINACTIVE_CNT_U08</p>
+<p>PrevPAState_Cnt_M_u8 = D_PASTATEINACTIVE_CNT_U08</p>
+<p>VCTireCircRcvd_Cnt_M_Lgc = FALSE</p>
+<p>MtrTrqOvrlyStrRqMax_Nm_M_f32 = k_MtrTrqOvrlyStrRqMax_Nm_f32</p>
+<p>PrevDesiredTunPers_Cnt_M_u16 = DesiredTunPersTypH_Cnt_M_u08</p>
+<p>if(VCTireCircSavedTypH_Cnt_U16 == D_TIRECIRCUMFSAVD_CNT_U16)</p>
+<p>{</p>
+<p>VC_TIRE_CIRCUMF_mm_M_u16 = VC_TIRE_CIRCUMFTypH_mm_u16;</p>
+<p>}</p>
+<p>if(Nvm_VINOdometer_Cnt_u8[1] != TRUE)</p>
+<p>{</p>
+<p>StartVinOdo_Cnt_M_lgc = TRUE;</p>
+<p>}</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataRateFltMsg_Z, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataRngFltMsg_Z, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DSTXORActive, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataOtherFltMsg_Z, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_InvalidMsg_Z, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_PgrsCntFltMsg_Z, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_CRCFltMsg_Z, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_VLF_14, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataOtherFltMsg_AA, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_VLF_09, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataRngFltMsg_AA, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataRngFltMsg_AB, 0x01, NTC_STATUS_PASSED)</p>
+<p>Rte_Call_NxtrDiagMgr_SetNTCStatus(NTC_Num_DataRateFltMsg_AB, 0x01, NTC_STATUS_PASSED)</p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_Write_Ap_SrlComInput_HaLFFuncPresent_Cnt_lgc(HaLFFuncPresentTypH_Cnt_M_lgc)</p>
+<p>Rte_Write_Ap_SrlComInput_PrkAsstFuncPresent_Cnt_lgc(VC_PPPA_PrsntTypH_Cnt_M_lgc)</p>
+<p>Rte_Write_Ap_SrlComInput_DSTFuncPresent_Cnt_lgc(DSTFuncPresentTypH_Cnt_M_lgc)</p>
+<p>if (TuningSetForNextCycleTypH_Cnt_M_u16 &gt; D_NUMOFTUNSETS_CNT_U16)</p>
+<p>{</p>
+<p>TuningSetForNextCycleTypH_Cnt_M_u16 = 0</p>
+<p>}</p>
+<p>SrlComInput_WriteBits(TuningSetForNextCycleTypH_Cnt_M_u16,T_A001InternalBusSig_Cnt_u8,196U,199U)</p>
+<p>Rte_Write_Ap_SrlComInput_DesiredTunSet_Cnt_u16(TuningSetForNextCycleTypH_Cnt_M_u16)</p>
+<p>Rte_Write_DesiredTunPers_Cnt_u16(DesiredTunPersTypH_Cnt_M_u08)</p>
+<p>DescEnableCommunication()</p>
+<h4 id="program-flow-end"> Program Flow End</h4>
+<p>N/A</p>
+<h2 id="periodic-functions">Periodic Functions</h2>
+<p>None</p>
+<h2 id="periodic-event-triggered-functions">Periodic Event Triggered Functions</h2>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>This is a high level design of the module. The entire module is not represented in this document. It is intended to show inputs, outputs and constant values, plus a high level understanding of the code.</p>
+<h3 id="srlcominput_per1">SrlComInput_Per1</h3>
+<h4 id="design-rationale-2">Design Rationale</h4>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<p>N/A</p>
+<h4 id="store-module-inputs-to-local-copies">Store Module Inputs to Local copies</h4>
+<p>*See below</p>
+<h4 id="description">Description</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image3.wmf" /><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image4.wmf" /></p>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image5.wmf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-1">Store Local copy of outputs into Module Outputs</h4>
+<p>See section above.</p>
+<h4 id="program-flow-end-1">Program Flow End</h4>
+<p>N/A</p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs-2">Store Local copy of outputs into Module Outputs</h4>
+<p>See section above.</p>
+<h4 id="program-flow-end-2">Program Flow End</h4>
+<p>N/A</p>
+<h2 id="periodic-event-triggered-functions-1">Periodic Event Triggered Functions</h2>
+<h2 id="fault-recovery-functions"> Fault Recovery Functions</h2>
+<p>None</p>
+<h2 id="shutdown-functions"> Shutdown Functions</h2>
+<p>None</p>
+<h2 id="interrupt-functions"> Interrupt Functions</h2>
+<p>None</p>
+<h2 id="serial-communication-functions"> Serial Communication Functions</h2>
+<h2 class="unnumbered" id="local-functionmacro-definitions">Local Function/Macro Definitions</h2>
+<p>If these are numerous and defined in a separate source file then reference the source file only.</p>
+<h3 id="readecm_a1">ReadECM_A1</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadECM_A1</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-1">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image6.wmf" /></p>
+<h3 id="cbc_pt2">CBC_PT2</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>CBC_PT2</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-2">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image7.wmf" /></p>
+<h3 id="readesp_a8">ReadESP_A8</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadESP_A8</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-3">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image8.wmf" /></p>
+<h3 id="iscrc8valid">IsCRC8Valid</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>IsCRC8Valid</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>Buffer_Ptr_T_u8</td>
+<td>uint8</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>BufferSize_Cnt_T_u32</td>
+<td>uint32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ExpectedCRC_Cnt_T_u8</td>
+<td>uint8</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>IsCRCOK_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-4">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image9.wmf" /></p>
+<h3 id="calcslewcmd">CalcSlewCmd</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>CalcSlewCmd</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>CurrentCmd_Ptr_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SlewRate_Cnt_T_f32</td>
+<td>float32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>SlewCompleted_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-5">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image10.wmf" /></p>
+<h3 id="diagcrc11c">DiagCRC11C</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 38%" />
+<col style="width: 18%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagCRC11C</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>ESPA8_T_str</td>
+<td>tVEH_SPEED_PKT</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>ReceivedDataValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-6">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image11.wmf" /></p>
+<h3 id="readpts_strctrl">ReadPTS_StrCtrl</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadPTS_StrCtrl</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-7">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image12.wmf" /></p>
+<h3 id="diagntc19c">DiagNTC19C</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC19C</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TorqueOverlaySteeringReq_HwNm_T_f32</td>
+<td>float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>IsCmdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-8">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image13.wmf" /></p>
+<h3 id="diagntc19d">DiagNTC19D</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 47%" />
+<col style="width: 15%" />
+<col style="width: 9%" />
+<col style="width: 10%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC19D</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TorqueOverlaySteeringReq_HwNm_T_f32</td>
+<td>float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>PATrqOvCmdRqst_HwNm_T_f32</td>
+<td>float</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-9">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image14.wmf" /></p>
+<h3 id="diagntc19b">DiagNTC19B</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC19B</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MC_29Fh_Cnt_T_u16</td>
+<td>uint16</td>
+<td>0</td>
+<td>65535</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>CounterValid_T_Cnt_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-10">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image15.wmf" /></p>
+<h3 id="diagntc1b6">DiagNTC1B6</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC1B6</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TorqueOverlayIntActivation_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-11">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image16.wmf" /></p>
+<h3 id="diagcrc29f">DiagCRC29F</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagCRC29F</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>PTS_StrCtrl_T_str</td>
+<td></td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>ReceivedDataValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-12">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image17.wmf" /></p>
+<h3 id="readvehcfg4">ReadVehCfg4</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadVehCfg4</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-13">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image18.wmf" /></p>
+<h3 id="diagntc170">DiagNTC170</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC170</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-14">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image19.wmf" /></p>
+<h3 id="readesp_a5">ReadESP_A5</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadESP_A5</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-15">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image20.wmf" /></p>
+<h3 id="readesp_a6">ReadESP_A6</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadESP_A6</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-16">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image21.wmf" /></p>
+<h3 id="readvehcfg5">ReadVehCfg5</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadVehCfg5</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-17">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image22.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadHALF_MTO_SteerControl</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-18">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image23.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 53%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC0E9</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MotorTorqueOverlaySteeringReq_Nm_T_f32</td>
+<td>Float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-19">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image24.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 53%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC0EE</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>HALFDriveStyleSts_Cnt_T_u08</td>
+<td>Uint8</td>
+<td>full</td>
+<td>full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-20">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image25.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC196</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>HaLFState_Cnt_T_u08</td>
+<td>Uint8</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>HaLFStateReq_Nm_T_f32</td>
+<td>Float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-21">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image26.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 40%" />
+<col style="width: 16%" />
+<col style="width: 10%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC195</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>HaLFState_Cnt_T_u08</td>
+<td>Uint8</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>MotorTorqueOverlaySteeringReq_HwNm_T_f32</td>
+<td>float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>HaLFTrqOvCmdRqst_MtrNm_T_f32</td>
+<td>float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-22">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image27.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 39%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC194</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>HaLFState_Cnt_T_u08</td>
+<td>Uint8</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>MotorTorqueOverlaySteeringReq_Cnt_T_f32</td>
+<td>Float32</td>
+<td>-8</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>IsCmdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-23">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image28.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 52%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC1C6</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MotorTorqueOverlayIntActivation_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-24">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image29.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 53%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC193</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MC_292h_Cnt_T_u16</td>
+<td>Uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>CounterValid_T_Cnt_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-25">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image30.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 53%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC13B_MC11C</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MC_11Ch_Cnt_T_u16</td>
+<td>Uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>CounterValid_T_Cnt_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-26">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image31.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 52%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC190</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MTO_HALFSystemSts_Cnt_T_u16</td>
+<td>Uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-27">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image32.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 47%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagCRC292</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>HaLF_StrCtrl_T_str</td>
+<td>tHaLF_StrCtrl</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>ReceivedDataValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-28">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image33.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 51%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadNET_CFG_PT</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-29">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image34.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadSCCM_STW_ANGL_STAT</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-30">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image35.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadEcuCfg6</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-31">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image36.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC1F5</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-32">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image37.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadDST_TOC</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-33">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image38.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DSTDiagNTC188</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TO_Req_HwNm_T_f32</td>
+<td>float32</td>
+<td>-16</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-34">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image39.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DSTDiagNTC18CReqOutOfRange</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TO_Req_HwNm_T_f32</td>
+<td>float32</td>
+<td>-16</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>IsCmdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-35">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image40.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 48%" />
+<col style="width: 14%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DSTDiagNTC18DDeltaOutOfRange</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TO_Req_HwNm_T_f32</td>
+<td>float32</td>
+<td>-16</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>TO_Req_HwNm_T_f32</td>
+<td>float32</td>
+<td>-16</td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-36">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image41.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DSTDiagNTC18EMaxActiveTime</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>TOCSts_T_Cnt_u8</td>
+<td>uint8</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>IsNTCFailed_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-37">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image42.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DSTDiagNTC18FRawXORTest</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>RawTO_Req_Nm_T_u16</td>
+<td>Uint16</td>
+<td>-16</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>IsCmdValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-38">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image43.wmf" /></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 50%" />
+<col style="width: 11%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DSTDiagCondtions18CDF</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DSTState_T_Cnt_u8</td>
+<td>uint8</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>DST_TOCState_T_Cnt_u8</td>
+<td>uint8</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>MakeDiag18C_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-39">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image44.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagCRC294</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>DST_TOC_T_str</td>
+<td>tDST_TOC</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>ReceivedDataValid_Cnt_T_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-40">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image45.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC18B</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>MC_294h_Cnt_T_u16</td>
+<td>uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td>CounterValid_T_Cnt_lgc</td>
+<td>boolean</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-41">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image46.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC189</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>ElapsedTime_mS_T_u16</td>
+<td>uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-42">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image47.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadTRNSSTAT</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-43">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image48.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadWHEELSPEED2</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-44">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image49.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadESP_A4</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-45">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image50.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadECMA3</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-46">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image51.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadICA1</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-47">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image52.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadVIN</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-48">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image53.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadENGCFG</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-49">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image54.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadVehCfg1</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-50">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image55.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadBATTVOLT</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-51">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image56.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadVehCfg3</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-52">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image57.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadCfgRQ</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-53">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image58.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadCfgRQC</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-54">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image59.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadGWLinIC2</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-55">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image60.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadEcmIndicators</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-56">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image61.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadCBC_PT1</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-57">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image62.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadVehCfg7</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-58">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image63.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ReadTRNSSPD</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-59">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image64.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC14E</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>BattVolt_Volt_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>18</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-60">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image65.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC14F</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>BattVolt_Volt_T_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>18</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-61">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image66.wmf" /></p>
+<p>.</p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC102</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-62">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image67.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC104</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-63">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image68.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC124</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-64">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image69.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC091</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-65">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image70.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC0EF</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-66">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image71.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>SrlComInput_WriteBits</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>Data_T_Cnt_u32</td>
+<td>uint32</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Buffer_T_Cnt_u08</td>
+<td>uint8</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>StartBit_Cnt_T_u16</td>
+<td>uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>EndBit_Cnt_T_u16</td>
+<td>uint16</td>
+<td>Full</td>
+<td>Full</td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-67">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image72.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ResetTimers</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-68">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image73.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td><strong>SrlComInput_SCom_ManualVehSpd</strong></td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>VehSpd_Kph_f32</td>
+<td>float32</td>
+<td>0</td>
+<td>255</td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-69">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image74.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>VehSpdOverRide</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-70">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image75.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>DiagNTC091</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-71">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image76.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ClearHALFNTC_MessageNotRcvd</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-72">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image77.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ClearHALFNTC_RcvdMesgNotValid</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-73">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image78.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ClearPTSNTC_MessageNotRcvd</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-74">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image79.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ClearPTSNTC_RcvdMesgNotValid</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-75">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image80.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ClearDSTTOCNTC_MessageNotRcvd</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-76">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image81.wmf" /></p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 49%" />
+<col style="width: 13%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td>ClearDSTTOCNTC_RcvdMesgNotValid</td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Return Value</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="description-77">Description</h3>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image82.wmf" /></p>
+<h1 class="unnumbered" id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>(Describe in words relevant details about the execution sequence of the different sub modules.)</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Task List</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SrlComInput_Init ()</td>
+<td></td>
+<td>On Event (Once)</td>
+<td>On Entering WARMINIT</td>
+</tr>
+<tr class="even">
+<td>SrlComInput_Per1 ()</td>
+<td></td>
+<td>10mS</td>
+<td>WARMINIT, OPERATE, DISABLE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>N/A</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-3"><br />
+</h1>
+<h1 id="memory-map-definition-requirements">Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SrlComInput_Init ()</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>SrlComInput_Per1 ()</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>SrlComInput_Scom_ManualVehSpd()</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 49%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ReadSCCM_STW_ANGL_STAT</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadECM_A1</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadCBC_PT2</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadPTS_StrCtrl</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadESP_A8</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadESP_A5</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadESP_A6</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadVehCfg5</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadHALF_MTO_SteerControl</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadNET_CFG_PT</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadEcuCfg6</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadDST_TOC</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadTRNSSTAT</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadVehCfg4</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadBATTVOLT</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadVehCfg1</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadENGCFG</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadVIN</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadICA1</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadECMA3</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadESPA4</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadVehCfg3</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadWHEELSPEED2</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadCfgRQ</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadCfgRQC</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadGWLinIC2</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadEcmIndicators</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>ReadVehCfg7</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>ReadCBC_PT1</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>DiagNTC189</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagCRC294</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC18B</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DSTDiagNTC18CreqOutOfRange</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DSTDiagNTC18DdeltaOutOfRange</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DSTDiagNTC18EmaxActiveTime</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DSTDiagNTC18FRawXORTest</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DSTDiagCondtions18CDF</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagCRC292</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC190</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC193</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC194</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC195</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC196</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC1C6</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagCRC11C</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC13B_MC11C</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagCRC29F</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC19B</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC19C</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC19D</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC1B6</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC14E</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC14F</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC102</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC104</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DiagNTC124</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>DiagNTC170</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SrlComInput_WriteBits</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>ResetTimers</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="odd">
+<td>DSTDiagNTC188</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+<tr class="even">
+<td>VehSpdOverRide</td>
+<td>RTE_AP_SRLCOMINPUT_APPL_CODE</td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-4"></h1>
+<h1 id="known-issues-limitations-with-design">Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>INLINE functions defined in “GlobalMacro.h” are not unit tested</p></li>
+</ol>
+<h1 class="unnumbered" id="revision-control-log">Revision Control Log</h1>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 65%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Item #</strong></td>
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1.0</td>
+<td>Initial Version</td>
+<td>05June13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2.0</td>
+<td>Anomaly 4866 and the addition of NTC188</td>
+<td>11June13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3.0</td>
+<td>Added NTC 1C0, NTC0E9, NTC0EC, NTC0EA and NTC0EB</td>
+<td>21June13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4.0</td>
+<td>Anomaly 5189</td>
+<td>27JUN13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5.0</td>
+<td>Anomaly 5197</td>
+<td>09JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6.0</td>
+<td>Add FD1B manual VehSpeed</td>
+<td>11JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7.0</td>
+<td>Removed Slew</td>
+<td>12JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8.0</td>
+<td>Anomaly 5245, 5262</td>
+<td>17JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9.0</td>
+<td>Anomaly 4603</td>
+<td>25JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>10</td>
+<td>Anomaly 5266</td>
+<td>30JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>11</td>
+<td>Anomaly 5324, 5339</td>
+<td>31JUL13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>12</td>
+<td>Anomaly 5269, 5356, 5357, 5359, 5358</td>
+<td>02AUG13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>13</td>
+<td>Anomaly 5373</td>
+<td>03AUG13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>14</td>
+<td>Anomaly 5405, 5420, 5431, 5434, 5446, 5459, 5460, 5476, 5474, 5474 ,5477, 5478, 5479</td>
+<td>15AUG13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>15</td>
+<td>Anomaly 5400, changes for A001, A002, A003, A004</td>
+<td>05SEP13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>16</td>
+<td>Changes for 01.00.02 release of CL</td>
+<td>02OCT13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>20</td>
+<td><p>Changes made for Anomalies related to CTC not going to history with NTC in history.Ref Anom 5463.</p>
+<p>MDD Version number is changed to 20 from 16 to match synergy version</p></td>
+<td>07Oct 13</td>
+<td>NRAR</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>21</td>
+<td>18C,18D,18E,188,18F NTC’s are set to PASSED when fails enable criteria</td>
+<td>11OCT13</td>
+<td>NRAR</td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>22</td>
+<td>NTC 189 set to PASSED when DSTFUNC present is false</td>
+<td>14OCT13</td>
+<td>NRAR</td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>23</td>
+<td>Updated for changes in version L 01.00.04</td>
+<td>24OCT13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>24</td>
+<td></td>
+<td>04NOV13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>25</td>
+<td>Anomaly 5959</td>
+<td>06NOV13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>26</td>
+<td>26</td>
+<td>Fixes for DST and HALF NTC’s</td>
+<td>08NOV13</td>
+<td>NRAR</td>
+</tr>
+<tr class="odd">
+<td>27</td>
+<td>27</td>
+<td>Changes for L02.00.00 and CW 01.00.04</td>
+<td>21NOV13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>28</td>
+<td>28</td>
+<td>Anomaly 6128</td>
+<td>04Dec13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>29</td>
+<td>Anomaly 6192 6193</td>
+<td>08JAN14</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>30</td>
+<td>30</td>
+<td>Anomaly 6209 6207</td>
+<td>16JAN14</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>31</td>
+<td>31</td>
+<td>Updates for SER 7A</td>
+<td>10FEB14</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>32</td>
+<td>32</td>
+<td>Anomalies 6355, 6358, 6364, 6365, 6366, 6386, 6392,</td>
+<td>26FEB14</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>33</td>
+<td>33</td>
+<td>Anomalies 6434, 6436</td>
+<td>06MAR14</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>34</td>
+<td>33.1.1</td>
+<td>Added DST logic to NTC 194</td>
+<td>15MAY14</td>
+<td>SAH</td>
+</tr>
+<tr class="odd">
+<td>35</td>
+<td>33.1.2</td>
+<td>Anomaly 6806, added prev values for HaLF enable and trqovrqst as outputs</td>
+<td>20MAY14</td>
+<td>SAH</td>
+</tr>
+<tr class="even">
+<td>36</td>
+<td>33.1.3</td>
+<td>Updated NTC 0x1DF to clear bit from HaLFErrInterfaceActive_Cnt_M_bit when message is received.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>

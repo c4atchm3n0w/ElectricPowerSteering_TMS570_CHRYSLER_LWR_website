@@ -1,0 +1,611 @@
+---
+title: VehiclePowerMode_MDD
+linkTitle: VehiclePowerMode_MDD
+weight: 18
+---
+
+<h1 class="unnumbered" id="module----vehiclepwrmode">Module -- VehiclePwrMode</h1>
+<h1 id="high-level-description">High-Level Description</h1>
+<p>This module determines the vehicle level power moding signal for the EPS system</p>
+<h1 id="figures">Figures</h1>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image1.png" style="width:2.97342in;height:1.76014in" /></p>
+<h2 id="diagram-function-data-sharing">Diagram – Function Data Sharing</h2>
+<h3 id="diagram-function-name">Diagram – Function (Name)</h3>
+<h1 id="variable-data-dictionary"><br />
+Variable Data Dictionary</h1>
+<p>For details on module input / output variable, refer to the Data Dictionary for the application. Input / output variable names are listed here for reference.</p>
+<table>
+<colgroup>
+<col style="width: 49%" />
+<col style="width: 0%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module Inputs</th>
+<th colspan="2">Module Outputs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td colspan="2">EngRPM_Cnt_u16</td>
+<td>ATermActive_Cnt_lgc</td>
+</tr>
+<tr class="even">
+<td colspan="2">EngONSrlComSvcDft_Cnt_lgc</td>
+<td>CTermActive_Cnt_lgc</td>
+</tr>
+<tr class="odd">
+<td colspan="2">VehSpd_Kph_f32</td>
+<td>OperRampRate_XpmS_f32</td>
+</tr>
+<tr class="even">
+<td colspan="2">VehSpdValid_Cnt_lgc</td>
+<td>OperRampValue_Uls_f32</td>
+</tr>
+<tr class="odd">
+<td colspan="2">EssEngStop_Cnt_lgc</td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="2">SpStPrsnt_Cnt_T_lgc</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td colspan="2">DefaultVehSpd</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-internal-variables">Module Internal Variables</h2>
+<p>This section identifies the name, range and resolutions for module specific data created by this module. If there are no range restrictions on the variable, the term “FULL” is placed into the table for legal range.</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 16%" />
+<col style="width: 9%" />
+<col style="width: 10%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Resolution</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CTermActive_Cnt_M_lgc</td>
+<td>1</td>
+<td>FALSE</td>
+<td>TRUE</td>
+<td>VEHPWRMD_START_SEC_VAR_CLEARED_BOOLEAN</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-defined-typedef-definitiondeclaration">User defined typedef definition/declaration </h3>
+<p>This section documents any user types uniquely used for the module.</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Typedef Name</th>
+<th>Element Name</th>
+<th>User Defined Type</th>
+<th><p>Legal Range</p>
+<p>(min)</p></th>
+<th><p>Legal Range</p>
+<p>(max)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+</tbody>
+</table>
+<h1 id="constant-data-dictionary">Constant Data Dictionary</h1>
+<h2 id="calibration-constants">Calibration Constants</h2>
+<p>This section lists the calibrations used by the module. For details on calibration constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>k_RampDnRt_UlspmS_f32</td>
+</tr>
+<tr class="even">
+<td>k_RampUpRtLoSpd_UlspmS_f32</td>
+</tr>
+<tr class="odd">
+<td>k_VehSpdAstLmt_Kph_f32</td>
+</tr>
+</tbody>
+</table>
+<h2 id="programfixed-constants">Program(fixed) Constants</h2>
+<h3 id="embedded-constants">Embedded Constants</h3>
+<p>All embedded constants whose values are provided in Eng units will be evaluated to the equivalent counts by using the FPM_InitFixedPoint_m() macro within the #define statement.</p>
+<h4 id="local">Local</h4>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Units</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ENGONRPM_CNT_U16</td>
+<td>1</td>
+<td>RPM</td>
+<td>300</td>
+</tr>
+<tr class="even">
+<td>D_ENGRPMINVLD_CNT_U16</td>
+<td>1</td>
+<td>Counts</td>
+<td>0xFFFF</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 class="unnumbered" id="section"></h4>
+<h4 id="global">Global</h4>
+<p>This section lists the global constants used by the module. For details on global constants, refer to the Data Dictionary for the application.</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D_ZERO_ULS_F32</td>
+</tr>
+<tr class="even">
+<td>D_ONE_ULS_F32</td>
+</tr>
+</tbody>
+</table>
+<h3 id="module-specific-lookup-tables-constants">Module specific Lookup Tables Constants</h3>
+<p>(This is for lookup tables (arrays) with fixed values, same name as other tables)</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 11%" />
+<col style="width: 40%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant Name</th>
+<th>Resolution</th>
+<th>Value</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="functionsmacros-used-by-the-sub-modules"><br />
+Functions/Macros used by the Sub-Modules </h1>
+<h2 id="library-functions-macros">Library Functions / Macros </h2>
+<p>The library and functions / Macros that are called by the various sub modules are identified below,</p>
+<ol type="1">
+<li><p>&lt;None&gt;</p></li>
+</ol>
+<h2 id="data-hiding-functions">Data Hiding Functions</h2>
+<ol type="1">
+<li><p>Rte_Call_EpsEn_OP_GET</p></li>
+</ol>
+<h2 id="global-functionsmacros-defined-by-this-module">Global Functions/Macros Defined by this Module</h2>
+<h3 id="global-function-1">Global Function #1</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td><strong>N/A</strong></td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>(if none, write None)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>(Insert more rows for additional passed arguments)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>(if no value returned, write N/A)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description">Description</h4>
+<p>(Place flowchart/design for local function)</p>
+<h2 id="local-functionsmacros-used-by-this-mdd-only">Local Functions/Macros Used by this MDD only</h2>
+<h3 id="local-function-1">Local Function #1</h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 46%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function Name</strong></td>
+<td><strong>N/A</strong></td>
+<td>Type</td>
+<td>Min</td>
+<td>Max</td>
+</tr>
+<tr class="even">
+<td><strong>Arguments Passed</strong></td>
+<td>(if none, write None)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>(Insert more rows for additional passed arguments)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Return Value</strong></td>
+<td>(if no value returned, write N/A)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="description-1">Description</h4>
+<p>(Place flowchart/design for local function)</p>
+<h1 id="software-module-implementation">Software Module Implementation</h1>
+<h2 id="runtime-environment-rte-initial-values">Runtime Environment (RTE) Initial Values</h2>
+<p>This section lists the initial values of data written by this module but controlled by the RTE. After RTE initialization, the data in this table will contain these values.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Data</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ATermActive_Cnt_lgc</td>
+<td>TRUE</td>
+</tr>
+<tr class="even">
+<td>CTermActive_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>EngRPM_Cnt_u16</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>EngONSrlComSvcDft_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>VehSpd_Kph_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>VehSpdValid_Cnt_lgc</td>
+<td>FALSE</td>
+</tr>
+<tr class="odd">
+<td>OperRampRate_XpmS_f32</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>OperRampValue_Uls_f21</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="initialization-functions">Initialization Functions</h2>
+<h3 id="init-_init1">Init: _Init1</h3>
+<h4 id="design-rationale">Design Rationale</h4>
+<h4 id="module-outputs">Module Outputs</h4>
+<p>Rte_IWrite_VehPwrMd_Init1_OperRampRate_XpmS_f32(k_RampDnRt_UlspmS_f32)</p>
+<p>Rte_IWrite_VehPwrMd_Init1_OperRampValue_Uls_f32(D_ZERO_ULS_F32)</p>
+<h4 id="module-internal">Module Internal </h4>
+<p>(Initialize all module internal variables in this section)</p>
+<h2 id="periodic-functions"><br />
+Periodic Functions</h2>
+<h3 id="per-_per1">Per: _Per1</h3>
+<h4 id="design-rationale-1">Design Rationale</h4>
+<p>There are a set of inputs that are read in but not used. This is because these inputs are likely to be used in the final design. The current implementation does not meet final design requirements.</p>
+<h4 id="program-flow-start">Program Flow Start</h4>
+<h4 id="rte_call_vehpwrmd_per1_cp0_checkpointreachedstore-module-inputs-to-local-copies">Rte_Call_VehPwrMd_Per1_CP0_CheckpointReached()Store Module Inputs to Local copies</h4>
+<p><em>EngONSrlComSvcDft_Cnt_T_lgc</em> = Rte_IRead_VehPwrMd_Per1_EngONSrlComSvcDft_Cnt_lgc()</p>
+<p>Rte_Call_EpsEn_OP_GET(&amp;<em>EPSEn_Cnt_T_lgc</em>)</p>
+<p><em>EngRPM_Cnt_T_u16 = Rte_IRead_VehPwrMd_Per1_EngRPM_Cnt_u16()</em></p>
+<p><em>VehSpdValid_Cnt_T_lgc</em> = Rte_IRead_VehPwrMd_Per1_VehSpdValid_Cnt_lgc()</p>
+<p><em>VehSpd_Kph_T_f32 =</em> Rte_IRead_VehPwrMd_Per1_VehSpd_Kph_f32()</p>
+<p><em>EssEngStop_Cnt_T_lgc = Rte_IRead_VehPwrMd_Per1_EssEngStop_Cnt_lgc()</em></p>
+<p><em>SpStPrsnt_Cnt_T_lgc = Rte_IRead_VehPwrMd_Per1_SpStPrsnt_Cnt_lgc()</em></p>
+<p><em>NmState_Cnt_T_u8 = NmGetStatus()</em></p>
+<h4 id="processing">Processing</h4>
+<p><img src="ElectricPowerSteering_TMS570_CHRYSLER_LWR_website/static/media/image2.emf" /></p>
+<h4 id="store-local-copy-of-outputs-into-module-outputs">Store Local copy of outputs into Module Outputs</h4>
+<p>Rte_IWrite_VehPwrMd_Per1_OperRampRate_XpmS_f32(<em>OperRampRate_XpmS_T_f32</em>)</p>
+<p>Rte_IWrite_VehPwrMd_Per1_OperRampValue_Uls_f32(<em>OperRampValue_Uls_T_f32</em>)</p>
+<p>Rte_IWrite_VehPwrMd_Per1_ATermActive_Cnt_lgc(<em>ATermActive_Cnt_T_lgc</em>)</p>
+<p>Rte_IWrite_VehPwrMd_Per1_CTermActive_Cnt_lgc(<em>CTermActive_Cnt_M_lgc</em>)</p>
+<h4 id="program-flow-end">Program Flow End</h4>
+<p>Rte_Call_VehPwrMd_Per1_CP1_CheckpointReached()</p>
+<h2 id="fault-recovery-functions"><br />
+Fault Recovery Functions</h2>
+<h2 id="shutdown-functions">Shutdown Functions</h2>
+<h2 id="interrupt-functions">Interrupt Functions</h2>
+<h2 id="serial-communication-functions">Serial Communication Functions</h2>
+<h2 class="unnumbered" id="section-1"></h2>
+<h1 id="execution-requirements">Execution Requirements</h1>
+<h2 id="execution-sequence-of-the-module">Execution Sequence of the Module</h2>
+<p>(Describe in words relevant details about the execution sequence of the different sub modules.)</p>
+<h2 id="execution-rates-for-sub-modules-called-by-the-scheduler">Execution Rates for sub-modules called by the Scheduler</h2>
+<p>This table serves as reference for the Scheduler design</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Calling Frequency</th>
+<th>System State(s) in which the function is called</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>VehPwrMd_Init1</td>
+<td>Executed once after the RTE is started</td>
+<td>COLDINIT</td>
+</tr>
+<tr class="even">
+<td>VehPwrMd_Per1</td>
+<td>2ms</td>
+<td>ALL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="execution-requirements-for-serial-communication-functions">Execution Requirements for Serial Communication Functions </h2>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function Name</th>
+<th>Sub-Module called by (Serial Comm Function Name)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt;None&gt;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-2"></h1>
+<h1 id="memory-map-definition-requirements"><br />
+Memory Map Definition Requirements</h1>
+<h2 id="sub-modules-functions">Sub Modules (Functions)</h2>
+<p>This table identifies the software segments for functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>VehPwrMd_Init1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>VehPwrMd_Per1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 class="unnumbered" id="section-3"></h2>
+<h2 id="local-functions">Local Functions</h2>
+<p>This table identifies the software segments for local functions identified in this module.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of Sub Module</th>
+<th>Software Segment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 class="unnumbered" id="section-4"></h1>
+<h1 id="known-issues-limitations-with-design"><br />
+Known Issues / Limitations With Design</h1>
+<ol type="1">
+<li><p>Inline functions defined in GlobalMacro.h are not unit tested</p></li>
+</ol>
+<h1 id="revision-control-log"><br />
+Revision Control Log</h1>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 68%" />
+<col style="width: 11%" />
+<col style="width: 12%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Rev #</strong></td>
+<td><strong>Change Description</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Author Initials</strong></td>
+</tr>
+<tr class="even">
+<td>1.0</td>
+<td>Initial MDD</td>
+<td>23May11</td>
+<td>LWW</td>
+</tr>
+<tr class="odd">
+<td>2.0</td>
+<td>Initial Chrysler version for VehPwrMode</td>
+<td>31JUL12</td>
+<td>SAH</td>
+</tr>
+<tr class="even">
+<td>3.0</td>
+<td>Update per SER Rev 2B</td>
+<td>3JAN13</td>
+<td>BWL</td>
+</tr>
+<tr class="odd">
+<td>4.0</td>
+<td>Updated per SER Rev 2G and anomaly 4761</td>
+<td>12Apr13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>5.0</td>
+<td>Add TWaitBusSleep check for shutdown</td>
+<td>21Jun13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>6.0</td>
+<td>Anomaly 5586 NetWork management changes</td>
+<td>02OCT13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>7.0</td>
+<td>Anomaly 5911 NM changes</td>
+<td>31OCT13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Updated for L version 02.00.00 and WR 01.0.04</td>
+<td>20NOV13</td>
+<td>M. Story</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Anomaly 6131 Cterm changes</td>
+<td>05DEC13</td>
+<td>M. Story</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>Anomaly 6206</td>
+<td>10JAN14</td>
+<td>M. Story</td>
+</tr>
+</tbody>
+</table>

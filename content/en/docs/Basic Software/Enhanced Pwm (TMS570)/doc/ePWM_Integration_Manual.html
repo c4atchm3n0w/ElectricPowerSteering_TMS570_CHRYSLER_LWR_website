@@ -1,0 +1,413 @@
+---
+title: ePWM_Integration_Manual
+linkTitle: ePWM_Integration_Manual
+weight: 5
+---
+
+<p><a href="#dependencies">1 Dependencies <span>2</span></a></p>
+<p><a href="#swcs">1.1 SWCs <span>2</span></a></p>
+<p><a href="#configuration-files-to-be-provided-by-integration-project">1.2 Configuration Files to be provided by Integration Project <span>2</span></a></p>
+<p><a href="#functions-to-be-provided-by-integration-project">1.3 Functions to be provided by Integration Project <span>2</span></a></p>
+<p><a href="#configuration">2 Configuration <span>3</span></a></p>
+<p><a href="#build-time-config">2.1 Build Time Config <span>3</span></a></p>
+<p><a href="#generator-config">2.2 Generator Config <span>3</span></a></p>
+<p><a href="#integration">3 Integration <span>4</span></a></p>
+<p><a href="#global-data">3.1 Global Data <span>4</span></a></p>
+<p><a href="#component-conflicts">3.2 Component Conflicts <span>4</span></a></p>
+<p><a href="#include-path">3.3 Include Path <span>4</span></a></p>
+<p><a href="#adc2-changes">3.4 ADC2 Changes <span>4</span></a></p>
+<p><a href="#configurator-changes">3.5 Configurator Changes <span>4</span></a></p>
+<p><a href="#dio-and-iohwab">3.5.1 DIO <span>4</span></a></p>
+<p><a href="#port">3.5.2 Port <span>5</span></a></p>
+<p><a href="#runnable-scheduling">4 Runnable Scheduling <span>6</span></a></p>
+<p><a href="#memory-mapping">5 Memory Mapping <span>7</span></a></p>
+<p><a href="#mapping">5.1 Mapping <span>7</span></a></p>
+<p><a href="#usage">5.2 Usage <span>7</span></a></p>
+<p><a href="#revision-control-log">6 Revision Control Log <span>8</span></a></p>
+<h1 id="dependencies">Dependencies</h1>
+<h2 id="swcs">SWCs</h2>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 69%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Module</th>
+<th>Required Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CDD_Data</td>
+<td>Global variables for DC Phs Comp (from PwmCdd)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-files-to-be-provided-by-integration-project">Configuration Files to be provided by Integration Project</h2>
+<p>None</p>
+<h2 id="functions-to-be-provided-by-integration-project">Functions to be provided by Integration Project</h2>
+<p>None</p>
+<h1 id="configuration">Configuration</h1>
+<h2 id="build-time-config">Build Time Config</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 53%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+<th>SWC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="generator-config">Generator Config</h2>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 47%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Notes</th>
+<th>SWC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="integration">Integration</h1>
+<h2 id="global-data">Global Data</h2>
+<p>The following global symbols must be defined in CDD_Data.c and .h (populated by PwmCdd):</p>
+<ul>
+<li><p>uint16: CDD_DCPhsComp_Cnt_G_u16[3]</p></li>
+<li><p>uint16: CDD_PWMPeriod_Cnt_G_u16</p></li>
+</ul>
+<h2 id="component-conflicts">Component Conflicts</h2>
+<p>This component replaces an existing NHET component. The ePWM component contains the NHET program specific to ePWM operation. In addition, the Ap_ePWM2 developer component replaces the Ap_Nhet2 component.</p>
+<h2 id="include-path">Include Path</h2>
+<p>The “include” directory of this SWC needs to be included in the integration project include search path.</p>
+<h2 id="adc2-changes">ADC2 Changes</h2>
+<p>The ePWM module must be configured to start ADC conversions for the ADC2 module. This is configured by setting the following register values for the ADC2 module:</p>
+<ul>
+<li><p>G0SRC = 3 (EPWM_A1)</p></li>
+<li><p>G1SRC = 1 (EPWM_B)</p></li>
+</ul>
+<p>This is done in parallel with pin multiplexing changes to route the appropriate SOCA and SOCB signals to the ADC2 module. See FDD 33E for more information.</p>
+<h2 id="configurator-changes">Configurator Changes</h2>
+<h3 id="dio-and-iohwab">DIO and IOHwAb</h3>
+<p>If NHET was previously used to generate PWM signals, reassignments are required (as the ePWM outputs will conflict with assigned DIO pins). This is hardware-dependent; refer to the program’s Resource Allocation sheet or schematic. The following pins are used by ePWM and the ePWM-specific NHET on the TMS570LS1227 PGE (144 pin) package (see the datasheet for more information):</p>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pin</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>6</td>
+<td>N2HET1[11], MIBSPI3NCS[4], <strong>N2HET2[18]</strong>, ETPWM1SYNCO</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>GIOA[5], EXTCLKIN, <strong>ETPWM1A</strong></td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td>GIOA[6], N2HET2[4], <strong>ETPWM1B</strong></td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>GIOA[7], N2HET2[6], <strong>ETPWM2A</strong></td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>N2HET1[1], SPI4ENA, <strong>N2HET2[8]</strong></td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>N2HET1[3], SPI4NCS[0], <strong>N2HET2[10]</strong></td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>N2HET1[0], SPI4CLK, <strong>ETPWM2B</strong></td>
+</tr>
+<tr class="even">
+<td>30</td>
+<td>N2HET1[2], SPI4SIMO, <strong>ETPWM3A</strong></td>
+</tr>
+<tr class="odd">
+<td>31</td>
+<td>N2HET1[5], SPI4SOMI, N2HET2[12], <strong>ETPWM3B</strong></td>
+</tr>
+<tr class="even">
+<td>33</td>
+<td>N2HET1[7], N2HET2[14], <strong>ETPWM7B</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="port">Port</h3>
+<h4 id="pin-direction-settings">Pin Direction Settings</h4>
+<p>The changes in DIO (hardware-dependent) may require updates to the pin direction and other settings for the newly configured DIO signals.</p>
+<h4 id="multiplexing-changes">Multiplexing Changes</h4>
+<p>Several multiplexing options must be configured for both external routing (peripherals to pins) and internal routing (peripherals to peripherals).</p>
+<p>The following changes must be made within configurator:</p>
+<ul>
+<li><p>Multiplexing for DIO changes (hardware-dependent)</p></li>
+<li><p>Multiplexing for NHET component change</p>
+<ul>
+<li><p>This should result in PINMUX1[8-15] being set to 0x04</p></li>
+<li><p>While N2HET2[8] and [10] can be configured, configurator does not generate these values correctly (see the manual configuration below)</p></li>
+</ul></li>
+<li><p>ADC Trigger Table – select ADC Trigger Table 2</p>
+<ul>
+<li><p>This should result in PINMUX30[0-7] being set to 0x02</p></li>
+</ul></li>
+</ul>
+<p>The following changes must be made with manual edits to Port_PBcfg.c:</p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 14%" />
+<col style="width: 18%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Register</th>
+<th>Bits</th>
+<th>Value</th>
+<th>Selected Option</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PINMUX2</td>
+<td>24-31</td>
+<td>0x04</td>
+<td>ETPWM1A</td>
+</tr>
+<tr class="even">
+<td>PINMUX3</td>
+<td>16-23</td>
+<td>0x04</td>
+<td>ETPWM1B</td>
+</tr>
+<tr class="odd">
+<td>PINMUX4</td>
+<td>0-7</td>
+<td>0x04</td>
+<td>ETPWM2A</td>
+</tr>
+<tr class="even">
+<td>PINMUX4</td>
+<td>16-23</td>
+<td>0x10</td>
+<td>N2HET2[8] (configurator errata)</td>
+</tr>
+<tr class="odd">
+<td>PINMUX4</td>
+<td>24-31</td>
+<td>0x10</td>
+<td>N2HET2[10] (configurator errata)</td>
+</tr>
+<tr class="even">
+<td>PINMUX5</td>
+<td>0-7</td>
+<td>0x04</td>
+<td>ETPWM2B</td>
+</tr>
+<tr class="odd">
+<td>PINMUX5</td>
+<td>8-15</td>
+<td>0x04</td>
+<td>ETPWM3A</td>
+</tr>
+<tr class="even">
+<td>PINMUX5</td>
+<td>16-23</td>
+<td>0x08</td>
+<td>ETPWM3B</td>
+</tr>
+<tr class="odd">
+<td>PINMUX6</td>
+<td>0-7</td>
+<td>0x10</td>
+<td>ETPWM7B</td>
+</tr>
+<tr class="even">
+<td>PINMUX31*</td>
+<td>16-31</td>
+<td>0x0202</td>
+<td>ADC2 Trigger Event Selection</td>
+</tr>
+<tr class="odd">
+<td>PINMUX35*</td>
+<td>24-31</td>
+<td>0x00</td>
+<td>SOC4A_SEL cleared</td>
+</tr>
+<tr class="even">
+<td>PINMUX37*</td>
+<td>0-31</td>
+<td>0x01010102</td>
+<td>Sync time bases, enable clocks for ePWM 0 to 3</td>
+</tr>
+<tr class="odd">
+<td>PINMUX38*</td>
+<td>0-31</td>
+<td>0x01000001</td>
+<td>Enable clocks for ePWM 4 and 7</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>* Configurator does not define symbols for these registers. Define the following symbols manually:</p>
+<p>#define PORT_BASE_ADDR_PINMUX_31 ((Port_RegisterPtrType)(0xFFFFEB8C))</p>
+<p>#define PORT_BASE_ADDR_PINMUX_35 ((Port_RegisterPtrType)(0xFFFFEB9C))</p>
+<p>#define PORT_BASE_ADDR_PINMUX_37 ((Port_RegisterPtrType)(0xFFFFEBA4))</p>
+<p>#define PORT_BASE_ADDR_PINMUX_38 ((Port_RegisterPtrType)(0xFFFFEBA8))</p>
+<p>A default value of 0x01 should be used for bytes not otherwise defined.</p>
+</blockquote>
+<h1 id="runnable-scheduling">Runnable Scheduling</h1>
+<p>This section specifies the required runnable scheduling.</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 56%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Runnable</th>
+<th>Scheduling Requirements</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nhet_Init1</td>
+<td>Place in EcuStartup_Init1 (EcuStartup.c) along with ePWM_Init1, following the memory initialization routine SchM_InitMemory.</td>
+<td>Init</td>
+</tr>
+<tr class="even">
+<td>ePWM_Init1</td>
+<td>Place in EcuStartup_Init1 (EcuStartup.c) along with Nhet_Init1, following the memory initialization routine SchM_InitMemory.</td>
+<td>Init</td>
+</tr>
+<tr class="odd">
+<td>ePWM_Per1</td>
+<td>Must be placed in the motor control ISR, following PwmCdd (or whichever function populates the global variables used by ePWM).</td>
+<td>Cyclic (ISR)</td>
+</tr>
+<tr class="even">
+<td>ePWM2_Trns1</td>
+<td>Schedule on transition into the WARMINIT state</td>
+<td>Event (RTE)</td>
+</tr>
+<tr class="odd">
+<td>ePWM2_Trns2</td>
+<td>Schedule on transition into the DISABLE state</td>
+<td>Event (RTE)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="memory-mapping">Memory Mapping</h1>
+<h2 id="mapping">Mapping</h2>
+<table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 26%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Memory Section</th>
+<th>Contents</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>EPWM_START_SEC_CODE</td>
+<td>Runnable Code</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>NHET_START_SEC_CODE</td>
+<td>Runnable Code</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>* Each …START_SEC… constant is terminated by a …STOP_SEC… constant as specified in the AUTOSAR Memory Mapping requirements.</p>
+<h2 id="usage">Usage</h2>
+<table>
+<colgroup>
+<col style="width: 55%" />
+<col style="width: 23%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>RAM</th>
+<th>ROM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Full driver</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Table 1: ARM Cortex R4 Memory Usage</p>
+<h1 id="revision-control-log">Revision Control Log</h1>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 71%" />
+<col style="width: 12%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Rev #</strong></th>
+<th><strong>Change Description</strong></th>
+<th><strong>Date</strong></th>
+<th><strong>Author</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Initial version</td>
+<td>15-Feb-13</td>
+<td>OT</td>
+</tr>
+</tbody>
+</table>
